@@ -1,0 +1,7 @@
+name: authpass_cloud_backend
+dependencies:
+  angel_orm: ^2.1.0-beta.3
+dev_dependencies:
+  angel_orm_generator: ^2.1.0-beta.2
+  build_runner: ^1.0.0
+
