@@ -1,5 +1,5 @@
 <?php
-$TOKEN = 'lorem';
+$TOKEN = '3?okQI/#~L.$lp.G8$gr';
 
 /**
  * @param string $message
