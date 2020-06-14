@@ -1,4 +1,8 @@
 <?php
+
+// stored in the authpass-cloudu repository. do not  change on server.
+// https://github.com/authpass/authpass-cloud
+
 $TOKEN = '3?okQI/#~L.$lp.G8$gr';
 
 /**
@@ -67,6 +71,20 @@ $versionFile = $dir . '/' . $artifact->prefix . 'latest' . '.txt';
 
 if (file_exists($target)) {
     fatalError('file already exists at ' . $target);
+}
+
+// Check $_FILES['upload']['error'] value.
+
+switch ($_FILES['upload']['error']) {
+    case UPLOAD_ERR_OK:
+        break;
+    case UPLOAD_ERR_NO_FILE:
+        throw fatalError('No file sent.');
+    case UPLOAD_ERR_INI_SIZE:
+    case UPLOAD_ERR_FORM_SIZE:
+        throw fatalError('Exceeded filesize limit.');
+    default:
+        throw fatalError('Unknown errors.' . $_FILES['upload']['error']);
 }
 
 if (!move_uploaded_file($_FILES['upload']['tmp_name'], $target)) {
