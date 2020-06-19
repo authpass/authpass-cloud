@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: AuthPass
+  description: Never mind.
+  version: 1.0.0
+  x-dart-name: AuthPassCloud
+servers:
+  - url: 'https'
+paths:
+  /user/register:
+    post:
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+  /email/confirm:
+    put:
+      summary: Confirm email address
+      parameters:
+        - name: token
+          in: query
+          description: Unique token which was sent to email address.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid token or email address.
+components:
+  schemas:
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          description: 'Email address for the current user.'
+      required:
+        - email
+    RegisterResponse:
+      properties:
+        userUuid:
+          type: string
+          description: 'Uuid of the newly registered user.'

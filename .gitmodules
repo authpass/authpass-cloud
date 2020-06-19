@@ -1,0 +1,3 @@
+[submodule "deps/openapi_dart"]
+	path = deps/openapi_dart
+	url = ../../hpoul/openapi_dart
