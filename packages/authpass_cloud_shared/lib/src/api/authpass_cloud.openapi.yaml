@@ -51,3 +51,5 @@ components:
         userUuid:
           type: string
           description: 'Uuid of the newly registered user.'
+      required:
+        - userUuid

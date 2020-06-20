@@ -12,15 +12,15 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
-      OpenApiRequest request, RegisterRequest body) {
-    // TODO: implement userRegisterPost
-    throw UnimplementedError();
+      OpenApiRequest request, RegisterRequest body) async {
+    _logger.fine('Creating new user. ${body.email}');
+    return UserRegisterPostResponse.response200(
+        RegisterResponse(userUuid: '123'));
   }
 
   @override
   Future<EmailConfirmPutResponse> emailConfirmPut(
-      OpenApiRequest request, String token) {
-    // TODO: implement emailConfirmPut
-    throw UnimplementedError();
+      OpenApiRequest request, String token) async {
+    return EmailConfirmPutResponse.response200();
   }
 }

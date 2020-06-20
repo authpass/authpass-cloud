@@ -11,7 +11,7 @@ final _logger = Logger('server');
 Future<void> main(List<String> args) async {
   PrintAppender.setupLogging();
   final db = DatabaseAccess();
-  await db.init();
+  await db.prepareDatabase();
   _logger.fine('Starting Server ...');
   final server = OpenApiShelfServer(
       AuthPassCloudRouter(AuthPassServiceProvider())..configure());

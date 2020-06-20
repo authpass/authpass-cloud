@@ -1,3 +1,6 @@
+import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/migration_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
@@ -5,9 +8,36 @@ import 'package:postgres/postgres.dart';
 final _logger = Logger('database_access');
 
 class DatabaseTransaction {
-  DatabaseTransaction(this.conn);
+  DatabaseTransaction(this._conn, this.tables);
 
-  final PostgreSQLExecutionContext conn;
+  final PostgreSQLExecutionContext _conn;
+  final Tables tables;
+
+  Future<int> execute(
+    String fmtString, {
+    Map<String, dynamic> substitutionValues,
+    int timeoutInSeconds,
+  }) async {
+    try {
+      return await _conn.execute(fmtString,
+          substitutionValues: substitutionValues,
+          timeoutInSeconds: timeoutInSeconds);
+    } catch (e, stackTrace) {
+      _logger.warning(
+          'Error while running statement $fmtString', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<PostgreSQLResult> query(String fmtString,
+      {Map<String, dynamic> substitutionValues,
+      bool allowReuse,
+      int timeoutInSeconds}) async {
+    return _conn.query(fmtString,
+        substitutionValues: substitutionValues,
+        allowReuse: allowReuse,
+        timeoutInSeconds: timeoutInSeconds);
+  }
 }
 
 class DatabaseAccess {
@@ -33,7 +63,7 @@ class DatabaseAccess {
   Future<T> run<T>(
           Future<T> Function(DatabaseTransaction transaction) block) async =>
       _transaction((conn) async {
-        return await block(DatabaseTransaction(conn));
+        return await block(DatabaseTransaction(conn, tables));
       });
 
   Future<T> _transaction<T>(
@@ -48,10 +78,10 @@ class DatabaseAccess {
         ' is not ${T.runtimeType}');
   }
 
-  Future<void> init() async {
+  Future<void> prepareDatabase() async {
     _logger.finest('Initializing database.');
     await clean();
-    final lastMigration = await _transaction((connection) async {
+    final lastMigration = await run((connection) async {
       try {
         await tables.migration.createTable(connection);
         return await tables.migration.queryLastVersion(connection);
@@ -61,7 +91,7 @@ class DatabaseAccess {
       }
     });
     _logger.fine('Last migration: $lastMigration');
-    await _transaction((conn) async {
+    await run((conn) async {
       final migrations = Migrations.migrations();
       for (final migration in migrations) {
         if (migration.id > lastMigration) {
@@ -116,19 +146,12 @@ class DatabaseAccess {
 
 class Tables {
   final migration = MigrationTable();
+  final user = UserTable();
 
   List<TableBase> get allTables => [
         migration,
+        user,
       ];
-}
-
-abstract class TableBase {
-  List<String> get tables;
-}
-
-abstract class TableConstants {
-  // ignore: non_constant_identifier_names
-  final _COLUMN_ID = 'id';
 }
 
 class Migrations {
@@ -139,45 +162,15 @@ class Migrations {
         assert(up != null);
 
   final int id;
-  final Future<void> Function(PostgreSQLExecutionContext conn) up;
+  final Future<void> Function(DatabaseTransaction conn) up;
 
   static List<Migrations> migrations() {
     return [
-      Migrations(id: 1, up: (conn) async {}),
+      Migrations(
+          id: 1,
+          up: (conn) async {
+            conn.tables.user.createTables(conn);
+          }),
     ];
-  }
-}
-
-class MigrationTable extends TableBase with TableConstants {
-  static const _TABLE_MIGRATE = 'authpass_migration';
-  static const _TABLE_MIGRATE_VERSION = 'version';
-  static const _TABLE_MIGRATE_APPLIED_AT = 'applied_at';
-
-  @override
-  List<String> get tables => [_TABLE_MIGRATE];
-
-  Future<void> createTable(PostgreSQLExecutionContext connection) async {
-    _logger.finest('Creating table ...');
-    final result = await connection.execute('''
-      CREATE TABLE IF NOT EXISTS $_TABLE_MIGRATE (
-        $_COLUMN_ID SERIAL PRIMARY KEY,
-        $_TABLE_MIGRATE_APPLIED_AT TIMESTAMP NOT NULL,
-        $_TABLE_MIGRATE_VERSION INT NOT NULL
-      );
-      ''');
-    _logger.fine('Got result: $result');
-    if (result > 0) {
-      if (result > 1) {
-        throw Exception('Expected at most 1 affected row $result');
-      }
-    }
-  }
-
-  Future<int> queryLastVersion(PostgreSQLExecutionContext connection) async {
-    final result = await connection
-        .query('SELECT MAX($_TABLE_MIGRATE_VERSION) FROM $_TABLE_MIGRATE');
-    final maxVersion = result.first[0] as int;
-    _logger.finer('Migration version: $maxVersion');
-    return maxVersion ?? 0;
   }
 }
