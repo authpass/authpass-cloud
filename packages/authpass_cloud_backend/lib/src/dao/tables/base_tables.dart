@@ -9,6 +9,8 @@ abstract class TableConstants {
 
   final columnCreatedAt = 'created_at';
 
-  String get specColumnCreatedAt => '$columnCreatedAt $typeTimestamp NOT NULL '
+  String get typeTimestampNotNull => '$typeTimestamp NOT NULL';
+
+  String get specColumnCreatedAt => '$columnCreatedAt $typeTimestampNotNull '
       'DEFAULT CURRENT_TIMESTAMP';
 }

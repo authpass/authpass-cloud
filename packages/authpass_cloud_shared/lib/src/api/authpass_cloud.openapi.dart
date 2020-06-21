@@ -104,16 +104,14 @@ abstract class EmailConfirmPutResponse extends _i3.OpenApiResponse {
   }
 }
 
-abstract class AuthPassCloud implements _i3.Service {
+abstract class AuthPassCloud implements _i3.ApiEndpoint {
   /// Create new user
   /// post: /user/register
-  Future<UserRegisterPostResponse> userRegisterPost(
-      _i3.OpenApiRequest request, RegisterRequest body);
+  Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
 
   /// Confirm email address
   /// put: /email/confirm
-  Future<EmailConfirmPutResponse> emailConfirmPut(
-      _i3.OpenApiRequest request, String token);
+  Future<EmailConfirmPutResponse> emailConfirmPut(String token);
 }
 
 abstract class AuthPassCloudClient {
@@ -178,18 +176,17 @@ class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
 class AuthPassCloudRouter extends _i3.OpenApiServerRouterBase {
   AuthPassCloudRouter(this.impl);
 
-  final _i3.ServiceProvider<AuthPassCloud> impl;
+  final _i3.ApiEndpointProvider<AuthPassCloud> impl;
 
   void configure() {
     addRoute('/user/register', 'post', (_i3.OpenApiRequest request) async {
       return await impl.invoke((AuthPassCloud impl) async =>
           impl.userRegisterPost(
-              request, RegisterRequest.fromJson(await request.readJsonBody())));
+              RegisterRequest.fromJson(await request.readJsonBody())));
     });
     addRoute('/email/confirm', 'put', (_i3.OpenApiRequest request) async {
       return await impl.invoke((AuthPassCloud impl) async =>
-          impl.emailConfirmPut(
-              request, paramToString(request.queryParameter('token'))));
+          impl.emailConfirmPut(paramToString(request.queryParameter('token'))));
     });
   }
 }

@@ -6,10 +6,12 @@ import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
-class CryptoUtils {
+class CryptoService {
   final Random _random = Random.secure();
   final Uuid _uuid =
       Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
+
+  String createSecureUuid() => _uuid.v4();
 
   String createSecureToken({int length = 32}) {
     assert(length != null);

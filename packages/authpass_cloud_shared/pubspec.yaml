@@ -12,5 +12,4 @@ dev_dependencies:
     path: ../../deps/openapi_dart/packages/openapi_code_builder
   build_runner: ^1.10.0
   json_serializable: ^3.3.0
-
-
+  pedantic: ^1.9.0

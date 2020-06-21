@@ -1,6 +1,7 @@
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/migration_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
+import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
@@ -15,13 +16,12 @@ class DatabaseTransaction {
 
   Future<int> execute(
     String fmtString, {
-    Map<String, dynamic> substitutionValues,
+    Map<String, Object> values,
     int timeoutInSeconds,
   }) async {
     try {
       return await _conn.execute(fmtString,
-          substitutionValues: substitutionValues,
-          timeoutInSeconds: timeoutInSeconds);
+          substitutionValues: values, timeoutInSeconds: timeoutInSeconds);
     } catch (e, stackTrace) {
       _logger.warning(
           'Error while running statement $fmtString', e, stackTrace);
@@ -30,18 +30,47 @@ class DatabaseTransaction {
   }
 
   Future<PostgreSQLResult> query(String fmtString,
-      {Map<String, dynamic> substitutionValues,
+      {Map<String, Object> values,
       bool allowReuse,
       int timeoutInSeconds}) async {
     return _conn.query(fmtString,
-        substitutionValues: substitutionValues,
+        substitutionValues: values,
         allowReuse: allowReuse,
         timeoutInSeconds: timeoutInSeconds);
   }
 }
 
+class DatabaseConfig {
+  DatabaseConfig({
+    this.host = 'localhost',
+    this.port = 5432,
+    this.databaseName = 'authpass',
+    this.username = 'authpass',
+    this.password = 'blubb',
+  });
+  final String host;
+  final int port;
+  final String databaseName;
+  final String username;
+  final String password;
+
+  DatabaseConfig copyWith({String databaseName}) => DatabaseConfig(
+        host: host,
+        port: port,
+        databaseName: databaseName ?? this.databaseName,
+        username: username,
+        password: password,
+      );
+}
+
 class DatabaseAccess {
-  final tables = Tables();
+  DatabaseAccess({
+    @required CryptoService cryptoService,
+    @required this.config,
+  }) : tables = Tables(cryptoService: cryptoService);
+
+  final Tables tables;
+  final DatabaseConfig config;
 
   PostgreSQLConnection _conn;
 
@@ -49,10 +78,25 @@ class DatabaseAccess {
     if (_conn != null) {
       return _conn;
     }
-    final conn = PostgreSQLConnection('localhost', 5432, 'authpass',
-        username: 'authpass', password: 'blubb');
+    final conn = PostgreSQLConnection(
+      config.host,
+      config.port,
+      config.databaseName,
+      username: config.username,
+      password: config.password,
+    );
     await conn.open();
-    return conn;
+    return _conn = conn;
+  }
+
+  @visibleForTesting
+  Future<void> forTestCreateDatabase(String name) async {
+    await (await _connection()).execute('CREATE DATABASE $name');
+  }
+
+  @visibleForTesting
+  Future<void> forTestDropDatabase(String databaseName) async {
+    await (await _connection()).execute('DROP DATABASE $databaseName');
   }
 
   Future<void> dispose() async {
@@ -60,8 +104,7 @@ class DatabaseAccess {
     _conn = null;
   }
 
-  Future<T> run<T>(
-          Future<T> Function(DatabaseTransaction transaction) block) async =>
+  Future<T> run<T>(Future<T> Function(DatabaseTransaction db) block) async =>
       _transaction((conn) async {
         return await block(DatabaseTransaction(conn, tables));
       });
@@ -125,13 +168,16 @@ class DatabaseAccess {
   Future<void> clean() async {
     _logger.warning('Clearing database.');
     final tableNames = tables.allTables.expand((e) => e.tables);
-    final conn = await _connection();
-    await conn.transaction((connection) async {
-      for (final tableName in tableNames) {
-        final result =
-            await connection.execute('DROP TABLE IF EXISTS $tableName');
-        _logger.fine('Dropped $tableName ($result)');
-      }
+    await run((connection) async {
+      final tables = tableNames.join(', ');
+      final result = await connection.execute('DROP TABLE IF EXISTS $tables');
+      _logger.fine('Dropped $tables ($result)');
+
+//      for (final tableName in tableNames) {
+//        final result =
+//            await connection.execute('DROP TABLE IF EXISTS $tableName');
+//        _logger.fine('Dropped $tableName ($result)');
+//      }
     });
   }
 }
@@ -145,8 +191,11 @@ class DatabaseAccess {
 //}
 
 class Tables {
+  Tables({
+    @required CryptoService cryptoService,
+  }) : user = UserTable(cryptoService: cryptoService);
   final migration = MigrationTable();
-  final user = UserTable();
+  final UserTable user;
 
   List<TableBase> get allTables => [
         migration,
@@ -169,7 +218,7 @@ class Migrations {
       Migrations(
           id: 1,
           up: (conn) async {
-            conn.tables.user.createTables(conn);
+            await conn.tables.user.createTables(conn);
           }),
     ];
   }
