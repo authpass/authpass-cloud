@@ -173,6 +173,26 @@ class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
   }
 }
 
+class AuthPassCloudUrlResolve with _i3.OpenApiUrlEncodeMixin {
+  /// Create new user
+  /// post: /user/register
+  ///
+  _i3.OpenApiClientRequest userRegisterPost() {
+    final request = _i3.OpenApiClientRequest('post', '/user/register');
+    return request;
+  }
+
+  /// Confirm email address
+  /// put: /email/confirm
+  ///
+  /// * [token]: Unique token which was sent to email address.
+  _i3.OpenApiClientRequest emailConfirmPut({String token}) {
+    final request = _i3.OpenApiClientRequest('put', '/email/confirm');
+    request.addQueryParameter('token', encodeString(token));
+    return request;
+  }
+}
+
 class AuthPassCloudRouter extends _i3.OpenApiServerRouterBase {
   AuthPassCloudRouter(this.impl);
 
