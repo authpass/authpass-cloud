@@ -24,6 +24,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
       RegisterRequest body) async {
     final emailConfirm =
         await userRepository.createUserOrConfirmEmail(body.email);
+    final urlResolve = AuthPassCloudUrlResolve();
+    urlResolve.emailConfirmGet(token: '');
     await serviceProvider.emailService
         .sendEmailConfirmationToken(emailConfirm.email.emailAddress, '');
     _logger.fine('Creating new user. ${body.email}');
@@ -32,7 +34,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
-  Future<EmailConfirmPutResponse> emailConfirmPut(String token) async {
-    return EmailConfirmPutResponse.response200();
+  Future<EmailConfirmGetResponse> emailConfirmGet(String token) {
+    throw UnimplementedError();
   }
 }

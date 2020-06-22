@@ -24,11 +24,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegisterResponse'
   /email/confirm:
-    put:
+    get:
       summary: Confirm email address
       parameters:
         - name: token
           in: query
+          required: true
           description: Unique token which was sent to email address.
           schema:
             type: string
