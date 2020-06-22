@@ -22,7 +22,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
-    final user = await userRepository.createUserOrConfirmEmail(body.email);
+    final emailConfirm =
+        await userRepository.createUserOrConfirmEmail(body.email);
+    await serviceProvider.emailService
+        .sendEmailConfirmationToken(emailConfirm.email.emailAddress, '');
     _logger.fine('Creating new user. ${body.email}');
     return UserRegisterPostResponse.response200(
         RegisterResponse(userUuid: '123'));

@@ -5,26 +5,16 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:test/test.dart';
 
-DatabaseAccess _createDatabaseAccess(DatabaseConfig config) {
-  return DatabaseAccess(cryptoService: CryptoService(), config: config);
-}
+import '../test_utils.dart';
 
 void main() {
   PrintAppender.setupLogging();
-  final config = DatabaseConfig();
   DatabaseAccess db;
   setUp(() async {
-    final tmp = _createDatabaseAccess(config);
-    final testDb = 'authpass_test_${Random().nextInt(1000000)}';
-    await tmp.forTestCreateDatabase(testDb);
-    await tmp.dispose();
-    db = _createDatabaseAccess(config.copyWith(databaseName: testDb));
-    await db.prepareDatabase();
+    db = await TestUtils.setUpDatabase();
   });
   tearDown(() async {
-    await db.dispose();
-    await _createDatabaseAccess(config)
-        .forTestDropDatabase(db.config.databaseName);
+    await TestUtils.tearDown(db);
   });
   test('creating user', () async {
     await db.run((db) async {

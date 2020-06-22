@@ -60,8 +60,13 @@ class UserTable extends TableBase with TableConstants {
     ''');
   }
 
+  String _normalizeEmail(String email) {
+    return email.toLowerCase();
+  }
+
   Future<EmailEntity> findUserByEmail(
       DatabaseTransaction db, String email) async {
+    email = _normalizeEmail(email);
     final query = await db.query('''
       SELECT u.$columnId, e.$columnId FROM $_TABLE_USER u 
         INNER JOIN $_TABLE_EMAIL e ON u.$columnId = e.$_COLUMN_USER_ID
@@ -73,6 +78,7 @@ class UserTable extends TableBase with TableConstants {
     final row = query.first;
     return EmailEntity(
       id: row[1] as String,
+      emailAddress: email,
       user: UserEntity(id: row[0] as String),
     );
   }
@@ -89,6 +95,7 @@ class UserTable extends TableBase with TableConstants {
 
   Future<EmailConfirmEntity> insertUser(
       DatabaseTransaction db, String email) async {
+    email = _normalizeEmail(email);
     final userUuid = cryptoService.createSecureUuid();
     final emailUuid = cryptoService.createSecureUuid();
     final result = await db.execute(
@@ -111,6 +118,7 @@ class UserTable extends TableBase with TableConstants {
         db,
         EmailEntity(
           id: emailUuid,
+          emailAddress: email,
           user: UserEntity(id: userUuid),
         ));
   }
@@ -125,11 +133,14 @@ class UserEntity {
 }
 
 class EmailEntity {
-  EmailEntity({@required this.id, @required this.user})
+  EmailEntity(
+      {@required this.id, @required this.emailAddress, @required this.user})
       : assert(id != null),
+        assert(emailAddress != null),
         assert(user != null);
 
   final String id;
+  final String emailAddress;
   final UserEntity user;
 }
 
