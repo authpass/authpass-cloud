@@ -1,5 +1,6 @@
 abstract class TableBase {
   List<String> get tables;
+  List<String> get types => const [];
 }
 
 abstract class TableConstants {

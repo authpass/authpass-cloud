@@ -3,8 +3,14 @@ import 'dart:math';
 
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
+
+enum TokenType {
+  emailConfirm,
+  authToken,
+}
 
 class CryptoService {
   final Random _random = Random.secure();
@@ -13,7 +19,7 @@ class CryptoService {
 
   String createSecureUuid() => _uuid.v4();
 
-  String createSecureToken({int length = 32}) {
+  String createSecureToken({int length = 32, @required TokenType type}) {
     assert(length != null);
     final byteLength = length ~/ 4 * 3;
     final list = Uint8List(byteLength);

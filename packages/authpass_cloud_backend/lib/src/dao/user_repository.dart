@@ -15,6 +15,11 @@ class UserRepository {
     if (userEmail == null) {
       return await db.tables.user.insertUser(db, email);
     }
-    return await db.tables.user.insertEmailConfirmToken(db, userEmail);
+    final authToken = await db.tables.user.insertAuthToken(db, userEmail.user);
+    return await db.tables.user.insertEmailConfirmToken(
+      db,
+      userEmail,
+      authToken,
+    );
   }
 }

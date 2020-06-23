@@ -21,16 +21,30 @@ class RegisterRequest {
   Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
 }
 
+enum RegisterResponseStatus {
+  @_i1.JsonValue('created')
+  created,
+  @_i1.JsonValue('confirmed')
+  confirmed,
+}
+
 ///
 @_i1.JsonSerializable()
 class RegisterResponse {
-  RegisterResponse({@_i2.required this.userUuid});
+  RegisterResponse(
+      {@_i2.required this.userUuid, @_i2.required this.authToken, this.status});
 
   factory RegisterResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterResponseFromJson(jsonMap);
 
   /// Uuid of the newly registered user.
   final String userUuid;
+
+  /// Auth token which can be used for authentication, once email is confirmed.
+  final String authToken;
+
+  /// Status of the user and auth token (created or confirmed).
+  final RegisterResponseStatus status;
 
   Map<String, dynamic> toJson() => _$RegisterResponseToJson(this);
 }
@@ -105,7 +119,7 @@ abstract class EmailConfirmGetResponse extends _i3.OpenApiResponse {
 }
 
 abstract class AuthPassCloud implements _i3.ApiEndpoint {
-  /// Create new user
+  /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
 
@@ -119,7 +133,7 @@ abstract class AuthPassCloudClient {
           Uri baseUri, _i3.OpenApiRequestSender requestSender) =>
       _AuthPassCloudClientImpl._(baseUri, requestSender);
 
-  /// Create new user
+  /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
   Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
@@ -141,7 +155,7 @@ class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
   @override
   final _i3.OpenApiRequestSender requestSender;
 
-  /// Create new user
+  /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
   @override
@@ -175,7 +189,7 @@ class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
 }
 
 class AuthPassCloudUrlResolve with _i3.OpenApiUrlEncodeMixin {
-  /// Create new user
+  /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
   _i3.OpenApiClientRequest userRegisterPost() {

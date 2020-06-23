@@ -168,10 +168,14 @@ class DatabaseAccess {
   Future<void> clean() async {
     _logger.warning('Clearing database.');
     final tableNames = tables.allTables.expand((e) => e.tables);
+    final typeNames = tables.allTables.expand((e) => e.types);
     await run((connection) async {
       final tables = tableNames.join(', ');
       final result = await connection.execute('DROP TABLE IF EXISTS $tables');
       _logger.fine('Dropped $tables ($result)');
+      if (typeNames.isNotEmpty) {
+        await connection.execute('DROP TYPE IF EXISTS ${typeNames.join(', ')}');
+      }
 
 //      for (final tableName in tableNames) {
 //        final result =

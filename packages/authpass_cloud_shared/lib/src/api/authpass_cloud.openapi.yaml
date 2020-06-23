@@ -9,7 +9,7 @@ servers:
 paths:
   /user/register:
     post:
-      summary: Create new user
+      summary: Create new user, or login the user using confirmation email.
       requestBody:
         required: true
         content:
@@ -52,5 +52,15 @@ components:
         userUuid:
           type: string
           description: 'Uuid of the newly registered user.'
+        authToken:
+          type: string
+          description: 'Auth token which can be used for authentication, once email is confirmed.'
+        status:
+          type: string
+          description: 'Status of the user and auth token (created or confirmed).'
+          enum:
+            - created
+            - confirmed
       required:
         - userUuid
+        - authToken
