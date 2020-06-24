@@ -46,7 +46,7 @@ abstract class Env {
 
 class DevEnv extends Env {
   @override
-  bool get debug => throw UnimplementedError();
+  bool get debug => true;
 
   @override
   String get help => 'Development environment';

@@ -2,6 +2,7 @@ import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/migration_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
@@ -123,7 +124,7 @@ class DatabaseAccess {
 
   Future<void> prepareDatabase() async {
     _logger.finest('Initializing database.');
-    await clean();
+//    await clean();
     final lastMigration = await run((connection) async {
       try {
         await tables.migration.createTable(connection);
@@ -134,12 +135,15 @@ class DatabaseAccess {
       }
     });
     _logger.fine('Last migration: $lastMigration');
+    final migrationRun = clock.now();
     await run((conn) async {
       final migrations = Migrations.migrations();
       for (final migration in migrations) {
         if (migration.id > lastMigration) {
           _logger.fine('Running migration ${migration.id}');
           await migration.up(conn);
+          await tables.migration
+              .insertMigrationRun(conn, migrationRun, migration.id);
         }
       }
     });

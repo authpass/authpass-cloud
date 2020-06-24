@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:test/test.dart';
 

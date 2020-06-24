@@ -1,8 +1,6 @@
-import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
-import 'package:authpass_cloud_backend/src/service/config.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
@@ -33,8 +31,7 @@ class Server {
     await db.prepareDatabase();
 
     final server = OpenApiShelfServer(
-        AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider))
-          ..configure());
+        AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
     server.startServer();
   }
 }

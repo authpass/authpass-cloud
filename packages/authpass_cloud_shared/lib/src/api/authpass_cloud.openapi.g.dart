@@ -69,3 +69,16 @@ const _$RegisterResponseStatusEnumMap = {
   RegisterResponseStatus.created: 'created',
   RegisterResponseStatus.confirmed: 'confirmed',
 };
+
+EmailConfirmSchema _$EmailConfirmSchemaFromJson(Map<String, dynamic> json) {
+  return EmailConfirmSchema(
+    token: json['token'] as String,
+    gRecaptchaResponse: json['g-recaptcha-response'] as String,
+  );
+}
+
+Map<String, dynamic> _$EmailConfirmSchemaToJson(EmailConfirmSchema instance) =>
+    <String, dynamic>{
+      'token': instance.token,
+      'g-recaptcha-response': instance.gRecaptchaResponse,
+    };

@@ -10,9 +10,9 @@ Future<void> main() async {
   PrintAppender.setupLogging();
   _logger.fine('Starting Client ...');
   final requestSender = HttpRequestSender();
-  final client = AuthPassCloudClient(
-      Uri.parse('https://virtserver.swaggerhub.com/hpoul/Testapi/1.0.0'),
-      requestSender);
+//  const baseUri = 'https://virtserver.swaggerhub.com/hpoul/Testapi/1.0.0';
+  const baseUri = 'http://localhost:8080';
+  final client = AuthPassCloudClient(Uri.parse(baseUri), requestSender);
   final blubb =
       await client.userRegisterPost(RegisterRequest(email: 'a@b.com'));
   blubb.map(

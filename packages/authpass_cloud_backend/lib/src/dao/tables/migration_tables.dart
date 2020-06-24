@@ -2,6 +2,7 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 
 import 'package:logging/logging.dart';
+import 'package:quiver/check.dart';
 
 final _logger = Logger('migration_tables');
 
@@ -36,5 +37,14 @@ class MigrationTable extends TableBase with TableConstants {
     final maxVersion = result.first[0] as int;
     _logger.finer('Migration version: $maxVersion');
     return maxVersion ?? 0;
+  }
+
+  Future<void> insertMigrationRun(
+      DatabaseTransaction db, DateTime appliedAt, int version) async {
+    final result = await db.execute(
+        '''INSERT INTO $_TABLE_MIGRATE ($_TABLE_MIGRATE_APPLIED_AT, $_TABLE_MIGRATE_VERSION)
+      values (@appliedAt, @version)''',
+        values: {'appliedAt': appliedAt, 'version': version});
+    checkState(result == 1);
   }
 }

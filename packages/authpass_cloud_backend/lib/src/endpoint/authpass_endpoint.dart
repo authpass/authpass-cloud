@@ -1,5 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
+import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
@@ -43,13 +44,19 @@ class AuthPassCloudImpl extends AuthPassCloud {
     if (!await userRepository.isValidEmailConfirmToken(token)) {
       return EmailConfirmGetResponse.response400();
     }
-    // TODO we should probably let the user confirm using a button
-    return EmailConfirmGetResponse.response200('lorem ipsum');
+    return EmailConfirmGetResponse.response200(
+        emailConfirmationPage(serviceProvider.env));
 //    throw UnimplementedError();
   }
 
   @override
-  Future<EmailConfirmPostResponse> emailConfirmPost() {
-    throw UnimplementedError();
+  Future<EmailConfirmPostResponse> emailConfirmPost(
+      EmailConfirmSchema body) async {
+    final success =
+        await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
+    if (success) {
+      return EmailConfirmPostResponse.response200('Success.');
+    }
+    return EmailConfirmPostResponse.response400();
   }
 }

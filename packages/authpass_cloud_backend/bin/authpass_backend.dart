@@ -1,15 +1,8 @@
 import 'package:args/args.dart';
-import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/env/prod.dart';
-import 'package:authpass_cloud_backend/src/server.dart';
-import 'package:authpass_cloud_backend/src/service/service_provider.dart';
-import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
-import 'package:logging_appenders/logging_appenders.dart';
-
 import 'package:logging/logging.dart';
-import 'package:openapi_base/openapi_base.dart';
+import 'package:logging_appenders/logging_appenders.dart';
 
 final _logger = Logger('server');
 
@@ -17,6 +10,7 @@ const ARG_ENV = 'env';
 
 Future<void> main(List<String> args) async {
   PrintAppender.setupLogging();
+  _logger.finer('Starting…');
 
   final environments = {
     'prod': ProdEnv(),
