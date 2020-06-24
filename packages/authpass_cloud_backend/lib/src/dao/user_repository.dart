@@ -22,4 +22,7 @@ class UserRepository {
       authToken,
     );
   }
+
+  Future<bool> isValidEmailConfirmToken(String token) =>
+      db.tables.user.isValidEmailToken(db, token);
 }

@@ -13,3 +13,9 @@ dev_dependencies:
   build_runner: ^1.10.0
   json_serializable: ^3.3.0
   pedantic: ^1.9.0
+
+dependency_overrides:
+  open_api:
+    path: ../../deps/openapi_dart/deps/open-api-dart
+  openapi_base:
+    path: ../../deps/openapi_dart/packages/openapi_base

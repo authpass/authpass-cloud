@@ -19,6 +19,8 @@ class RegisterRequest {
   final String email;
 
   Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
+  @override
+  String toString() => toJson().toString();
 }
 
 enum RegisterResponseStatus {
@@ -28,11 +30,22 @@ enum RegisterResponseStatus {
   confirmed,
 }
 
+extension RegisterResponseStatusExt on RegisterResponseStatus {
+  static final Map<String, RegisterResponseStatus> _names = {
+    'created': RegisterResponseStatus.created,
+    'confirmed': RegisterResponseStatus.confirmed
+  };
+  static RegisterResponseStatus fromName(String name) => _names[name];
+  String get name => toString().substring(23);
+}
+
 ///
 @_i1.JsonSerializable()
 class RegisterResponse {
   RegisterResponse(
-      {@_i2.required this.userUuid, @_i2.required this.authToken, this.status});
+      {@_i2.required this.userUuid,
+      @_i2.required this.authToken,
+      @_i2.required this.status});
 
   factory RegisterResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterResponseFromJson(jsonMap);
@@ -47,6 +60,8 @@ class RegisterResponse {
   final RegisterResponseStatus status;
 
   Map<String, dynamic> toJson() => _$RegisterResponseToJson(this);
+  @override
+  String toString() => toJson().toString();
 }
 
 class _UserRegisterPostResponse200 extends UserRegisterPostResponse {
@@ -59,6 +74,13 @@ class _UserRegisterPostResponse200 extends UserRegisterPostResponse {
   final int status;
 
   final RegisterResponse body;
+
+  @override
+  final String contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'body': body, 'contentType': contentType};
 }
 
 abstract class UserRegisterPostResponse extends _i3.OpenApiResponse {
@@ -80,10 +102,19 @@ abstract class UserRegisterPostResponse extends _i3.OpenApiResponse {
 
 class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse {
   /// OK
-  _EmailConfirmGetResponse200.response200() : status = 200;
+  _EmailConfirmGetResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
+
+  final String body;
+
+  @override
+  final String contentType = 'text/html';
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'body': body, 'contentType': contentType};
 }
 
 class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse {
@@ -92,14 +123,21 @@ class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse {
 
   @override
   final int status;
+
+  @override
+  final String contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
 }
 
 abstract class EmailConfirmGetResponse extends _i3.OpenApiResponse {
   EmailConfirmGetResponse();
 
   /// OK
-  factory EmailConfirmGetResponse.response200() =>
-      _EmailConfirmGetResponse200.response200();
+  factory EmailConfirmGetResponse.response200(String body) =>
+      _EmailConfirmGetResponse200.response200(body);
 
   /// Invalid token or email address.
   factory EmailConfirmGetResponse.response400() =>
@@ -118,6 +156,62 @@ abstract class EmailConfirmGetResponse extends _i3.OpenApiResponse {
   }
 }
 
+class _EmailConfirmPostResponse200 extends EmailConfirmPostResponse {
+  /// OK
+  _EmailConfirmPostResponse200.response200(this.body) : status = 200;
+
+  @override
+  final int status;
+
+  final String body;
+
+  @override
+  final String contentType = 'text/html';
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'body': body, 'contentType': contentType};
+}
+
+class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
+  /// Invalid token or email address.
+  _EmailConfirmPostResponse400.response400() : status = 400;
+
+  @override
+  final int status;
+
+  @override
+  final String contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class EmailConfirmPostResponse extends _i3.OpenApiResponse {
+  EmailConfirmPostResponse();
+
+  /// OK
+  factory EmailConfirmPostResponse.response200(String body) =>
+      _EmailConfirmPostResponse200.response200(body);
+
+  /// Invalid token or email address.
+  factory EmailConfirmPostResponse.response400() =>
+      _EmailConfirmPostResponse400.response400();
+
+  void map(
+      {@_i2.required _i3.ResponseMap<_EmailConfirmPostResponse200> on200,
+      @_i2.required _i3.ResponseMap<_EmailConfirmPostResponse400> on400}) {
+    if (this is _EmailConfirmPostResponse200) {
+      on200((this as _EmailConfirmPostResponse200));
+    } else if (this is _EmailConfirmPostResponse400) {
+      on400((this as _EmailConfirmPostResponse400));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+}
+
 abstract class AuthPassCloud implements _i3.ApiEndpoint {
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
@@ -125,7 +219,11 @@ abstract class AuthPassCloud implements _i3.ApiEndpoint {
 
   /// Confirm email address
   /// get: /email/confirm
-  Future<EmailConfirmGetResponse> emailConfirmGet(@_i2.required String token);
+  Future<EmailConfirmGetResponse> emailConfirmGet({@_i2.required String token});
+
+  /// Confirm with recaptcha
+  /// post: /email/confirm
+  Future<EmailConfirmPostResponse> emailConfirmPost();
 }
 
 abstract class AuthPassCloudClient {
@@ -143,6 +241,11 @@ abstract class AuthPassCloudClient {
   ///
   /// * [token]: Unique token which was sent to email address.
   Future<EmailConfirmGetResponse> emailConfirmGet({@_i2.required String token});
+
+  /// Confirm with recaptcha
+  /// post: /email/confirm
+  ///
+  Future<EmailConfirmPostResponse> emailConfirmPost();
 }
 
 class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
@@ -181,9 +284,25 @@ class _AuthPassCloudClientImpl extends _i3.OpenApiClientBase
     request.addQueryParameter('token', encodeString(token));
     return await sendRequest(request, {
       '200': (_i3.OpenApiClientResponse response) async =>
-          _EmailConfirmGetResponse200.response200(),
+          _EmailConfirmGetResponse200.response200(
+              await response.responseBodyString()),
       '400': (_i3.OpenApiClientResponse response) async =>
           _EmailConfirmGetResponse400.response400()
+    });
+  }
+
+  /// Confirm with recaptcha
+  /// post: /email/confirm
+  ///
+  @override
+  Future<EmailConfirmPostResponse> emailConfirmPost() async {
+    final request = _i3.OpenApiClientRequest('post', '/email/confirm');
+    return await sendRequest(request, {
+      '200': (_i3.OpenApiClientResponse response) async =>
+          _EmailConfirmPostResponse200.response200(
+              await response.responseBodyString()),
+      '400': (_i3.OpenApiClientResponse response) async =>
+          _EmailConfirmPostResponse400.response400()
     });
   }
 }
@@ -206,6 +325,14 @@ class AuthPassCloudUrlResolve with _i3.OpenApiUrlEncodeMixin {
     request.addQueryParameter('token', encodeString(token));
     return request;
   }
+
+  /// Confirm with recaptcha
+  /// post: /email/confirm
+  ///
+  _i3.OpenApiClientRequest emailConfirmPost() {
+    final request = _i3.OpenApiClientRequest('post', '/email/confirm');
+    return request;
+  }
 }
 
 class AuthPassCloudRouter extends _i3.OpenApiServerRouterBase {
@@ -213,15 +340,41 @@ class AuthPassCloudRouter extends _i3.OpenApiServerRouterBase {
 
   final _i3.ApiEndpointProvider<AuthPassCloud> impl;
 
+  @override
   void configure() {
     addRoute('/user/register', 'post', (_i3.OpenApiRequest request) async {
       return await impl.invoke((AuthPassCloud impl) async =>
           impl.userRegisterPost(
               RegisterRequest.fromJson(await request.readJsonBody())));
-    });
+    }, security: [
+      _i3.SecurityRequirement(schemes: [
+        _i3.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/email/confirm', 'get', (_i3.OpenApiRequest request) async {
       return await impl.invoke((AuthPassCloud impl) async =>
-          impl.emailConfirmGet(paramToString(request.queryParameter('token'))));
-    });
+          impl.emailConfirmGet(
+              token: paramToString(request.queryParameter('token'))));
+    }, security: [
+      _i3.SecurityRequirement(schemes: [
+        _i3.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/email/confirm', 'post', (_i3.OpenApiRequest request) async {
+      return await impl
+          .invoke((AuthPassCloud impl) async => impl.emailConfirmPost());
+    }, security: [
+      _i3.SecurityRequirement(schemes: [
+        _i3.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
   }
+}
+
+class SecuritySchemes {
+  static final authToken =
+      _i3.SecuritySchemeHttp(scheme: _i3.SecuritySchemeHttpScheme.bearer);
 }

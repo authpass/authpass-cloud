@@ -2,6 +2,7 @@ import 'package:args/args.dart';
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
+import 'package:authpass_cloud_backend/src/env/prod.dart';
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
@@ -31,7 +32,7 @@ Future<void> main(List<String> args) async {
   final result = parser.parse(args);
   final env = environments[result[ARG_ENV]];
 
-  await Server(env: env).run();
+  await env.run();
 
 //  final server = Server([AuthPassCloudService()]);
 //  await server.serve(port: 50051);

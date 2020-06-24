@@ -25,16 +25,31 @@ class AuthPassCloudImpl extends AuthPassCloud {
     final emailConfirm =
         await userRepository.createUserOrConfirmEmail(body.email);
     final urlResolve = AuthPassCloudUrlResolve();
-    urlResolve.emailConfirmGet(token: '');
-    await serviceProvider.emailService
-        .sendEmailConfirmationToken(emailConfirm.email.emailAddress, '');
+    final url = urlResolve
+        .emailConfirmGet(token: emailConfirm.token)
+        .resolveUri(serviceProvider.env.baseUri);
+    await serviceProvider.emailService.sendEmailConfirmationToken(
+        emailConfirm.email.emailAddress, url.toString());
     _logger.fine('Creating new user. ${body.email}');
-    return UserRegisterPostResponse.response200(
-        RegisterResponse(userUuid: '123'));
+    return UserRegisterPostResponse.response200(RegisterResponse(
+      userUuid: emailConfirm.email.user.id,
+      authToken: emailConfirm.authToken.token,
+      status: RegisterResponseStatus.created,
+    ));
   }
 
   @override
-  Future<EmailConfirmGetResponse> emailConfirmGet(String token) {
+  Future<EmailConfirmGetResponse> emailConfirmGet({String token}) async {
+    if (!await userRepository.isValidEmailConfirmToken(token)) {
+      return EmailConfirmGetResponse.response400();
+    }
+    // TODO we should probably let the user confirm using a button
+    return EmailConfirmGetResponse.response200('lorem ipsum');
+//    throw UnimplementedError();
+  }
+
+  @override
+  Future<EmailConfirmPostResponse> emailConfirmPost() {
     throw UnimplementedError();
   }
 }

@@ -296,11 +296,11 @@ packages:
     source: hosted
     version: "1.1.1"
   open_api:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: open_api
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../../deps/openapi_dart/deps/open-api-dart"
+      relative: true
+    source: path
     version: "2.0.1"
   openapi_base:
     dependency: "direct main"
@@ -308,14 +308,14 @@ packages:
       path: "../../deps/openapi_dart/packages/openapi_base"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.1.0"
   openapi_code_builder:
     dependency: "direct dev"
     description:
       path: "../../deps/openapi_dart/packages/openapi_code_builder"
       relative: true
     source: path
-    version: "0.0.0"
+    version: "0.1.0"
   package_config:
     dependency: transitive
     description:

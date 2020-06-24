@@ -78,6 +78,7 @@ class UserTable extends TableBase with TableConstants {
       $_COLUMN_EMAIL_ID uuid not null references $_TABLE_EMAIL ($columnId),
       $_COLUMN_TOKEN varchar not null unique,
       $_COLUMN_AUTH_TOKEN_ID uuid references $_TABLE_AUTH_TOKEN ($columnId),
+      $_COLUMN_CONFIRMED_AT $typeTimestamp default null,
       $specColumnCreatedAt
     );
     ''');
@@ -143,6 +144,21 @@ class UserTable extends TableBase with TableConstants {
       token: emailToken,
       authToken: authToken,
     );
+  }
+
+  Future<bool> isValidEmailToken(DatabaseTransaction db, String token) async {
+    final result = await db.query(
+        '''SELECT $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL_CONFIRM WHERE token = @token''',
+        values: {'token': token});
+    if (result.isEmpty) {
+      return false;
+    }
+    final tokenResult = result.single;
+    if (tokenResult[0] != null) {
+      _logger.fine('Token validated which was already confirmed.');
+      return false;
+    }
+    return true;
   }
 
   Future<EmailConfirmEntity> insertUser(

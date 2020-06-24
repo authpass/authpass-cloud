@@ -36,6 +36,36 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Invalid token or email address.
+    post:
+      summary: Confirm with recaptcha
+      requestBody:
+        required: true
+        description: ''
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                g-recaptcha-response:
+                  type: string
+              required:
+                - token
+                - g-recaptcha-response
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
         '400':
           description: Invalid token or email address.
 components:
@@ -64,3 +94,10 @@ components:
       required:
         - userUuid
         - authToken
+        - status
+  securitySchemes:
+    auth_token:
+      type: http
+      scheme: bearer
+security:
+  - auth_token: []
