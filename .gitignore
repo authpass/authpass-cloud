@@ -1,3 +1,6 @@
 .dart_tool
 .packages
 
+/.blackbox/pubring.gpg~
+/.blackbox/pubring.kbx~
+/.blackbox/secring.gpg
