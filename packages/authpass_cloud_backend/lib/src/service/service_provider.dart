@@ -10,10 +10,11 @@ class ServiceProvider {
     @required this.env,
     @required this.cryptoService,
     @required this.emailService,
+    RecaptchaService recaptchaService,
   })  : assert(env != null),
         assert(cryptoService != null),
         assert(emailService != null),
-        recaptchaService =
+        recaptchaService = recaptchaService ??
             RecaptchaService(secret: env.secrets.recaptchaSecretKey);
 
   final Env env;

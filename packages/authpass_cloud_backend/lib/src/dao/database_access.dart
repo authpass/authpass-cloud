@@ -19,10 +19,17 @@ class DatabaseTransaction {
     String fmtString, {
     Map<String, Object> values,
     int timeoutInSeconds,
+    int expectedResultCount,
   }) async {
     try {
-      return await _conn.execute(fmtString,
+      final result = await _conn.execute(fmtString,
           substitutionValues: values, timeoutInSeconds: timeoutInSeconds);
+      if (expectedResultCount != null && result != expectedResultCount) {
+        throw StateError(
+            'Expected result: $expectedResultCount but got $result. '
+            'for query: $fmtString');
+      }
+      return result;
     } catch (e, stackTrace) {
       _logger.warning(
           'Error while running statement $fmtString', e, stackTrace);

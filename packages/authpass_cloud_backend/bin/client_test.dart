@@ -13,11 +13,23 @@ Future<void> main() async {
 //  const baseUri = 'https://virtserver.swaggerhub.com/hpoul/Testapi/1.0.0';
   const baseUri = 'http://localhost:8080';
   final client = AuthPassCloudClient(Uri.parse(baseUri), requestSender);
-  final blubb =
-      await client.userRegisterPost(RegisterRequest(email: 'a@b.com'));
-  blubb.map(
-    on200: (response) => _logger.info('Success! ${response.body.userUuid}'),
-  );
-  _logger.info('Response: $blubb');
+  final registerResponse =
+      (await client.userRegisterPost(RegisterRequest(email: 'a@b.com')))
+          .requireSuccess();
+  _logger.info('Success! ${registerResponse.userUuid}');
+  final authToken = registerResponse.authToken;
+  client.setAuth(SecuritySchemes.authToken,
+      SecuritySchemeHttpData(bearerToken: authToken));
+
+  while (true) {
+    await Future<int>.delayed(const Duration(seconds: 5));
+    final status = (await client.emailStatusGet()).requireSuccess();
+    _logger.info('Status: $status');
+    if (status.status == EmailStatusGetResponseBody200Status.confirmed) {
+      _logger.info('Confirmed 🎉️');
+      break;
+    }
+  }
+//  _logger.info('Response: $blubb');
   requestSender.dispose();
 }

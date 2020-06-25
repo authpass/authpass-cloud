@@ -23,6 +23,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegisterResponse'
+  /email/status:
+    get:
+      summary: Get the status of the current auth token (whether it was confirmed or not).
+      responses:
+        '200':
+          description: 'Whether it was confirmed or not.'
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - created
+                      - confirmed
   /email/confirm:
     get:
       summary: Confirm email address

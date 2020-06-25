@@ -1,6 +1,6 @@
 import 'package:authpass_cloud_backend/src/env/env.dart';
 
-String emailConfirmationPage(Env env) {
+String emailConfirmationPage(Env env, String token) {
   // language=html
   return '''<!DOCTYPE html>
 <head>
@@ -26,6 +26,7 @@ background-color: white;
   <div class="modal-content">
   <div class="box content">
     <form action="?" method="POST">
+      <input type="hidden" name="token" value="$token" />
       <h2>Confirm your email address</h2>
       <p>Click the checkbox to confirm your email address.</p>
       <div class="g-recaptcha" data-sitekey="${env.secrets.recaptchaSiteKey}" data-callback="onReturnCallback"></div>

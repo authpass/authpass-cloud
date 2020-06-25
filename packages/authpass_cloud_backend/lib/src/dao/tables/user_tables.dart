@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:meta/meta.dart';
 
 import 'package:logging/logging.dart';
+import 'package:postgres/postgres.dart';
 
 final _logger = Logger('user_tables');
 
@@ -16,6 +19,9 @@ enum AuthTokenStatus {
 extension on AuthTokenStatus {
   String get name => toString().split('.')[1];
 }
+
+AuthTokenStatus authTokenStatusFromName(String name) =>
+    AuthTokenStatus.values.firstWhere((element) => element.name == name);
 
 class UserTable extends TableBase with TableConstants {
   UserTable({@required this.cryptoService}) : assert(cryptoService != null);
@@ -123,7 +129,8 @@ class UserTable extends TableBase with TableConstants {
       'token': authToken,
       'status': AuthTokenStatus.created.name,
     });
-    return AuthTokenEntity(id: tokenUuid, token: authToken);
+    return AuthTokenEntity(
+        id: tokenUuid, token: authToken, status: AuthTokenStatus.created);
   }
 
   Future<EmailConfirmEntity> insertEmailConfirmToken(DatabaseTransaction db,
@@ -143,6 +150,7 @@ class UserTable extends TableBase with TableConstants {
       email: email,
       token: emailToken,
       authToken: authToken,
+      confirmedAt: null,
     );
   }
 
@@ -159,6 +167,55 @@ class UserTable extends TableBase with TableConstants {
       return false;
     }
     return true;
+  }
+
+  Future<AuthTokenEntity> findAuthToken(DatabaseTransaction db,
+      {String authToken, String tokenId}) async {
+    assert(authToken != null || tokenId != null);
+    final where =
+        authToken != null ? ' $_COLUMN_TOKEN = @token ' : '$columnId = @id ';
+    return db.query(
+        '''select $columnId, $_COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS FROM $_TABLE_AUTH_TOKEN WHERE $where''',
+        values: authToken != null
+            ? {'token': authToken}
+            : {'id': tokenId}).singleOrNull((row) {
+      return AuthTokenEntity(
+          id: row[0] as String,
+          token: row[2] as String,
+          status: authTokenStatusFromName(row[3] as String));
+    });
+  }
+
+  Future<EmailConfirmEntity> findEmailConfirmToken(
+      DatabaseTransaction db, String token) async {
+    return await db.query('''SELECT $_COLUMN_EMAIL_ID,
+     $_COLUMN_TOKEN, $_COLUMN_AUTH_TOKEN_ID, $_COLUMN_CONFIRMED_AT 
+     FROM $_TABLE_EMAIL_CONFIRM WHERE $_COLUMN_TOKEN = @token ''',
+        values: {'token': token}).singleOrNull((row) async {
+      final email = await findEmailById(db, row[0] as String);
+      final authToken = row[2] == null
+          ? null
+          : await findAuthToken(db, tokenId: row[2] as String);
+      return EmailConfirmEntity(
+        email: email,
+        token: row[1] as String,
+        authToken: authToken,
+        confirmedAt: row[3] as DateTime,
+      );
+    });
+  }
+
+  Future<EmailEntity> findEmailById(
+      DatabaseTransaction db, String emailId) async {
+    return db.query('''SELECT $_COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS, 
+    $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL WHERE $columnId = @id''',
+        values: {'id': emailId}).singleOrNull((row) {
+      return EmailEntity(
+        id: emailId,
+        emailAddress: row[1] as String,
+        user: UserEntity(id: row[0] as String),
+      );
+    });
   }
 
   Future<EmailConfirmEntity> insertUser(
@@ -194,14 +251,51 @@ class UserTable extends TableBase with TableConstants {
       authToken,
     );
   }
+
+  Future<void> updateAuthToken(DatabaseTransaction db, String id,
+      {AuthTokenStatus status}) async {
+    await db.execute(
+      '''UPDATE $_TABLE_AUTH_TOKEN SET $_COLUMN_STATUS = @status WHERE $columnId = @id''',
+      values: {'status': status.name, 'id': id},
+      expectedResultCount: 1,
+    );
+  }
+
+  Future<void> updateEmailConfirmToken(DatabaseTransaction db, String token,
+      {DateTime confirmedAt}) async {
+    await db.execute(
+      '''UPDATE $_TABLE_EMAIL_CONFIRM SET $_COLUMN_CONFIRMED_AT = @confirmedAt WHERE token = @token''',
+      values: {'confirmedAt': confirmedAt, 'token': token},
+      expectedResultCount: 1,
+    );
+  }
+}
+
+extension on Future<PostgreSQLResult> {
+  Future<T> singleOrNull<T>(FutureOr<T> Function(PostgreSQLResultRow row) cb) =>
+      then((value) => value.singleOrNull(cb));
+}
+
+extension on PostgreSQLResult {
+  T singleOrNull<T>(T Function(PostgreSQLResultRow row) cb) {
+    if (isEmpty) {
+      return null;
+    }
+    return cb(single);
+  }
 }
 
 class AuthTokenEntity {
-  AuthTokenEntity({@required this.id, @required this.token})
-      : assert(id != null),
-        assert(token != null);
+  AuthTokenEntity({
+    @required this.id,
+    @required this.token,
+    @required this.status,
+  })  : assert(id != null),
+        assert(token != null),
+        assert(status != null);
   final String id;
   final String token;
+  final AuthTokenStatus status;
 }
 
 class UserEntity {
@@ -229,10 +323,12 @@ class EmailConfirmEntity {
     @required this.email,
     @required this.token,
     @required this.authToken,
+    @required this.confirmedAt,
   })  : assert(email != null),
         assert(token != null);
 
   final EmailEntity email;
   final String token;
   final AuthTokenEntity authToken;
+  final DateTime confirmedAt;
 }

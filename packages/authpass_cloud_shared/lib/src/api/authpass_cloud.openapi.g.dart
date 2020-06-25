@@ -70,6 +70,25 @@ const _$RegisterResponseStatusEnumMap = {
   RegisterResponseStatus.confirmed: 'confirmed',
 };
 
+EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
+    Map<String, dynamic> json) {
+  return EmailStatusGetResponseBody200(
+    status: _$enumDecodeNullable(
+        _$EmailStatusGetResponseBody200StatusEnumMap, json['status']),
+  );
+}
+
+Map<String, dynamic> _$EmailStatusGetResponseBody200ToJson(
+        EmailStatusGetResponseBody200 instance) =>
+    <String, dynamic>{
+      'status': _$EmailStatusGetResponseBody200StatusEnumMap[instance.status],
+    };
+
+const _$EmailStatusGetResponseBody200StatusEnumMap = {
+  EmailStatusGetResponseBody200Status.created: 'created',
+  EmailStatusGetResponseBody200Status.confirmed: 'confirmed',
+};
+
 EmailConfirmSchema _$EmailConfirmSchemaFromJson(Map<String, dynamic> json) {
   return EmailConfirmSchema(
     token: json['token'] as String,

@@ -42,12 +42,13 @@ class AuthPassEndpointProvider extends ApiEndpointProvider<AuthPassCloudImpl> {
   final ServiceProvider serviceProvider;
 
   @override
-  Future<U> invoke<U>(callback) async {
+  Future<U> invoke<U>(request, callback) async {
     final db = serviceProvider.createDatabaseAccess();
     try {
       return await db.run((conn) async {
         return await callback(AuthPassCloudImpl(
           serviceProvider,
+          request,
           conn,
           UserRepository(conn),
         ));

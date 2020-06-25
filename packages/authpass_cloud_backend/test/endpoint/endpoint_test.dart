@@ -3,12 +3,14 @@ import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
+import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
+import 'package:openapi_base/openapi_base.dart';
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
@@ -19,7 +21,11 @@ final _logger = Logger('endpoint_test');
 //
 //}
 
+class MockOpenApiRequest extends Mock implements OpenApiRequest {}
+
 class MockEmailService extends Mock implements EmailService {}
+
+class MockRecaptchaService extends Mock implements RecaptchaService {}
 
 @isTest
 void endpointTest(String description,
@@ -29,12 +35,16 @@ void endpointTest(String description,
     try {
       await db.run((db) async {
         final endpoint = AuthPassCloudImpl(
-            ServiceProvider(
-                env: DevEnv(),
-                cryptoService: CryptoService(),
-                emailService: MockEmailService()),
-            db,
-            UserRepository(db));
+          ServiceProvider(
+            env: DevEnv(),
+            cryptoService: CryptoService(),
+            emailService: MockEmailService(),
+            recaptchaService: MockRecaptchaService(),
+          ),
+          MockOpenApiRequest(),
+          db,
+          UserRepository(db),
+        );
         await body(endpoint);
       });
     } finally {
@@ -49,11 +59,33 @@ void main() {
 
   endpointTest('creating user', (endpoint) async {
     final emailService = endpoint.serviceProvider.emailService;
-    await endpoint.userRegisterPost(RegisterRequest(email: 'a@b.com'));
+    final registerResponse =
+        await endpoint.userRegisterPost(RegisterRequest(email: 'a@b.com'));
     final captured =
-        verify(emailService.sendEmailConfirmationToken(captureAny, any))
+        verify(emailService.sendEmailConfirmationToken(captureAny, captureAny))
             .captured;
-    expect(captured, ['a@b.com']);
+    expect(captured, ['a@b.com', matches('^http.+')]);
+    final emailToken =
+        Uri.parse(captured[1] as String).queryParameters['token'];
     verifyNoMoreInteractions(emailService);
+
+    when(endpoint.request.headerParameter('Authorization'))
+        .thenReturn(['Bearer ${registerResponse.requireSuccess().authToken}']);
+
+    {
+      final status = (await endpoint.emailStatusGet()).requireSuccess();
+      expect(status.status, EmailStatusGetResponseBody200Status.created);
+    }
+
+    when(endpoint.serviceProvider.recaptchaService.verify(any, any))
+        .thenAnswer((realInvocation) async => true);
+
+    await endpoint.emailConfirmPost(
+        EmailConfirmSchema(token: emailToken, gRecaptchaResponse: ''));
+
+    {
+      final status = (await endpoint.emailStatusGet()).requireSuccess();
+      expect(status.status, EmailStatusGetResponseBody200Status.confirmed);
+    }
   });
 }

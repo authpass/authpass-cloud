@@ -1,15 +1,18 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
+import 'package:openapi_base/openapi_base.dart';
 
 final _logger = Logger('authpass_service');
 
 class AuthPassCloudImpl extends AuthPassCloud {
   AuthPassCloudImpl(
     this.serviceProvider,
+    this.request,
     this.db,
     this.userRepository,
   )   : assert(serviceProvider != null),
@@ -17,6 +20,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
         assert(userRepository != null);
 
   final ServiceProvider serviceProvider;
+  final OpenApiRequest request;
   final DatabaseTransaction db;
   final UserRepository userRepository;
 
@@ -45,7 +49,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
       return EmailConfirmGetResponse.response400();
     }
     return EmailConfirmGetResponse.response200(
-        emailConfirmationPage(serviceProvider.env));
+        emailConfirmationPage(serviceProvider.env, token));
 //    throw UnimplementedError();
   }
 
@@ -55,8 +59,38 @@ class AuthPassCloudImpl extends AuthPassCloud {
     final success =
         await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
     if (success) {
+      await userRepository.confirmEmailAddress(body.token);
       return EmailConfirmPostResponse.response200('Success.');
     }
     return EmailConfirmPostResponse.response400();
+  }
+
+  @override
+  Future<EmailStatusGetResponse> emailStatusGet() async {
+    final token = await _requireAuthToken(acceptUnconfirmed: true);
+
+    final status = token.status == AuthTokenStatus.created
+        ? EmailStatusGetResponseBody200Status.created
+        : EmailStatusGetResponseBody200Status.confirmed;
+    return EmailStatusGetResponse.response200(
+        EmailStatusGetResponseBody200(status: status));
+  }
+
+  Future<AuthTokenEntity> _requireAuthToken(
+      {bool acceptUnconfirmed = false}) async {
+    final data = SecuritySchemes.authToken.fromRequest(request);
+    if (data == null || data.bearerToken == null || data.bearerToken.isEmpty) {
+      throw UnauthorizedException('Missing auth token.');
+    }
+    final validToken = await userRepository.findValidAuthToken(
+      data.bearerToken,
+      acceptUnconfirmed: acceptUnconfirmed,
+    );
+
+    if (validToken == null) {
+      throw UnauthorizedException('No valid auth token.');
+    }
+
+    return validToken;
   }
 }
