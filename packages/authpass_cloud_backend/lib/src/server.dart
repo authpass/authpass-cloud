@@ -24,7 +24,7 @@ class Server {
     final serviceProvider = ServiceProvider(
       env: env,
       cryptoService: CryptoService(),
-      emailService: FakeEmailService(),
+      emailService: _createEmailService(env),
     );
 
     final db = serviceProvider.createDatabaseAccess();
@@ -33,6 +33,13 @@ class Server {
     final server = OpenApiShelfServer(
         AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
     server.startServer();
+  }
+
+  EmailService _createEmailService(Env env) {
+    if (env.email is EmailSmtpConfig) {
+      return MailerEmailService(config: env.email as EmailSmtpConfig);
+    }
+    return FakeEmailService();
   }
 }
 

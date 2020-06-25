@@ -13,9 +13,9 @@ Future<void> main() async {
 //  const baseUri = 'https://virtserver.swaggerhub.com/hpoul/Testapi/1.0.0';
   const baseUri = 'http://localhost:8080';
   final client = AuthPassCloudClient(Uri.parse(baseUri), requestSender);
-  final registerResponse =
-      (await client.userRegisterPost(RegisterRequest(email: 'a@b.com')))
-          .requireSuccess();
+  final registerResponse = (await client
+          .userRegisterPost(RegisterRequest(email: 'herbert.hell@m.poul.at')))
+      .requireSuccess();
   _logger.info('Success! ${registerResponse.userUuid}');
   final authToken = registerResponse.authToken;
   client.setAuth(SecuritySchemes.authToken,

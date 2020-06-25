@@ -17,6 +17,7 @@ dependencies:
   checked_yaml: ^1.0.2
   http: ^0.12.1
   clock: ^1.0.1
+  mailer: ^3.0.4
 
   openapi_base:
     path: ../../deps/openapi_dart/packages/openapi_base

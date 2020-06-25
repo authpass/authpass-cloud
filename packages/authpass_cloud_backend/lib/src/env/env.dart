@@ -1,7 +1,36 @@
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 
 final _logger = Logger('env');
+
+abstract class EmailConfig {}
+
+class DummyEmailConfig implements EmailConfig {}
+
+class EmailSmtpConfig implements EmailConfig {
+  EmailSmtpConfig({
+    @required this.smtpHost,
+    this.smtpPort,
+    this.smtpSsl,
+    this.smtpUsername,
+    this.smtpPassword,
+    this.smtpAllowInsecure = false,
+    @required this.fromAddress,
+    this.fromName,
+  })  : assert(smtpHost != null),
+        assert(fromAddress != null),
+        assert(smtpAllowInsecure != null);
+
+  final String smtpHost;
+  final int smtpPort;
+  final bool smtpSsl;
+  final String smtpUsername;
+  final String smtpPassword;
+  final bool smtpAllowInsecure;
+  final String fromAddress;
+  final String fromName;
+}
 
 abstract class EnvSecrets {
   String get recaptchaSiteKey;
@@ -27,6 +56,8 @@ abstract class Env {
           'Assertions are disabled, but you still use dev environment!');
     }
   }
+
+  EmailConfig get email;
 
   bool assertEnabled = false;
 
@@ -56,4 +87,7 @@ class DevEnv extends Env {
 
   @override
   EnvSecrets get secrets => EmptySecrets();
+
+  @override
+  EmailConfig get email => DummyEmailConfig();
 }
