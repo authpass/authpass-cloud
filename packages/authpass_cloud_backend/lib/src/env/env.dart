@@ -1,36 +1,8 @@
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 
 final _logger = Logger('env');
-
-abstract class EmailConfig {}
-
-class DummyEmailConfig implements EmailConfig {}
-
-class EmailSmtpConfig implements EmailConfig {
-  EmailSmtpConfig({
-    @required this.smtpHost,
-    this.smtpPort,
-    this.smtpSsl,
-    this.smtpUsername,
-    this.smtpPassword,
-    this.smtpAllowInsecure = false,
-    @required this.fromAddress,
-    this.fromName,
-  })  : assert(smtpHost != null),
-        assert(fromAddress != null),
-        assert(smtpAllowInsecure != null);
-
-  final String smtpHost;
-  final int smtpPort;
-  final bool smtpSsl;
-  final String smtpUsername;
-  final String smtpPassword;
-  final bool smtpAllowInsecure;
-  final String fromAddress;
-  final String fromName;
-}
 
 abstract class EnvSecrets {
   String get recaptchaSiteKey;
@@ -63,9 +35,6 @@ abstract class Env {
 
   bool get debug;
 
-  /// help text displayed in the command line help.
-  String get help;
-
   Uri get baseUri;
 
   EnvSecrets get secrets;
@@ -80,14 +49,13 @@ class DevEnv extends Env {
   bool get debug => true;
 
   @override
-  String get help => 'Development environment';
-
-  @override
   final Uri baseUri = Uri.parse('https://cloud.authpass.app');
 
   @override
   EnvSecrets get secrets => EmptySecrets();
 
   @override
-  EmailConfig get email => DummyEmailConfig();
+  EmailConfig get email => EmailConfig(
+        fromAddress: 'fake@address.com',
+      );
 }

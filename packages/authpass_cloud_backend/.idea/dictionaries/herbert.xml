@@ -2,6 +2,7 @@
   <dictionary name="herbert">
     <words>
       <w>authpass</w>
+      <w>smtp</w>
     </words>
   </dictionary>
 </component>

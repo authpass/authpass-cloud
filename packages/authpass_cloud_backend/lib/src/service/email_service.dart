@@ -1,4 +1,4 @@
-import 'package:authpass_cloud_backend/src/env/env.dart';
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:logging/logging.dart';
 import 'package:mailer/mailer.dart' as mailer;
 import 'package:mailer/smtp_server.dart' as smtp;
@@ -49,25 +49,29 @@ class FakeEmailService extends EmailServiceImpl {
 }
 
 class MailerEmailService extends EmailServiceImpl {
-  MailerEmailService({this.config});
+  MailerEmailService({this.emailConfig})
+      : smtpConfig = emailConfig.smtp,
+        assert(emailConfig.smtp != null);
 
-  final EmailSmtpConfig config;
+  final EmailConfig emailConfig;
+  final EmailSmtpConfig smtpConfig;
 
   @override
   Future<void> sendEmail(
       {String recipient, String subject, String body}) async {
     final message = mailer.Message()
-      ..from = mailer.Address(config.fromAddress, config.fromName)
+      ..from = mailer.Address(emailConfig.fromAddress, emailConfig.fromName)
       ..recipients.add(recipient)
       ..subject = subject
       ..text = body;
 
     final smtpServer = smtp.SmtpServer(
-      config.smtpHost,
-      port: config.smtpPort ?? 587,
-      username: config.smtpUsername,
-      password: config.smtpUsername,
-      allowInsecure: config.smtpAllowInsecure,
+      smtpConfig.host,
+      ssl: smtpConfig.ssl,
+      port: smtpConfig.port ?? 587,
+      username: smtpConfig.username,
+      password: smtpConfig.password,
+      allowInsecure: smtpConfig.allowInsecure,
     );
     try {
       final response = await mailer.send(message, smtpServer,

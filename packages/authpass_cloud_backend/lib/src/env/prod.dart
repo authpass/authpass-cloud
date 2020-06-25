@@ -1,21 +1,20 @@
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
-import 'package:authpass_cloud_backend/src/env/secrets.dart' as prodSecrets;
 
 class ProdEnv extends Env {
-  @override
-  bool get debug => throw UnimplementedError();
+  ProdEnv(this.config);
+
+  final ConfigFileRoot config;
 
   @override
-  String get help => 'Production environment';
+  bool get debug => false;
 
   @override
   final Uri baseUri = Uri.parse('https://cloud.authpass.app');
 
   @override
-  EnvSecrets get secrets => prodSecrets.ProdSecrets();
+  EnvSecrets get secrets => config.secrets;
 
   @override
-  EmailConfig get email => prodSecrets.prodEmailConfig;
+  EmailConfig get email => config.email;
 }
-
-Future<void> main() async => await ProdEnv().run();

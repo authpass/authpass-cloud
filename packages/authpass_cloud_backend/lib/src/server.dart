@@ -1,5 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
@@ -36,8 +37,12 @@ class Server {
   }
 
   EmailService _createEmailService(Env env) {
-    if (env.email is EmailSmtpConfig) {
-      return MailerEmailService(config: env.email as EmailSmtpConfig);
+    if (env.email.smtp is EmailSmtpConfig) {
+      return MailerEmailService(emailConfig: env.email);
+    }
+    if (!env.assertEnabled) {
+      throw StateError('Assertions are not enabled, '
+          'no fake email service allowed.');
     }
     return FakeEmailService();
   }
