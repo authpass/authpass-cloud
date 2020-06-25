@@ -4,5 +4,4 @@
 /.blackbox/pubring.gpg~
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
-/packages/authpass_cloud_backend/lib/src/env/secrets.dart
 dev_hp.exe
