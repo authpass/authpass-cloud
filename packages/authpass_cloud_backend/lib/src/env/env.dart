@@ -17,6 +17,14 @@ class EmptySecrets extends SecretsConfig {
   String get recaptchaSiteKey => '';
 }
 
+class BuildInfo {
+  static const host = String.fromEnvironment('HOST', defaultValue: 'unknown');
+  static const date =
+      String.fromEnvironment('BUILD_DATE', defaultValue: 'unknown');
+
+  static String asString() => 'AuthPass Backend (Build $date @ $host)';
+}
+
 abstract class Env {
   Env() {
     assert((() {

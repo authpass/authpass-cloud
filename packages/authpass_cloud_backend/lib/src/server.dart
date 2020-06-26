@@ -20,7 +20,7 @@ class Server {
 
   Future<void> run() async {
     PrintAppender.setupLogging();
-    _logger.fine('Starting Server ...');
+    _logger.fine('Starting Server ... ${BuildInfo.asString()}');
 
     final serviceProvider = ServiceProvider(
       env: env,
@@ -30,13 +30,16 @@ class Server {
 
     final db = serviceProvider.createDatabaseAccess();
     await db.prepareDatabase();
+    await db.dispose();
 
     final server = OpenApiShelfServer(
         AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
-    server.startServer(
+    final process = await server.startServer(
       address: env.config.http.host,
       port: env.config.http.port,
     );
+    final exitCode = await process.exitCode;
+    _logger.fine('exitCode from server: $exitCode');
   }
 
   EmailService _createEmailService(Env env) {

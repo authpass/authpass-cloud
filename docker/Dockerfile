@@ -7,7 +7,11 @@ WORKDIR /src/packages/authpass_cloud_backend
 COPY ./ /src
 
 RUN dart pub get
-RUN dart compile exe -o /src/authpass_backend.exe bin/authpass_backend.dart
+RUN dart compile exe \
+    -o /src/authpass_backend.exe \
+    --define=BUILD_DATE="`date +%Y-%m-%d_%H%M%`" \
+    --define=HOST="`hostname -f`" \
+    bin/authpass_backend.dart
 
 # alpine:3.12.0
 #FROM alpine@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
