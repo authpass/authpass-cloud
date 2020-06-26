@@ -1,0 +1,17 @@
+# Dockerfile must be run in root directory of project
+# or better yet with the docker-compose.yaml
+
+FROM google/dart:2.9.0-19.0.dev as build
+
+WORKDIR /src/packages/authpass_cloud_backend
+COPY ./ /src
+
+RUN dart pub get
+RUN dart compile exe -o /src/authpass_backend.exe bin/authpass_backend.dart
+
+# alpine:3.12.0
+FROM alpine@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
+
+COPY --from=build /src/authpass_backend.exe /
+
+CMD ['/src/authpass_backend.exe']

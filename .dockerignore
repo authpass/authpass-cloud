@@ -1,0 +1,8 @@
+/docker
+**/.dart_tool/
+**/.git/
+**/.idea/
+.packages
+.pub/
+build/
+

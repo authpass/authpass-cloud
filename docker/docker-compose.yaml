@@ -21,4 +21,10 @@ services:
       placement:
         constraints: [node.role == manager]
     stop_grace_period: 60s
-
+  backend:
+    image: docker.pkg.github.com/authpass/authpass-cloud/authpass-backend
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    links:
+      - pgdb

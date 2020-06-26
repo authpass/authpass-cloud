@@ -1,0 +1,22 @@
+name: build backend
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Checkout submodules
+      shell: bash
+      run: |
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git submodule sync --recursive
+        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+    - name: docker build
+      run: cd docker && docker-compose build backend
+    - uses: azure/docker-login@v1
+      with:
+        login-server: 'docker.pkg.github.com'
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: docker push
+      run: cd docker && docker-compose push backend
