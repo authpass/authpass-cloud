@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   pgdb:
     # postgres:12.3
@@ -10,8 +10,19 @@ services:
       POSTGRES_PASSWORD: blubb
       POSTGRES_DB: authpass
     volumes:
-      - ./_data/pgdb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+#      - ./_data/pgdb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./_data/pgdb/data:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c log_min_duration_statement=100
+      -c log_checkpoints=on
+      -c log_connections=on
+      -c log_disconnections=on
+      -c log_lock_waits=on
+      -c log_temp_files=0
+      -c log_autovacuum_min_duration=0
+      -c log_error_verbosity=default
+      -c log_line_prefix='%t [%3p]: [%2l] db=%d,user=%u,app=%a,client=%h '
     deploy:
       restart_policy:
         condition: any
@@ -28,9 +39,20 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     ports:
-      - 8080:8080
+      - 9560:8080
     command: /authpass_backend.exe serve -c config/prod.yaml
     volumes:
       - ./config:/config
-    links:
+    depends_on:
       - pgdb
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3000
+        window: 120s
+      update_config:
+        delay: 30s
+        order: start-first
+        monitor: 5m
+        failure_action: rollback
