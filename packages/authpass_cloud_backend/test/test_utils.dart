@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 
 class TestUtils {
-  static final config = DatabaseConfig();
+  static final config = DatabaseConfig.defaults();
 
   static DatabaseAccess createDatabaseAccess(DatabaseConfig config) {
     return DatabaseAccess(cryptoService: CryptoService(), config: config);

@@ -4,18 +4,41 @@ import 'package:meta/meta.dart';
 
 part 'config.g.dart';
 
-@JsonSerializable(nullable: false, anyMap: true)
+@JsonSerializable(anyMap: true)
 class ConfigFileRoot {
   ConfigFileRoot({
+    HttpConfig http,
     @required this.email,
     @required this.secrets,
-  })  : assert(email != null),
+    @required this.database,
+  })  : http = http ?? HttpConfig.defaults(),
+        assert(email != null),
         assert(secrets != null);
   factory ConfigFileRoot.fromJson(Map json) => _$ConfigFileRootFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigFileRootToJson(this);
 
+  final HttpConfig http;
   final EmailConfig email;
   final SecretsConfig secrets;
+  final DatabaseConfig database;
+}
+
+@JsonSerializable(anyMap: true)
+class HttpConfig {
+  const HttpConfig({
+    @required this.host,
+    @required this.port,
+  })  : assert(host != null),
+        assert(port != null);
+  factory HttpConfig.fromJson(Map<String, dynamic> json) =>
+      _$HttpConfigFromJson(json);
+  factory HttpConfig.defaults() => HttpConfig.fromJson(<String, dynamic>{});
+  Map<String, dynamic> toJson() => _$HttpConfigToJson(this);
+
+  @JsonKey(defaultValue: 'localhost')
+  final String host;
+  @JsonKey(defaultValue: 8080)
+  final int port;
 }
 
 @JsonSerializable(anyMap: true)
@@ -69,4 +92,44 @@ class SecretsConfig implements EnvSecrets {
 
   @override
   final String recaptchaSiteKey;
+}
+
+@JsonSerializable(anyMap: true)
+class DatabaseConfig {
+  DatabaseConfig({
+    @required this.host,
+    @required this.port,
+    @required this.databaseName,
+    @required this.username,
+    this.password,
+  })  : assert(host != null),
+        assert(port != null),
+        assert(databaseName != null),
+        assert(username != null);
+
+  factory DatabaseConfig.fromJson(Map<String, dynamic> json) =>
+      _$DatabaseConfigFromJson(json);
+  factory DatabaseConfig.defaults() =>
+      DatabaseConfig.fromJson(<String, dynamic>{});
+  Map<String, dynamic> toJson() => _$DatabaseConfigToJson(this);
+
+  @JsonKey(defaultValue: 'localhost')
+  final String host;
+  @JsonKey(defaultValue: 5432)
+  final int port;
+
+  @JsonKey(defaultValue: 'authpass')
+  final String databaseName;
+  @JsonKey(defaultValue: 'authpass')
+  final String username;
+  @JsonKey(defaultValue: 'blubb')
+  final String password;
+
+  DatabaseConfig copyWith({String databaseName}) => DatabaseConfig(
+        host: host,
+        port: port,
+        databaseName: databaseName ?? this.databaseName,
+        username: username,
+        password: password,
+      );
 }

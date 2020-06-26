@@ -4,6 +4,7 @@ import 'package:authpass_cloud_backend/src/env/env.dart';
 class ProdEnv extends Env {
   ProdEnv(this.config);
 
+  @override
   final ConfigFileRoot config;
 
   @override
@@ -11,10 +12,4 @@ class ProdEnv extends Env {
 
   @override
   final Uri baseUri = Uri.parse('https://cloud.authpass.app');
-
-  @override
-  EnvSecrets get secrets => config.secrets;
-
-  @override
-  EmailConfig get email => config.email;
 }

@@ -15,7 +15,7 @@ class ServiceProvider {
         assert(cryptoService != null),
         assert(emailService != null),
         recaptchaService = recaptchaService ??
-            RecaptchaService(secret: env.secrets.recaptchaSecretKey);
+            RecaptchaService(secret: env.config.secrets.recaptchaSecretKey);
 
   final Env env;
   final CryptoService cryptoService;
@@ -24,6 +24,6 @@ class ServiceProvider {
 
   DatabaseAccess createDatabaseAccess() => DatabaseAccess(
         cryptoService: cryptoService,
-        config: DatabaseConfig(),
+        config: env.config.database,
       );
 }

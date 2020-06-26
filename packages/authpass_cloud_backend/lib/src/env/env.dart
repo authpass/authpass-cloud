@@ -9,7 +9,7 @@ abstract class EnvSecrets {
   String get recaptchaSecretKey;
 }
 
-class EmptySecrets extends EnvSecrets {
+class EmptySecrets extends SecretsConfig {
   @override
   String get recaptchaSecretKey => '';
 
@@ -29,15 +29,13 @@ abstract class Env {
     }
   }
 
-  EmailConfig get email;
-
   bool assertEnabled = false;
 
   bool get debug;
 
   Uri get baseUri;
 
-  EnvSecrets get secrets;
+  ConfigFileRoot get config;
 
   Future<void> run() async {
     await Server(env: this).run();
@@ -52,10 +50,11 @@ class DevEnv extends Env {
   final Uri baseUri = Uri.parse('https://cloud.authpass.app');
 
   @override
-  EnvSecrets get secrets => EmptySecrets();
-
-  @override
-  EmailConfig get email => EmailConfig(
+  final config = ConfigFileRoot(
+      http: HttpConfig.defaults(),
+      email: EmailConfig(
         fromAddress: 'fake@address.com',
-      );
+      ),
+      secrets: EmptySecrets(),
+      database: DatabaseConfig.defaults());
 }

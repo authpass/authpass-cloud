@@ -1,6 +1,7 @@
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/migration_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
+import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
@@ -46,29 +47,6 @@ class DatabaseTransaction {
         allowReuse: allowReuse,
         timeoutInSeconds: timeoutInSeconds);
   }
-}
-
-class DatabaseConfig {
-  DatabaseConfig({
-    this.host = 'localhost',
-    this.port = 5432,
-    this.databaseName = 'authpass',
-    this.username = 'authpass',
-    this.password = 'blubb',
-  });
-  final String host;
-  final int port;
-  final String databaseName;
-  final String username;
-  final String password;
-
-  DatabaseConfig copyWith({String databaseName}) => DatabaseConfig(
-        host: host,
-        port: port,
-        databaseName: databaseName ?? this.databaseName,
-        username: username,
-        password: password,
-      );
 }
 
 class DatabaseAccess {

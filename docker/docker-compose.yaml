@@ -26,5 +26,10 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    ports:
+      - 8080:8080
+    command: /authpass_backend.exe -c config/prod.yaml
+    volumes:
+      - ./config:/config
     links:
       - pgdb

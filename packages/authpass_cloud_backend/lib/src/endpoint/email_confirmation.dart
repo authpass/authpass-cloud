@@ -29,7 +29,7 @@ background-color: white;
       <input type="hidden" name="token" value="$token" />
       <h2>Confirm your email address</h2>
       <p>Click the checkbox to confirm your email address.</p>
-      <div class="g-recaptcha" data-sitekey="${env.secrets.recaptchaSiteKey}" data-callback="onReturnCallback"></div>
+      <div class="g-recaptcha" data-sitekey="${env.config.secrets.recaptchaSiteKey}" data-callback="onReturnCallback"></div>
     </form>
     </div>
   </div>

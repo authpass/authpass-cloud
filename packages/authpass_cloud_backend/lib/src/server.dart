@@ -33,12 +33,15 @@ class Server {
 
     final server = OpenApiShelfServer(
         AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
-    server.startServer();
+    server.startServer(
+      address: env.config.http.host,
+      port: env.config.http.port,
+    );
   }
 
   EmailService _createEmailService(Env env) {
-    if (env.email.smtp is EmailSmtpConfig) {
-      return MailerEmailService(emailConfig: env.email);
+    if (env.config.email.smtp is EmailSmtpConfig) {
+      return MailerEmailService(emailConfig: env.config.email);
     }
     if (!env.assertEnabled) {
       throw StateError('Assertions are not enabled, '

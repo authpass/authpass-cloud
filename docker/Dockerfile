@@ -10,8 +10,9 @@ RUN dart pub get
 RUN dart compile exe -o /src/authpass_backend.exe bin/authpass_backend.dart
 
 # alpine:3.12.0
-FROM alpine@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
+#FROM alpine@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
+FROM gcr.io/distroless/base-debian10
 
 COPY --from=build /src/authpass_backend.exe /
 
-CMD ['/src/authpass_backend.exe']
+CMD ['/authpass_backend.exe']
