@@ -21,5 +21,7 @@ FROM gcr.io/distroless/base-debian10@sha256:61b11e41972578b2417e4e9c9b0a3057b896
 HEALTHCHECK --interval=10s --timeout=3s --start-period=2s CMD ["/authpass_backend.exe", "healthcheck"]
 
 COPY --from=build /src/authpass_backend.exe /
+COPY --from=build /etc/ssl /etc/ssl
+COPY --from=build /usr/share/ca-certificates /usr/share/ca-certificates
 
 CMD ['/authpass_backend.exe', 'serve']

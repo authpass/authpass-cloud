@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:authpass_cloud_backend/src/cli/http_command.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/env/prod.dart';
@@ -21,6 +22,7 @@ Future<void> main(List<String> args) async {
 
   await (CommandRunner<void>('authpass_backend', 'Backend server')
         ..addCommand(HealthCheckCommand())
+        ..addCommand(HttpCommand())
         ..addCommand(ServeCommand()))
       .run(args);
 
