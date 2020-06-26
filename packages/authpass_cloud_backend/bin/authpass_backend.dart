@@ -60,7 +60,7 @@ class HealthCheckCommand extends Command<void> {
       }
     } catch (e, stackTrace) {
       _logger.severe('Error during health check', e, stackTrace);
-      exitCode = 2;
+      exitCode = 1;
     } finally {
       requestSender.dispose();
     }
