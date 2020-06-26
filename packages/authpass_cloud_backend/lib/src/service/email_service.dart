@@ -72,6 +72,7 @@ class MailerEmailService extends EmailServiceImpl {
       username: smtpConfig.username,
       password: smtpConfig.password,
       allowInsecure: smtpConfig.allowInsecure,
+      ignoreBadCertificate: smtpConfig.ignoreBadCertificate,
     );
     try {
       final response = await mailer.send(message, smtpServer,

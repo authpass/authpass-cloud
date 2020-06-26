@@ -68,19 +68,25 @@ class EmailSmtpConfig {
     this.username,
     this.password,
     this.allowInsecure = false,
+    this.ignoreBadCertificate = false,
   })  : assert(host != null),
         assert(allowInsecure != null);
   factory EmailSmtpConfig.fromJson(Map json) => _$EmailSmtpConfigFromJson(json);
   Map<String, dynamic> toJson() => _$EmailSmtpConfigToJson(this);
 
+  @JsonKey(required: true)
   final String host;
+  @JsonKey(defaultValue: 25)
   final int port;
+  @JsonKey(defaultValue: false)
   final bool ssl;
   final String username;
   final String password;
 
   @JsonKey(defaultValue: false)
   final bool allowInsecure;
+  @JsonKey(defaultValue: false)
+  final bool ignoreBadCertificate;
 }
 
 @JsonSerializable(nullable: false, anyMap: true, checked: true)
