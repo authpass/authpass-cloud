@@ -3,6 +3,8 @@
 
 FROM google/dart:2.9.0-19.0.dev as build
 
+HEALTHCHECK --interval=10s --timeout=10s --start-period=30s CMD /authpass_backend.exe healthcheck || exit 1
+
 WORKDIR /src/packages/authpass_cloud_backend
 COPY ./ /src
 
@@ -20,4 +22,4 @@ FROM gcr.io/distroless/base-debian10@sha256:61b11e41972578b2417e4e9c9b0a3057b896
 
 COPY --from=build /src/authpass_backend.exe /
 
-CMD ['/authpass_backend.exe']
+CMD ['/authpass_backend.exe', 'serve']

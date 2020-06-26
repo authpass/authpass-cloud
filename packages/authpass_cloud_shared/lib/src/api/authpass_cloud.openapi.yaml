@@ -7,6 +7,12 @@ info:
 servers:
   - url: 'https'
 paths:
+  /check:
+    get:
+      summary: 'Health check.'
+      responses:
+        '200':
+          description: 'Everything OK'
   /user/register:
     post:
       summary: Create new user, or login the user using confirmation email.

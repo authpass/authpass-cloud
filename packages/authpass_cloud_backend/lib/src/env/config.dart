@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 part 'config.g.dart';
 
-@JsonSerializable(anyMap: true)
+@JsonSerializable(anyMap: true, checked: true)
 class ConfigFileRoot {
   ConfigFileRoot({
     HttpConfig http,
@@ -13,17 +13,19 @@ class ConfigFileRoot {
     @required this.database,
   })  : http = http ?? HttpConfig.defaults(),
         assert(email != null),
-        assert(secrets != null);
+        assert(secrets != null),
+        assert(database != null);
   factory ConfigFileRoot.fromJson(Map json) => _$ConfigFileRootFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigFileRootToJson(this);
 
   final HttpConfig http;
   final EmailConfig email;
   final SecretsConfig secrets;
+  @JsonKey(nullable: false, required: true)
   final DatabaseConfig database;
 }
 
-@JsonSerializable(anyMap: true)
+@JsonSerializable(anyMap: true, checked: true)
 class HttpConfig {
   const HttpConfig({
     @required this.host,
@@ -41,7 +43,7 @@ class HttpConfig {
   final int port;
 }
 
-@JsonSerializable(anyMap: true)
+@JsonSerializable(anyMap: true, checked: true)
 class EmailConfig {
   EmailConfig({
     @required this.fromAddress,
@@ -52,11 +54,12 @@ class EmailConfig {
   Map<String, dynamic> toJson() => _$EmailConfigToJson(this);
 
   final EmailSmtpConfig smtp;
+  @JsonKey(required: true)
   final String fromAddress;
   final String fromName;
 }
 
-@JsonSerializable(anyMap: true)
+@JsonSerializable(anyMap: true, checked: true)
 class EmailSmtpConfig {
   EmailSmtpConfig({
     @required this.host,
@@ -75,10 +78,12 @@ class EmailSmtpConfig {
   final bool ssl;
   final String username;
   final String password;
+
+  @JsonKey(defaultValue: false)
   final bool allowInsecure;
 }
 
-@JsonSerializable(nullable: false, anyMap: true)
+@JsonSerializable(nullable: false, anyMap: true, checked: true)
 class SecretsConfig implements EnvSecrets {
   SecretsConfig({
     @required this.recaptchaSecretKey,
@@ -94,7 +99,7 @@ class SecretsConfig implements EnvSecrets {
   final String recaptchaSiteKey;
 }
 
-@JsonSerializable(anyMap: true)
+@JsonSerializable(anyMap: true, checked: true)
 class DatabaseConfig {
   DatabaseConfig({
     @required this.host,

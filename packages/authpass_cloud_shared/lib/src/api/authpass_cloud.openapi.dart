@@ -68,6 +68,36 @@ class RegisterResponse implements _i2.OpenApiContent {
   String toString() => toJson().toString();
 }
 
+class _CheckGetResponse200 extends CheckGetResponse {
+  /// Everything OK
+  _CheckGetResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class CheckGetResponse extends _i2.OpenApiResponse {
+  CheckGetResponse();
+
+  /// Everything OK
+  factory CheckGetResponse.response200() => _CheckGetResponse200.response200();
+
+  void map({@_i3.required _i2.ResponseMap<_CheckGetResponse200> on200}) {
+    if (this is _CheckGetResponse200) {
+      on200((this as _CheckGetResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+}
+
 class _UserRegisterPostResponse200 extends UserRegisterPostResponse
     implements _i2.OpenApiResponseBodyJson {
   /// OK
@@ -354,6 +384,10 @@ class EmailConfirmSchema implements _i2.OpenApiContent {
 }
 
 abstract class AuthPassCloud implements _i2.ApiEndpoint {
+  /// Health check.
+  /// get: /check
+  Future<CheckGetResponse> checkGet();
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
@@ -375,6 +409,11 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   factory AuthPassCloudClient(
           Uri baseUri, _i2.OpenApiRequestSender requestSender) =>
       _AuthPassCloudClientImpl._(baseUri, requestSender);
+
+  /// Health check.
+  /// get: /check
+  ///
+  Future<CheckGetResponse> checkGet();
 
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
@@ -407,6 +446,23 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
 
   @override
   final _i2.OpenApiRequestSender requestSender;
+
+  /// Health check.
+  /// get: /check
+  ///
+  @override
+  Future<CheckGetResponse> checkGet() async {
+    final request = _i2.OpenApiClientRequest('get', '/check', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _CheckGetResponse200.response200()
+    });
+  }
 
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
@@ -494,6 +550,19 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
 }
 
 class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
+  /// Health check.
+  /// get: /check
+  ///
+  _i2.OpenApiClientRequest checkGet() {
+    final request = _i2.OpenApiClientRequest('get', '/check', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
@@ -556,6 +625,15 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
 
   @override
   void configure() {
+    addRoute('/check', 'get', (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request, (AuthPassCloud impl) async => impl.checkGet());
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/user/register', 'post', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request,

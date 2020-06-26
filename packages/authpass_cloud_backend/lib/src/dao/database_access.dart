@@ -53,7 +53,9 @@ class DatabaseAccess {
   DatabaseAccess({
     @required CryptoService cryptoService,
     @required this.config,
-  }) : tables = Tables(cryptoService: cryptoService);
+  })  : tables = Tables(cryptoService: cryptoService),
+        assert(config != null),
+        assert(cryptoService != null);
 
   final Tables tables;
   final DatabaseConfig config;

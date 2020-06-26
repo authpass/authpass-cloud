@@ -25,6 +25,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
   final UserRepository userRepository;
 
   @override
+  Future<CheckGetResponse> checkGet() async {
+    // just make sure we still have a DB connection.
+    await db.tables.migration.queryLastVersion(db);
+    return CheckGetResponse.response200();
+  }
+
+  @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
     final emailConfirm =

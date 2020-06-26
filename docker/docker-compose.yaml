@@ -29,7 +29,7 @@ services:
       dockerfile: docker/Dockerfile
     ports:
       - 8080:8080
-    command: /authpass_backend.exe -c config/prod.yaml
+    command: /authpass_backend.exe serve -c config/prod.yaml
     volumes:
       - ./config:/config
     links:
