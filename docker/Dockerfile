@@ -9,7 +9,7 @@ COPY ./ /src
 RUN dart pub get
 RUN dart compile exe \
     -o /src/authpass_backend.exe \
-    --define=BUILD_DATE="`date +%Y-%m-%d_%H%M%`" \
+    --define=BUILD_DATE="`date +%Y-%m-%d_%H%M%S`" \
     --define=HOST="`hostname -f`" \
     bin/authpass_backend.dart
 
@@ -18,7 +18,7 @@ RUN dart compile exe \
 #FROM gcr.io/distroless/base-debian10
 FROM gcr.io/distroless/base-debian10@sha256:61b11e41972578b2417e4e9c9b0a3057b896bd9bd2e3bda961c4b784ea3987ba
 
-HEALTHCHECK --interval=10s --timeout=10s --start-period=30s CMD /authpass_backend.exe healthcheck
+HEALTHCHECK --interval=10s --timeout=3s --start-period=2s CMD ["/authpass_backend.exe", "healthcheck"]
 
 COPY --from=build /src/authpass_backend.exe /
 
