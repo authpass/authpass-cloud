@@ -1,2 +1,1 @@
 docker/config/prod.yaml
-packages/authpass_cloud_backend/config/prod.yaml
