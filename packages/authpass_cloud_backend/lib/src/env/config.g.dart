@@ -55,6 +55,7 @@ Map<String, dynamic> _$HttpConfigToJson(HttpConfig instance) =>
 
 EmailConfig _$EmailConfigFromJson(Map json) {
   return $checkedNew('EmailConfig', json, () {
+    $checkKeys(json, requiredKeys: const ['fromAddress']);
     final val = EmailConfig(
       fromAddress: $checkedConvert(json, 'fromAddress', (v) => v as String),
       fromName: $checkedConvert(json, 'fromName', (v) => v as String),
@@ -74,14 +75,18 @@ Map<String, dynamic> _$EmailConfigToJson(EmailConfig instance) =>
 
 EmailSmtpConfig _$EmailSmtpConfigFromJson(Map json) {
   return $checkedNew('EmailSmtpConfig', json, () {
+    $checkKeys(json, requiredKeys: const ['host']);
     final val = EmailSmtpConfig(
       host: $checkedConvert(json, 'host', (v) => v as String),
-      port: $checkedConvert(json, 'port', (v) => v as int),
-      ssl: $checkedConvert(json, 'ssl', (v) => v as bool),
+      port: $checkedConvert(json, 'port', (v) => v as int) ?? 25,
+      ssl: $checkedConvert(json, 'ssl', (v) => v as bool) ?? false,
       username: $checkedConvert(json, 'username', (v) => v as String),
       password: $checkedConvert(json, 'password', (v) => v as String),
       allowInsecure:
           $checkedConvert(json, 'allowInsecure', (v) => v as bool) ?? false,
+      ignoreBadCertificate:
+          $checkedConvert(json, 'ignoreBadCertificate', (v) => v as bool) ??
+              false,
     );
     return val;
   });
@@ -95,6 +100,7 @@ Map<String, dynamic> _$EmailSmtpConfigToJson(EmailSmtpConfig instance) =>
       'username': instance.username,
       'password': instance.password,
       'allowInsecure': instance.allowInsecure,
+      'ignoreBadCertificate': instance.ignoreBadCertificate,
     };
 
 SecretsConfig _$SecretsConfigFromJson(Map json) {
