@@ -59,6 +59,7 @@ class MailerEmailService extends EmailServiceImpl {
   @override
   Future<void> sendEmail(
       {String recipient, String subject, String body}) async {
+    _logger.fine('sending email. config: ${smtpConfig.toJson()}');
     final message = mailer.Message()
       ..from = mailer.Address(emailConfig.fromAddress, emailConfig.fromName)
       ..recipients.add(recipient)
