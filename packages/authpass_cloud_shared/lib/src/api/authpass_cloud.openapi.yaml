@@ -10,12 +10,14 @@ paths:
   /check:
     get:
       summary: 'Health check.'
+      security: []
       responses:
         '200':
           description: 'Everything OK'
   /user/register:
     post:
       summary: Create new user, or login the user using confirmation email.
+      security: []
       requestBody:
         required: true
         content:
@@ -47,6 +49,7 @@ paths:
   /email/confirm:
     get:
       summary: Confirm email address
+      security: []
       parameters:
         - name: token
           in: query
@@ -65,6 +68,7 @@ paths:
           description: Invalid token or email address.
     post:
       summary: Confirm with recaptcha
+      security: []
       requestBody:
         required: true
         description: ''
@@ -89,6 +93,28 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+  /email/receive:
+    post:
+      summary: Receive emails throw smtp bridge.
+      parameters:
+        - name: x-authpass-token
+          in: header
+          style: simple
+          schema:
+            type: string
+          required: true
+          description: 'Security token to validate origin from trusted server'
+      security: []
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              description: Email content (header and body)
+      responses:
+        '200':
+          description: 'Received and delivered successfully.'
 components:
   schemas:
     RegisterRequest:

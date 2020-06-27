@@ -383,6 +383,38 @@ class EmailConfirmSchema implements _i2.OpenApiContent {
   String toString() => toJson().toString();
 }
 
+class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
+  /// Received and delivered successfully.
+  _EmailReceivePostResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class EmailReceivePostResponse extends _i2.OpenApiResponse {
+  EmailReceivePostResponse();
+
+  /// Received and delivered successfully.
+  factory EmailReceivePostResponse.response200() =>
+      _EmailReceivePostResponse200.response200();
+
+  void map(
+      {@_i3.required _i2.ResponseMap<_EmailReceivePostResponse200> on200}) {
+    if (this is _EmailReceivePostResponse200) {
+      on200((this as _EmailReceivePostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+}
+
 abstract class AuthPassCloud implements _i2.ApiEndpoint {
   /// Health check.
   /// get: /check
@@ -403,6 +435,11 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   /// Confirm with recaptcha
   /// post: /email/confirm
   Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
+
+  /// Receive emails throw smtp bridge.
+  /// post: /email/receive
+  Future<EmailReceivePostResponse> emailReceivePost(String body,
+      {@_i3.required String xAuthpassToken});
 }
 
 abstract class AuthPassCloudClient implements _i2.OpenApiClient {
@@ -435,6 +472,13 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// post: /email/confirm
   ///
   Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
+
+  /// Receive emails throw smtp bridge.
+  /// post: /email/receive
+  ///
+  /// * [xAuthpassToken]: Security token to validate origin from trusted server
+  Future<EmailReceivePostResponse> emailReceivePost(String body,
+      {@_i3.required String xAuthpassToken});
 }
 
 class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
@@ -452,12 +496,7 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   ///
   @override
   Future<CheckGetResponse> checkGet() async {
-    final request = _i2.OpenApiClientRequest('get', '/check', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('get', '/check', []);
     return await sendRequest(request, {
       '200': (_i2.OpenApiClientResponse response) async =>
           _CheckGetResponse200.response200()
@@ -470,13 +509,9 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
-    final request = _i2.OpenApiClientRequest('post', '/user/register', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setJsonBody(body.toJson());
+    final request = _i2.OpenApiClientRequest('post', '/user/register', []);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
     return await sendRequest(request, {
       '200': (_i2.OpenApiClientResponse response) async =>
           _UserRegisterPostResponse200.response200(
@@ -510,12 +545,7 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   @override
   Future<EmailConfirmGetResponse> emailConfirmGet(
       {@_i3.required String token}) async {
-    final request = _i2.OpenApiClientRequest('get', '/email/confirm', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('get', '/email/confirm', []);
     request.addQueryParameter('token', encodeString(token));
     return await sendRequest(request, {
       '200': (_i2.OpenApiClientResponse response) async =>
@@ -532,19 +562,33 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   @override
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmSchema body) async {
-    final request = _i2.OpenApiClientRequest('post', '/email/confirm', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setJsonBody(body.toJson());
+    final request = _i2.OpenApiClientRequest('post', '/email/confirm', []);
+    request.setHeader('content-type', 'application/x-www-form-urlencoded');
+    request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
     return await sendRequest(request, {
       '200': (_i2.OpenApiClientResponse response) async =>
           _EmailConfirmPostResponse200.response200(
               await response.responseBodyString()),
       '400': (_i2.OpenApiClientResponse response) async =>
           _EmailConfirmPostResponse400.response400()
+    });
+  }
+
+  /// Receive emails throw smtp bridge.
+  /// post: /email/receive
+  ///
+  /// * [xAuthpassToken]: Security token to validate origin from trusted server
+  @override
+  Future<EmailReceivePostResponse> emailReceivePost(String body,
+      {@_i3.required String xAuthpassToken}) async {
+    final request = _i2.OpenApiClientRequest('post', '/email/receive', []);
+    request.addHeaderParameter(
+        'x-authpass-token', encodeString(xAuthpassToken));
+    request.setHeader('content-type', 'text/plain');
+    request.setBody(_i2.OpenApiClientRequestBodyText(body));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _EmailReceivePostResponse200.response200()
     });
   }
 }
@@ -554,12 +598,7 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
   /// get: /check
   ///
   _i2.OpenApiClientRequest checkGet() {
-    final request = _i2.OpenApiClientRequest('get', '/check', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('get', '/check', []);
     return request;
   }
 
@@ -567,12 +606,7 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
   /// post: /user/register
   ///
   _i2.OpenApiClientRequest userRegisterPost() {
-    final request = _i2.OpenApiClientRequest('post', '/user/register', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('post', '/user/register', []);
     return request;
   }
 
@@ -594,12 +628,7 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
   ///
   /// * [token]: Unique token which was sent to email address.
   _i2.OpenApiClientRequest emailConfirmGet({@_i3.required String token}) {
-    final request = _i2.OpenApiClientRequest('get', '/email/confirm', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('get', '/email/confirm', []);
     request.addQueryParameter('token', encodeString(token));
     return request;
   }
@@ -608,12 +637,19 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
   /// post: /email/confirm
   ///
   _i2.OpenApiClientRequest emailConfirmPost() {
-    final request = _i2.OpenApiClientRequest('post', '/email/confirm', [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = _i2.OpenApiClientRequest('post', '/email/confirm', []);
+    return request;
+  }
+
+  /// Receive emails throw smtp bridge.
+  /// post: /email/receive
+  ///
+  /// * [xAuthpassToken]: Security token to validate origin from trusted server
+  _i2.OpenApiClientRequest emailReceivePost(
+      {@_i3.required String xAuthpassToken}) {
+    final request = _i2.OpenApiClientRequest('post', '/email/receive', []);
+    request.addHeaderParameter(
+        'x-authpass-token', encodeString(xAuthpassToken));
     return request;
   }
 }
@@ -628,23 +664,13 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
     addRoute('/check', 'get', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request, (AuthPassCloud impl) async => impl.checkGet());
-    }, security: [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    }, security: []);
     addRoute('/user/register', 'post', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.userRegisterPost(
               RegisterRequest.fromJson(await request.readJsonBody())));
-    }, security: [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    }, security: []);
     addRoute('/email/status', 'get', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request, (AuthPassCloud impl) async => impl.emailStatusGet());
@@ -659,24 +685,22 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
           request,
           (AuthPassCloud impl) async => impl.emailConfirmGet(
               token: paramToString(request.queryParameter('token'))));
-    }, security: [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    }, security: []);
     addRoute('/email/confirm', 'post', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmPost(
               EmailConfirmSchema.fromJson(
                   await request.readUrlEncodedBodyFlat())));
-    }, security: [
-      _i2.SecurityRequirement(schemes: [
-        _i2.SecurityRequirementScheme(
-            scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    }, security: []);
+    addRoute('/email/receive', 'post', (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.emailReceivePost(
+              await request.readBodyString(),
+              xAuthpassToken:
+                  paramToString(request.headerParameter('x-authpass-token'))));
+    }, security: []);
   }
 }
 
