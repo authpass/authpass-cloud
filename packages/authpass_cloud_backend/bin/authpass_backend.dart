@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
+import 'package:authpass_cloud_backend/src/cli/email_command.dart';
 import 'package:authpass_cloud_backend/src/cli/http_command.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
@@ -14,17 +16,41 @@ import 'package:yaml/yaml.dart';
 final _logger = Logger('server');
 
 const ARG_CONFIG = 'config';
-const ARG_HELP = 'help';
+const ARG_QUIET = 'quiet';
+
+class MainCommandRunner extends CommandRunner<void> {
+  MainCommandRunner() : super('authpass_backend', 'Backend server') {
+    this
+      ..argParser.addFlag(
+        ARG_QUIET,
+        abbr: 'q',
+        help: 'No debug output.',
+      )
+      ..addCommand(HealthCheckCommand())
+      ..addCommand(HttpCommand())
+      ..addCommand(EmailReceiveCommand())
+      ..addCommand(ServeCommand());
+  }
+
+  @override
+  Future<void> runCommand(ArgResults argResults) async {
+    if (argResults[ARG_QUIET] as bool) {
+      PrintAppender.setupLogging(level: Level.SEVERE);
+    } else {
+      PrintAppender.setupLogging();
+      _logger.finer('Starting…');
+    }
+    return await super.runCommand(argResults);
+  }
+}
 
 Future<void> main(List<String> args) async {
-  PrintAppender.setupLogging();
-  _logger.finer('Starting…');
-
-  await (CommandRunner<void>('authpass_backend', 'Backend server')
-        ..addCommand(HealthCheckCommand())
-        ..addCommand(HttpCommand())
-        ..addCommand(ServeCommand()))
-      .run(args);
+  try {
+    await MainCommandRunner().run(args);
+  } on UsageException catch (e) {
+    print(e);
+    exit(64);
+  }
 
 //  final server = Server([AuthPassCloudService()]);
 //  await server.serve(port: 50051);

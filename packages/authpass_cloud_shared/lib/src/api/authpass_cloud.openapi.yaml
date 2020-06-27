@@ -115,6 +115,13 @@ paths:
       responses:
         '200':
           description: 'Received and delivered successfully.'
+        '403':
+          description: 'Delivery not accepted.'
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: 'Email error codes similar to https://tools.ietf.org/html/rfc3463 expected.'
 components:
   schemas:
     RegisterRequest:

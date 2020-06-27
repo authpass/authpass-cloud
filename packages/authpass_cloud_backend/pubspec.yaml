@@ -7,7 +7,7 @@ dependencies:
   meta: ^1.1.8
   uuid: ^2.1.0
   logging: ^0.11.4
-  logging_appenders: ^0.4.2+2
+  logging_appenders: ^0.4.2+3
   freezed_annotation: ^0.11.0
   json_annotation: ^3.0.1
   pedantic: ^1.9.0

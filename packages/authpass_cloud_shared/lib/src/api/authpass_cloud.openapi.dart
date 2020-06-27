@@ -398,6 +398,26 @@ class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
       {'status': status, 'contentType': contentType};
 }
 
+class _EmailReceivePostResponse403 extends EmailReceivePostResponse
+    implements _i2.OpenApiResponseBodyString {
+  /// Delivery not accepted.
+  _EmailReceivePostResponse403.response403(this.body) : status = 403;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final _i2.OpenApiContentType contentType =
+      _i2.OpenApiContentType.parse('text/plain');
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'body': body, 'contentType': contentType};
+}
+
 abstract class EmailReceivePostResponse extends _i2.OpenApiResponse {
   EmailReceivePostResponse();
 
@@ -405,10 +425,17 @@ abstract class EmailReceivePostResponse extends _i2.OpenApiResponse {
   factory EmailReceivePostResponse.response200() =>
       _EmailReceivePostResponse200.response200();
 
+  /// Delivery not accepted.
+  factory EmailReceivePostResponse.response403(String body) =>
+      _EmailReceivePostResponse403.response403(body);
+
   void map(
-      {@_i3.required _i2.ResponseMap<_EmailReceivePostResponse200> on200}) {
+      {@_i3.required _i2.ResponseMap<_EmailReceivePostResponse200> on200,
+      @_i3.required _i2.ResponseMap<_EmailReceivePostResponse403> on403}) {
     if (this is _EmailReceivePostResponse200) {
       on200((this as _EmailReceivePostResponse200));
+    } else if (this is _EmailReceivePostResponse403) {
+      on403((this as _EmailReceivePostResponse403));
     } else {
       throw StateError('Invalid instance type $this');
     }
@@ -438,6 +465,7 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
+  /// [body]: Email content (header and body)
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {@_i3.required String xAuthpassToken});
 }
@@ -477,6 +505,7 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// post: /email/receive
   ///
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
+  /// [body]: Email content (header and body)
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {@_i3.required String xAuthpassToken});
 }
@@ -578,6 +607,7 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   /// post: /email/receive
   ///
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
+  /// [body]: Email content (header and body)
   @override
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {@_i3.required String xAuthpassToken}) async {
@@ -588,7 +618,10 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     request.setBody(_i2.OpenApiClientRequestBodyText(body));
     return await sendRequest(request, {
       '200': (_i2.OpenApiClientResponse response) async =>
-          _EmailReceivePostResponse200.response200()
+          _EmailReceivePostResponse200.response200(),
+      '403': (_i2.OpenApiClientResponse response) async =>
+          _EmailReceivePostResponse403.response403(
+              await response.responseBodyString())
     });
   }
 }
