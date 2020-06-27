@@ -100,4 +100,11 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
     return validToken;
   }
+
+  @override
+  Future<EmailReceivePostResponse> emailReceivePost(String body,
+      {String xAuthpassToken}) async {
+    // TODO
+    return EmailReceivePostResponse.response200();
+  }
 }
