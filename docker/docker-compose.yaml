@@ -38,6 +38,9 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      args:
+        - buildnumber
+        - hostinfo=${USER}@${HOST}
     ports:
       - 9560:8080
     command: /authpass_backend.exe serve -c config/prod.yaml

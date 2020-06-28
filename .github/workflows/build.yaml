@@ -11,6 +11,11 @@ jobs:
         auth_header="$(git config --local --get http.https://github.com/.extraheader)"
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+    - name: create build number
+      id: buildnumber
+      run: |
+        buildnumber=$(curl -s https://raw.githubusercontent.com/hpoul/git-buildnumber/v1.0/git-buildnumber.sh | bash /dev/stdin generate)
+        echo "::set-output name=buildnumber::$buildnumber"
     - name: docker build
       run: cd docker && docker-compose build backend
     - uses: azure/docker-login@v1
@@ -27,4 +32,5 @@ jobs:
         docker rm ${image}
     - uses: actions/upload-artifact@v2
       with:
+        name: auhpass_backend_${{ steps.buildnumber.outputs.buildnumber }}
         path: authpass_backend.exe

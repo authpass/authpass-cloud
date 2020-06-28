@@ -21,8 +21,11 @@ class BuildInfo {
   static const host = String.fromEnvironment('HOST', defaultValue: 'unknown');
   static const date =
       String.fromEnvironment('BUILD_DATE', defaultValue: 'unknown');
+  static const number =
+      String.fromEnvironment('BUILD_NUMBER', defaultValue: '-1');
 
-  static String asString() => 'AuthPass Backend (Build $date @ $host)';
+  static String asString() => 'AuthPass Backend '
+      '(Build $number from $date @ $host)';
 }
 
 abstract class Env {

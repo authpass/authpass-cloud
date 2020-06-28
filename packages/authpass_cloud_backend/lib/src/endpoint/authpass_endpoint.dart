@@ -105,6 +105,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {String xAuthpassToken}) async {
     // TODO
+    _logger.info('Received email. With the following body:\n\n$body');
     return EmailReceivePostResponse.response200();
   }
 }

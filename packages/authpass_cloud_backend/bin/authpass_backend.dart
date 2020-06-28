@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:authpass_cloud_backend/src/cli/email_command.dart';
 import 'package:authpass_cloud_backend/src/cli/http_command.dart';
+import 'package:authpass_cloud_backend/src/cli/version_command.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/env/prod.dart';
@@ -29,6 +30,7 @@ class MainCommandRunner extends CommandRunner<void> {
       ..addCommand(HealthCheckCommand())
       ..addCommand(HttpCommand())
       ..addCommand(EmailReceiveCommand())
+      ..addCommand(VersionCommand())
       ..addCommand(ServeCommand());
   }
 

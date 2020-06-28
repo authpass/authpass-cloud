@@ -3,6 +3,9 @@
 
 FROM google/dart:2.9.0-19.0.dev as build
 
+ARG buildnumber
+ARG hostinfo
+
 WORKDIR /src/packages/authpass_cloud_backend
 COPY ./ /src
 
@@ -10,7 +13,8 @@ RUN dart pub get
 RUN dart compile exe \
     -o /src/authpass_backend.exe \
     --define=BUILD_DATE="`date +%Y-%m-%d_%H%M%S`" \
-    --define=HOST="`hostname -f`" \
+    --define=BUILD_NUMBER="$buildnumber" \
+    --define=HOST="$hostinfo" \
     bin/authpass_backend.dart
 
 # alpine:3.12.0
