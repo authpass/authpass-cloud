@@ -1,14 +1,14 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
-
 import 'package:logging/logging.dart';
-import 'package:quiver/check.dart';
+import 'package:meta/meta.dart';
 
 final _logger = Logger('migration_tables');
 
 class MigrationTable extends TableBase with TableConstants {
   static const _TABLE_MIGRATE = 'authpass_migration';
   static const _TABLE_MIGRATE_VERSION = 'version';
+  static const _TABLE_MIGRATE_VERSION_CODE = 'version_code';
   static const _TABLE_MIGRATE_APPLIED_AT = 'applied_at';
 
   @override
@@ -20,7 +20,8 @@ class MigrationTable extends TableBase with TableConstants {
       CREATE TABLE IF NOT EXISTS $_TABLE_MIGRATE (
         $columnId SERIAL PRIMARY KEY,
         $_TABLE_MIGRATE_APPLIED_AT $typeTimestamp NOT NULL,
-        $_TABLE_MIGRATE_VERSION INT NOT NULL
+        $_TABLE_MIGRATE_VERSION INT NOT NULL,
+        $_TABLE_MIGRATE_VERSION_CODE VARCHAR NOT NULL
       );
       ''');
     _logger.fine('Got result: $result');
@@ -39,12 +40,23 @@ class MigrationTable extends TableBase with TableConstants {
     return maxVersion ?? 0;
   }
 
-  Future<void> insertMigrationRun(
-      DatabaseTransaction db, DateTime appliedAt, int version) async {
-    final result = await db.execute(
-        '''INSERT INTO $_TABLE_MIGRATE ($_TABLE_MIGRATE_APPLIED_AT, $_TABLE_MIGRATE_VERSION)
-      values (@appliedAt, @version)''',
-        values: {'appliedAt': appliedAt, 'version': version});
-    checkState(result == 1);
+  Future<void> insertMigrationRun(DatabaseTransaction db, DateTime appliedAt,
+      int version, String versionCode) async {
+    await db.executeInsert(_TABLE_MIGRATE, {
+      _TABLE_MIGRATE_APPLIED_AT: appliedAt,
+      _TABLE_MIGRATE_VERSION: version,
+      _TABLE_MIGRATE_VERSION_CODE: versionCode
+    });
   }
+}
+
+class MigrationEntity {
+  MigrationEntity({
+    @required this.version,
+    @required this.versionCode,
+    @required this.appliedAt,
+  });
+  final int version;
+  final String versionCode;
+  final DateTime appliedAt;
 }

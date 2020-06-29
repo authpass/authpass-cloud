@@ -140,15 +140,24 @@ class DatabaseAccess {
       }
     });
     _logger.fine('Last migration: $lastMigration');
+    if (lastMigration > 0 && lastMigration < 3) {
+      _logger.warning('Recreating database.');
+      await clean();
+      await run((conn) async {
+        await tables.migration.createTable(conn);
+      });
+    }
+
     final migrationRun = clock.now();
     await run((conn) async {
       final migrations = Migrations.migrations();
       for (final migration in migrations) {
         if (migration.id > lastMigration) {
-          _logger.fine('Running migration ${migration.id}');
+          _logger.fine('Running migration ${migration.id} '
+              '(${migration.versionCode})');
           await migration.up(conn);
-          await tables.migration
-              .insertMigrationRun(conn, migrationRun, migration.id);
+          await tables.migration.insertMigrationRun(
+              conn, migrationRun, migration.id, migration.versionCode);
         }
       }
     });
@@ -180,7 +189,8 @@ class DatabaseAccess {
     final typeNames = tables.allTables.expand((e) => e.types);
     await run((connection) async {
       final tables = tableNames.join(', ');
-      final result = await connection.execute('DROP TABLE IF EXISTS $tables');
+      final result =
+          await connection.execute('DROP TABLE IF EXISTS $tables CASCADE');
       _logger.fine('Dropped $tables ($result)');
       if (typeNames.isNotEmpty) {
         await connection.execute('DROP TYPE IF EXISTS ${typeNames.join(', ')}');
@@ -221,11 +231,13 @@ class Tables {
 class Migrations {
   Migrations({
     @required this.id,
+    this.versionCode = 'a',
     @required this.up,
   })  : assert(id != null),
         assert(up != null);
 
   final int id;
+  final String versionCode;
   final Future<void> Function(DatabaseTransaction conn) up;
 
   static List<Migrations> migrations() {
@@ -240,6 +252,8 @@ class Migrations {
           up: (db) async {
             await db.tables.email.createTables(db);
           }),
+      // dummy migration to indicate a required clean database ;)
+      Migrations(id: 3, up: (db) async {})
     ];
   }
 }

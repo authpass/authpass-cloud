@@ -27,9 +27,9 @@ class UserTable extends TableBase with TableConstants {
   static const TABLE_USER = '"user"';
   static const _TABLE_AUTH_TOKEN = 'auth_token';
   static const _COLUMN_STATUS = 'status';
-  static const _TABLE_EMAIL = 'email';
+  static const _TABLE_EMAIL = 'user_email';
   static const COLUMN_USER_ID = 'user_id';
-  static const _TABLE_EMAIL_CONFIRM = 'email_confirm';
+  static const _TABLE_EMAIL_CONFIRM = 'user_email_confirm';
   static const _COLUMN_TOKEN = 'token';
 
   /// reference from email token to auth token.
