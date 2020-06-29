@@ -2,6 +2,8 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
+import 'package:authpass_cloud_backend/src/env/env.dart';
+import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
@@ -23,6 +25,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   final OpenApiRequest request;
   final DatabaseTransaction db;
   final UserRepository userRepository;
+  Env get _env => serviceProvider.env;
 
   @override
   Future<CheckGetResponse> checkGet() async {
@@ -104,6 +107,11 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {String xAuthpassToken}) async {
+    if (xAuthpassToken != _env.config.secrets.emailReceiveToken) {
+      return EmailReceivePostResponse.response403(MailSystemStatusCodes
+          .errorNotAcceptingNetworkMessages
+          .toString(message: 'Permission denied.'));
+    }
     // TODO
     _logger.info('Received email. With the following body:\n\n$body');
     return EmailReceivePostResponse.response200();

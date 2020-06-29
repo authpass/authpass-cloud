@@ -94,6 +94,7 @@ class SecretsConfig implements EnvSecrets {
   SecretsConfig({
     @required this.recaptchaSecretKey,
     @required this.recaptchaSiteKey,
+    @required this.emailReceiveToken,
   });
   factory SecretsConfig.fromJson(Map json) => _$SecretsConfigFromJson(json);
   Map<String, dynamic> toJson() => _$SecretsConfigToJson(this);
@@ -103,6 +104,9 @@ class SecretsConfig implements EnvSecrets {
 
   @override
   final String recaptchaSiteKey;
+
+  @override
+  final String emailReceiveToken;
 }
 
 @JsonSerializable(anyMap: true, checked: true)

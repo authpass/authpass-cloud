@@ -11,6 +11,11 @@ class MailSystemStatusCodes {
     OTHER,
     OTHER,
   );
+  static const errorNotAcceptingNetworkMessages = MailSystemStatusCodes._(
+    CLASS_PERMANENT_FAILURE,
+    ROUTING_MAIL_SYSTEM_STATUS,
+    '2',
+  );
   static const errorNetworkMisc = MailSystemStatusCodes._(
     CLASS_PERMANENT_FAILURE,
     ROUTING_OTHER,
@@ -21,6 +26,7 @@ class MailSystemStatusCodes {
   static const CLASS_PERSISTENT_TRANSIENT_ERROR = '4';
   static const CLASS_PERMANENT_FAILURE = '5';
 
+  static const ROUTING_MAIL_SYSTEM_STATUS = '3';
   static const ROUTING_OTHER = '4';
 
   static const OTHER = '0';
@@ -30,7 +36,8 @@ class MailSystemStatusCodes {
   final String detailCode;
 
   @override
-  String toString() {
-    return '$classCode.$subjectCode.$detailCode';
+  String toString({String message}) {
+    return '$classCode.$subjectCode.$detailCode'
+        '${message == null ? '' : ' $message'}';
   }
 }

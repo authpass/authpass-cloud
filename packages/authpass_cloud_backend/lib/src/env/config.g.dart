@@ -110,6 +110,8 @@ SecretsConfig _$SecretsConfigFromJson(Map json) {
           $checkedConvert(json, 'recaptchaSecretKey', (v) => v as String),
       recaptchaSiteKey:
           $checkedConvert(json, 'recaptchaSiteKey', (v) => v as String),
+      emailReceiveToken:
+          $checkedConvert(json, 'emailReceiveToken', (v) => v as String),
     );
     return val;
   });
@@ -119,6 +121,7 @@ Map<String, dynamic> _$SecretsConfigToJson(SecretsConfig instance) =>
     <String, dynamic>{
       'recaptchaSecretKey': instance.recaptchaSecretKey,
       'recaptchaSiteKey': instance.recaptchaSiteKey,
+      'emailReceiveToken': instance.emailReceiveToken,
     };
 
 DatabaseConfig _$DatabaseConfigFromJson(Map json) {

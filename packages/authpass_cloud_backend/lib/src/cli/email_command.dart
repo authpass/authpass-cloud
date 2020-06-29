@@ -52,12 +52,10 @@ class EmailReceiveCommand extends Command<void> {
     final requestSender = HttpRequestSender();
     final client = AuthPassCloudClient(Uri.parse(backend), requestSender);
     try {
-      final env = Platform.environment.entries
-          .map(
-              (e) => 'X-${e.key}: ${e.value.replaceAll(RegExp('[\r\n]+'), '')}')
-          .join('\n');
-      final response = await client.emailReceivePost(env + '\n' + body,
-          xAuthpassToken: token);
+      final response = await client.emailReceivePost(
+        body,
+        xAuthpassToken: token,
+      );
       response.map(
         on200: (responses) {
           print(MailSystemStatusCodes.success.toString());
