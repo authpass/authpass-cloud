@@ -12,12 +12,14 @@ class EmailTable extends TableBase with TableConstants {
   static const _TABLE_EMAIL_MESSAGE = 'email_message';
   static const COLUMN_USER_ID = UserTable.COLUMN_USER_ID;
   static const _COLUMN_LABEL = 'label';
+  static const SUBJECT_MAX_LENGTH = 200;
 
   /// client provided uuid so the client can match the mailbox with a
   /// password entry.
   static const _COLUMN_CLIENT_ENTRY_UUID = 'client_entry_uuid';
   static const _COLUMN_ADDRESS = 'address';
   static const _COLUMN_MAILBOX_ID = 'mailbox_id';
+  static const _COLUMN_SUBJECT = 'subject';
   static const _COLUMN_MESSAGE = 'message';
   static const _COLUMN_SIZE = 'size';
   static const _COLUMN_SENDER = 'sender';
@@ -49,6 +51,7 @@ class EmailTable extends TableBase with TableConstants {
       $_COLUMN_MESSAGE TEXT not null,
       $_COLUMN_SIZE INTEGER not null,
       $_COLUMN_SENDER VARCHAR not null,
+      $_COLUMN_SUBJECT VARCHAR($SUBJECT_MAX_LENGTH) not null,
       $specColumnCreatedAt
     );
     ''');
@@ -90,11 +93,12 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<void> insertMessage(
-    DatabaseTransaction db,
-    MailboxEntity mailbox,
-    String sender,
-    String message,
-  ) async {
+    DatabaseTransaction db, {
+    @required MailboxEntity mailbox,
+    @required String sender,
+    @required String subject,
+    @required String message,
+  }) async {
     final id = cryptoService.createSecureUuid();
     await db.executeInsert(_TABLE_EMAIL_MESSAGE, {
       columnId: id,
@@ -102,7 +106,17 @@ class EmailTable extends TableBase with TableConstants {
       _COLUMN_MESSAGE: message,
       _COLUMN_SENDER: sender,
       _COLUMN_SIZE: message.length,
+      _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
+  }
+}
+
+extension on String {
+  String maxLength(int maxLength) {
+    if (length > maxLength) {
+      return substring(0, maxLength);
+    }
+    return this;
   }
 }
 

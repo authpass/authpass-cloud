@@ -29,7 +29,14 @@ class EmailDeliveryService {
       _logger.warning('Invalid destination address {$recipient}');
       return MailSystemStatusCodes.failureBadDestinationAddress;
     }
-    await db.tables.email.insertMessage(db, mailbox, fromAddress, rawMessage);
+    final subject = message.decodeHeaderValue('subject');
+    await db.tables.email.insertMessage(
+      db,
+      mailbox: mailbox,
+      sender: fromAddress,
+      subject: subject ?? '',
+      message: rawMessage,
+    );
 
     _logger.info('Received email for {$recipient}.'
         ' (from {$fromAddress})'
