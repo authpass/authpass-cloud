@@ -3,8 +3,9 @@ class MailSystemStatusCodes {
   const MailSystemStatusCodes._(
     this.classCode,
     this.subjectCode,
-    this.detailCode,
-  );
+    this.detailCode, {
+    this.message,
+  });
 
   static const success = MailSystemStatusCodes._(
     CLASS_SUCCESS,
@@ -21,6 +22,11 @@ class MailSystemStatusCodes {
     ROUTING_OTHER,
     OTHER,
   );
+  static const failureBadDestinationAddress = MailSystemStatusCodes._(
+    CLASS_PERMANENT_FAILURE,
+    '1',
+    '1',
+  );
 
   static const CLASS_SUCCESS = '2';
   static const CLASS_PERSISTENT_TRANSIENT_ERROR = '4';
@@ -35,9 +41,21 @@ class MailSystemStatusCodes {
   final String subjectCode;
   final String detailCode;
 
+  final String message;
+
   @override
   String toString({String message}) {
+    message ??= message;
     return '$classCode.$subjectCode.$detailCode'
         '${message == null ? '' : ' $message'}';
   }
+
+  bool get isSuccess => classCode == CLASS_SUCCESS;
+
+  MailSystemStatusCodes withMessage(String message) => MailSystemStatusCodes._(
+        classCode,
+        subjectCode,
+        detailCode,
+        message: message,
+      );
 }

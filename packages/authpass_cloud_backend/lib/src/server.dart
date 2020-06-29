@@ -1,3 +1,4 @@
+import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
@@ -69,6 +70,11 @@ class AuthPassEndpointProvider extends ApiEndpointProvider<AuthPassCloudImpl> {
           request,
           conn,
           UserRepository(conn),
+          EmailRepository(
+            db: conn,
+            cryptoService: serviceProvider.cryptoService,
+            env: serviceProvider.env,
+          ),
         ));
       });
     } finally {

@@ -1,4 +1,5 @@
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/migration_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
@@ -15,6 +16,23 @@ class DatabaseTransaction {
 
   final PostgreSQLExecutionContext _conn;
   final Tables tables;
+  static final columnNamePattern = RegExp(r'^[a-z_]+$');
+
+  Future<int> executeInsert(String table, Map<String, Object> values) async {
+    assert((() {
+      for (final key in values.keys) {
+        if (!columnNamePattern.hasMatch(key)) {
+          throw ArgumentError.value(key, 'values', 'Invalid column name.');
+        }
+      }
+      return true;
+    })());
+    final entries = values.entries.toList();
+    final columnList = entries.map((e) => e.key).join(',');
+    final bindList = entries.map((e) => '@${e.key}').join(',');
+    return await execute('INSERT INTO $table ($columnList) VALUES ($bindList)',
+        values: values, expectedResultCount: 1);
+  }
 
   Future<int> execute(
     String fmtString, {
@@ -188,9 +206,11 @@ class DatabaseAccess {
 class Tables {
   Tables({
     @required CryptoService cryptoService,
-  }) : user = UserTable(cryptoService: cryptoService);
+  })  : user = UserTable(cryptoService: cryptoService),
+        email = EmailTable(cryptoService: cryptoService);
   final migration = MigrationTable();
   final UserTable user;
+  final EmailTable email;
 
   List<TableBase> get allTables => [
         migration,
@@ -214,6 +234,11 @@ class Migrations {
           id: 1,
           up: (conn) async {
             await conn.tables.user.createTables(conn);
+          }),
+      Migrations(
+          id: 2,
+          up: (db) async {
+            await db.tables.email.createTables(db);
           }),
     ];
   }

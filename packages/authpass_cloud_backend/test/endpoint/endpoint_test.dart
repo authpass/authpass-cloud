@@ -1,3 +1,4 @@
+import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
@@ -34,9 +35,10 @@ void endpointTest(String description,
     final db = await TestUtils.setUpDatabase();
     try {
       await db.run((db) async {
+        final env = DevEnv();
         final endpoint = AuthPassCloudImpl(
           ServiceProvider(
-            env: DevEnv(),
+            env: env,
             cryptoService: CryptoService(),
             emailService: MockEmailService(),
             recaptchaService: MockRecaptchaService(),
@@ -44,6 +46,11 @@ void endpointTest(String description,
           MockOpenApiRequest(),
           db,
           UserRepository(db),
+          EmailRepository(
+            db: db,
+            cryptoService: CryptoService(),
+            env: env,
+          ),
         );
         await body(endpoint);
       });

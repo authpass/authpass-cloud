@@ -383,6 +383,102 @@ class EmailConfirmSchema implements _i2.OpenApiContent {
   String toString() => toJson().toString();
 }
 
+///
+@_i1.JsonSerializable()
+class MailboxCreatePostResponseBody200 implements _i2.OpenApiContent {
+  MailboxCreatePostResponseBody200({this.address});
+
+  factory MailboxCreatePostResponseBody200.fromJson(
+          Map<String, dynamic> jsonMap) =>
+      _$MailboxCreatePostResponseBody200FromJson(jsonMap);
+
+  /// The address of the new mailbox.
+  @_i1.JsonKey(name: 'address')
+  final String address;
+
+  Map<String, dynamic> toJson() =>
+      _$MailboxCreatePostResponseBody200ToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+class _MailboxCreatePostResponse200 extends MailboxCreatePostResponse
+    implements _i2.OpenApiResponseBodyJson {
+  /// Successfully created mailbox.
+  _MailboxCreatePostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final MailboxCreatePostResponseBody200 body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final _i2.OpenApiContentType contentType =
+      _i2.OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class MailboxCreatePostResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<MailboxCreatePostResponseBody200> {
+  MailboxCreatePostResponse();
+
+  /// Successfully created mailbox.
+  factory MailboxCreatePostResponse.response200(
+          MailboxCreatePostResponseBody200 body) =>
+      _MailboxCreatePostResponse200.response200(body);
+
+  void map(
+      {@_i3.required _i2.ResponseMap<_MailboxCreatePostResponse200> on200}) {
+    if (this is _MailboxCreatePostResponse200) {
+      on200((this as _MailboxCreatePostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  @override
+  MailboxCreatePostResponseBody200 requireSuccess() {
+    if (this is _MailboxCreatePostResponse200) {
+      return (this as _MailboxCreatePostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+///
+@_i1.JsonSerializable()
+class MailboxCreateSchema implements _i2.OpenApiContent {
+  MailboxCreateSchema({this.label, this.entryUuid});
+
+  factory MailboxCreateSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$MailboxCreateSchemaFromJson(jsonMap);
+
+  /// label for this mailbox, can be an empty string.
+  @_i1.JsonKey(name: 'label')
+  final String label;
+
+  /// Client provided entry uuid to match with password entry, can be an empty string.
+  @_i1.JsonKey(name: 'entryUuid')
+  final String entryUuid;
+
+  Map<String, dynamic> toJson() => _$MailboxCreateSchemaToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
 class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
   /// Received and delivered successfully.
   _EmailReceivePostResponse200.response200() : status = 200;
@@ -463,6 +559,10 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   /// post: /email/confirm
   Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
 
+  /// Creates a new (random) email address mailbox.
+  /// post: /mailbox/create
+  Future<MailboxCreatePostResponse> mailboxCreatePost(MailboxCreateSchema body);
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   /// [body]: Email content (header and body)
@@ -500,6 +600,11 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// post: /email/confirm
   ///
   Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
+
+  /// Creates a new (random) email address mailbox.
+  /// post: /mailbox/create
+  ///
+  Future<MailboxCreatePostResponse> mailboxCreatePost(MailboxCreateSchema body);
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
@@ -603,6 +708,28 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     });
   }
 
+  /// Creates a new (random) email address mailbox.
+  /// post: /mailbox/create
+  ///
+  @override
+  Future<MailboxCreatePostResponse> mailboxCreatePost(
+      MailboxCreateSchema body) async {
+    final request = _i2.OpenApiClientRequest('post', '/mailbox/create', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailboxCreatePostResponse200.response200(
+              MailboxCreatePostResponseBody200.fromJson(
+                  await response.responseBodyJson()))
+    });
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -674,6 +801,19 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Creates a new (random) email address mailbox.
+  /// post: /mailbox/create
+  ///
+  _i2.OpenApiClientRequest mailboxCreatePost() {
+    final request = _i2.OpenApiClientRequest('post', '/mailbox/create', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -726,6 +866,17 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
               EmailConfirmSchema.fromJson(
                   await request.readUrlEncodedBodyFlat())));
     }, security: []);
+    addRoute('/mailbox/create', 'post', (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxCreatePost(
+              MailboxCreateSchema.fromJson(await request.readJsonBody())));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/email/receive', 'post', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request,

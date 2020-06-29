@@ -93,6 +93,33 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+  /mailbox/create:
+    post:
+      summary: Creates a new (random) email address mailbox.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: 'label for this mailbox, can be an empty string.'
+                entryUuid:
+                  type: string
+                  description: 'Client provided entry uuid to match with password entry, can be an empty string.'
+      responses:
+        '200':
+          description: 'Successfully created mailbox.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  address:
+                    type: string
+                    description: The address of the new mailbox.
   /email/receive:
     post:
       summary: Receive emails throw smtp bridge.

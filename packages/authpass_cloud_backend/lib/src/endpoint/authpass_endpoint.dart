@@ -1,4 +1,5 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
+import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
@@ -17,14 +18,18 @@ class AuthPassCloudImpl extends AuthPassCloud {
     this.request,
     this.db,
     this.userRepository,
+    this.emailRepository,
   )   : assert(serviceProvider != null),
         assert(db != null),
-        assert(userRepository != null);
+        assert(userRepository != null),
+        assert(emailRepository != null);
 
   final ServiceProvider serviceProvider;
   final OpenApiRequest request;
   final DatabaseTransaction db;
   final UserRepository userRepository;
+  final EmailRepository emailRepository;
+
   Env get _env => serviceProvider.env;
 
   @override
@@ -112,8 +117,25 @@ class AuthPassCloudImpl extends AuthPassCloud {
           .errorNotAcceptingNetworkMessages
           .toString(message: 'Permission denied.'));
     }
-    // TODO
-    _logger.info('Received email. With the following body:\n\n$body');
-    return EmailReceivePostResponse.response200();
+    final status =
+        await serviceProvider.emailDeliveryService.deliverEmail(db, body);
+    if (status.isSuccess) {
+      return EmailReceivePostResponse.response200();
+    } else {
+      return EmailReceivePostResponse.response403(status.toString());
+    }
+  }
+
+  @override
+  Future<MailboxCreatePostResponse> mailboxCreatePost(
+      MailboxCreateSchema body) async {
+    final token = await _requireAuthToken();
+    final address = await emailRepository.createAddress(
+      token.user,
+      label: body.label,
+      clientEntryUuid: body.entryUuid,
+    );
+    return MailboxCreatePostResponse.response200(
+        MailboxCreatePostResponseBody200(address: address));
   }
 }

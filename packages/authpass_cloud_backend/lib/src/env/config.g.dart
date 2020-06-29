@@ -24,6 +24,14 @@ ConfigFileRoot _$ConfigFileRootFromJson(Map json) {
           (v) => v == null ? null : SecretsConfig.fromJson(v as Map)),
       database: $checkedConvert(json, 'database',
           (v) => DatabaseConfig.fromJson(Map<String, dynamic>.from(v as Map))),
+      mailbox: $checkedConvert(
+          json,
+          'mailbox',
+          (v) => v == null
+              ? null
+              : MailboxConfig.fromJson((v as Map)?.map(
+                  (k, e) => MapEntry(k as String, e),
+                ))),
     );
     return val;
   });
@@ -35,6 +43,18 @@ Map<String, dynamic> _$ConfigFileRootToJson(ConfigFileRoot instance) =>
       'email': instance.email,
       'secrets': instance.secrets,
       'database': instance.database,
+      'mailbox': instance.mailbox,
+    };
+
+MailboxConfig _$MailboxConfigFromJson(Map<String, dynamic> json) {
+  return MailboxConfig(
+    defaultHost: json['defaultHost'] as String,
+  );
+}
+
+Map<String, dynamic> _$MailboxConfigToJson(MailboxConfig instance) =>
+    <String, dynamic>{
+      'defaultHost': instance.defaultHost,
     };
 
 HttpConfig _$HttpConfigFromJson(Map json) {

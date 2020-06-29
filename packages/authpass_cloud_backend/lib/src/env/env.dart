@@ -3,18 +3,25 @@ import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:logging/logging.dart';
 
 final _logger = Logger('env');
+//
+//abstract class EnvSecrets {
+//  String get recaptchaSiteKey;
+//  String get recaptchaSecretKey;
+//  String get emailReceiveToken;
+//}
 
-abstract class EnvSecrets {
-  String get recaptchaSiteKey;
-  String get recaptchaSecretKey;
-}
-
-class EmptySecrets extends SecretsConfig {
+class EmptySecrets implements SecretsConfig {
   @override
   String get recaptchaSecretKey => '';
 
   @override
   String get recaptchaSiteKey => '';
+
+  @override
+  String get emailReceiveToken => '';
+
+  @override
+  Map<String, dynamic> toJson() => throw UnimplementedError();
 }
 
 class BuildInfo {
@@ -62,6 +69,9 @@ class DevEnv extends Env {
 
   @override
   final config = ConfigFileRoot(
+      mailbox: MailboxConfig(
+        defaultHost: 'localhost',
+      ),
       http: HttpConfig.defaults(),
       email: EmailConfig(
         fromAddress: 'fake@address.com',

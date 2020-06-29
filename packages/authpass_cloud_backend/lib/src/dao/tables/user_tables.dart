@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
-import 'package:meta/meta.dart';
-
 import 'package:logging/logging.dart';
-import 'package:postgres/postgres.dart';
+import 'package:meta/meta.dart';
 
 final _logger = Logger('user_tables');
 
@@ -26,11 +24,11 @@ AuthTokenStatus authTokenStatusFromName(String name) =>
 class UserTable extends TableBase with TableConstants {
   UserTable({@required this.cryptoService}) : assert(cryptoService != null);
 
-  static const _TABLE_USER = '"user"';
+  static const TABLE_USER = '"user"';
   static const _TABLE_AUTH_TOKEN = 'auth_token';
   static const _COLUMN_STATUS = 'status';
   static const _TABLE_EMAIL = 'email';
-  static const _COLUMN_USER_ID = 'user_id';
+  static const COLUMN_USER_ID = 'user_id';
   static const _TABLE_EMAIL_CONFIRM = 'email_confirm';
   static const _COLUMN_TOKEN = 'token';
 
@@ -45,7 +43,7 @@ class UserTable extends TableBase with TableConstants {
 
   @override
   List<String> get tables => [
-        _TABLE_USER,
+        TABLE_USER,
         _TABLE_AUTH_TOKEN,
         _TABLE_EMAIL,
         _TABLE_EMAIL_CONFIRM,
@@ -56,7 +54,7 @@ class UserTable extends TableBase with TableConstants {
 
   Future<void> createTables(DatabaseTransaction conn) async {
     await conn.execute('''
-    CREATE TABLE $_TABLE_USER (
+    CREATE TABLE $TABLE_USER (
       $columnId uuid primary key,
       $specColumnCreatedAt
     );
@@ -64,7 +62,7 @@ class UserTable extends TableBase with TableConstants {
       (${AuthTokenStatus.values.map((e) => "'${e.name}'").join(',')});
     CREATE TABLE $_TABLE_AUTH_TOKEN (
       $columnId uuid primary key,
-      $_COLUMN_USER_ID uuid not null references $_TABLE_USER ($columnId),
+      $COLUMN_USER_ID uuid not null references $TABLE_USER ($columnId),
       $_COLUMN_TOKEN varchar not null,
       $_COLUMN_STATUS $_TYPE_STATUS not null,
       $specColumnCreatedAt,
@@ -73,7 +71,7 @@ class UserTable extends TableBase with TableConstants {
     );
     CREATE TABLE $_TABLE_EMAIL (
       $columnId uuid primary key,
-      $_COLUMN_USER_ID uuid not null references $_TABLE_USER ($columnId),
+      $COLUMN_USER_ID uuid not null references $TABLE_USER ($columnId),
       $_COLUMN_EMAIL_ADDRESS varchar not null,
       $specColumnCreatedAt,
       $_COLUMN_CONFIRMED_AT $typeTimestamp default null,
@@ -98,8 +96,8 @@ class UserTable extends TableBase with TableConstants {
       DatabaseTransaction db, String email) async {
     email = _normalizeEmail(email);
     final query = await db.query('''
-      SELECT u.$columnId, e.$columnId FROM $_TABLE_USER u 
-        INNER JOIN $_TABLE_EMAIL e ON u.$columnId = e.$_COLUMN_USER_ID
+      SELECT u.$columnId, e.$columnId FROM $TABLE_USER u 
+        INNER JOIN $_TABLE_EMAIL e ON u.$columnId = e.$COLUMN_USER_ID
       WHERE e.$_COLUMN_EMAIL_ADDRESS = @email
     ''', values: <String, dynamic>{'email': email});
     if (query.isEmpty) {
@@ -121,7 +119,7 @@ class UserTable extends TableBase with TableConstants {
     final authToken =
         cryptoService.createSecureToken(type: TokenType.emailConfirm);
     await db.execute('''INSERT INTO $_TABLE_AUTH_TOKEN 
-     ($columnId, $_COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS)
+     ($columnId, $COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS)
      VALUES (@tokenUuid, @userUuid, @token, @status)
     ''', values: {
       'tokenUuid': tokenUuid,
@@ -130,7 +128,11 @@ class UserTable extends TableBase with TableConstants {
       'status': AuthTokenStatus.created.name,
     });
     return AuthTokenEntity(
-        id: tokenUuid, token: authToken, status: AuthTokenStatus.created);
+      id: tokenUuid,
+      token: authToken,
+      status: AuthTokenStatus.created,
+      user: user,
+    );
   }
 
   Future<EmailConfirmEntity> insertEmailConfirmToken(DatabaseTransaction db,
@@ -175,14 +177,16 @@ class UserTable extends TableBase with TableConstants {
     final where =
         authToken != null ? ' $_COLUMN_TOKEN = @token ' : '$columnId = @id ';
     return db.query(
-        '''select $columnId, $_COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS FROM $_TABLE_AUTH_TOKEN WHERE $where''',
+        '''select $columnId, $COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS FROM $_TABLE_AUTH_TOKEN WHERE $where''',
         values: authToken != null
             ? {'token': authToken}
             : {'id': tokenId}).singleOrNull((row) {
       return AuthTokenEntity(
-          id: row[0] as String,
-          token: row[2] as String,
-          status: authTokenStatusFromName(row[3] as String));
+        id: row[0] as String,
+        token: row[2] as String,
+        status: authTokenStatusFromName(row[3] as String),
+        user: UserEntity(id: row[1] as String),
+      );
     });
   }
 
@@ -207,7 +211,7 @@ class UserTable extends TableBase with TableConstants {
 
   Future<EmailEntity> findEmailById(
       DatabaseTransaction db, String emailId) async {
-    return db.query('''SELECT $_COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS, 
+    return db.query('''SELECT $COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS, 
     $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL WHERE $columnId = @id''',
         values: {'id': emailId}).singleOrNull((row) {
       return EmailEntity(
@@ -225,9 +229,9 @@ class UserTable extends TableBase with TableConstants {
     final emailUuid = cryptoService.createSecureUuid();
     final result = await db.execute(
       '''
-      INSERT INTO $_TABLE_USER ($columnId) values (@uuid);
+      INSERT INTO $TABLE_USER ($columnId) values (@uuid);
       INSERT INTO $_TABLE_EMAIL 
-        ($columnId, $_COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS)
+        ($columnId, $COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS)
         values
         (@emailUuid, @uuid, @email);
       ''',
@@ -271,31 +275,19 @@ class UserTable extends TableBase with TableConstants {
   }
 }
 
-extension on Future<PostgreSQLResult> {
-  Future<T> singleOrNull<T>(FutureOr<T> Function(PostgreSQLResultRow row) cb) =>
-      then((value) => value.singleOrNull(cb));
-}
-
-extension on PostgreSQLResult {
-  T singleOrNull<T>(T Function(PostgreSQLResultRow row) cb) {
-    if (isEmpty) {
-      return null;
-    }
-    return cb(single);
-  }
-}
-
 class AuthTokenEntity {
   AuthTokenEntity({
     @required this.id,
     @required this.token,
     @required this.status,
+    @required this.user,
   })  : assert(id != null),
         assert(token != null),
         assert(status != null);
   final String id;
   final String token;
   final AuthTokenStatus status;
+  final UserEntity user;
 }
 
 class UserEntity {

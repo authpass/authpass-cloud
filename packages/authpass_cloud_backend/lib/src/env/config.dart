@@ -1,4 +1,3 @@
-import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -11,10 +10,12 @@ class ConfigFileRoot {
     @required this.email,
     @required this.secrets,
     @required this.database,
+    @required this.mailbox,
   })  : http = http ?? HttpConfig.defaults(),
         assert(email != null),
         assert(secrets != null),
-        assert(database != null);
+        assert(database != null),
+        assert(mailbox != null);
   factory ConfigFileRoot.fromJson(Map json) => _$ConfigFileRootFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigFileRootToJson(this);
 
@@ -23,6 +24,19 @@ class ConfigFileRoot {
   final SecretsConfig secrets;
   @JsonKey(nullable: false, required: true)
   final DatabaseConfig database;
+  final MailboxConfig mailbox;
+}
+
+@JsonSerializable(nullable: false)
+class MailboxConfig {
+  MailboxConfig({
+    this.defaultHost,
+  });
+  factory MailboxConfig.fromJson(Map<String, dynamic> json) =>
+      _$MailboxConfigFromJson(json);
+  Map<String, dynamic> toJson() => _$MailboxConfigToJson(this);
+
+  final String defaultHost;
 }
 
 @JsonSerializable(anyMap: true, checked: true)
@@ -90,7 +104,7 @@ class EmailSmtpConfig {
 }
 
 @JsonSerializable(nullable: false, anyMap: true, checked: true)
-class SecretsConfig implements EnvSecrets {
+class SecretsConfig {
   SecretsConfig({
     @required this.recaptchaSecretKey,
     @required this.recaptchaSiteKey,
@@ -99,13 +113,10 @@ class SecretsConfig implements EnvSecrets {
   factory SecretsConfig.fromJson(Map json) => _$SecretsConfigFromJson(json);
   Map<String, dynamic> toJson() => _$SecretsConfigToJson(this);
 
-  @override
   final String recaptchaSecretKey;
 
-  @override
   final String recaptchaSiteKey;
 
-  @override
   final String emailReceiveToken;
 }
 

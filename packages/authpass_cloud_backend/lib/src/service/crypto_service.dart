@@ -17,6 +17,9 @@ class CryptoService {
   final Uuid _uuid =
       Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
 
+  static const _ADDRESS_LENGTH = 32;
+  static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789._-+';
+
   String createSecureUuid() => _uuid.v4();
 
   String createSecureToken({int length = 32, @required TokenType type}) {
@@ -29,5 +32,13 @@ class CryptoService {
     final token = base64.encode(list);
     assert(token.length == length);
     return token;
+  }
+
+  String createRandomAddress() {
+    final address = String.fromCharCodes(Iterable.generate(
+        _ADDRESS_LENGTH,
+        (_) => _ADDRESS_CHARACTERS
+            .codeUnitAt(_random.nextInt(_ADDRESS_CHARACTERS.length))));
+    return address;
   }
 }

@@ -101,3 +101,30 @@ Map<String, dynamic> _$EmailConfirmSchemaToJson(EmailConfirmSchema instance) =>
       'token': instance.token,
       'g-recaptcha-response': instance.gRecaptchaResponse,
     };
+
+MailboxCreatePostResponseBody200 _$MailboxCreatePostResponseBody200FromJson(
+    Map<String, dynamic> json) {
+  return MailboxCreatePostResponseBody200(
+    address: json['address'] as String,
+  );
+}
+
+Map<String, dynamic> _$MailboxCreatePostResponseBody200ToJson(
+        MailboxCreatePostResponseBody200 instance) =>
+    <String, dynamic>{
+      'address': instance.address,
+    };
+
+MailboxCreateSchema _$MailboxCreateSchemaFromJson(Map<String, dynamic> json) {
+  return MailboxCreateSchema(
+    label: json['label'] as String,
+    entryUuid: json['entryUuid'] as String,
+  );
+}
+
+Map<String, dynamic> _$MailboxCreateSchemaToJson(
+        MailboxCreateSchema instance) =>
+    <String, dynamic>{
+      'label': instance.label,
+      'entryUuid': instance.entryUuid,
+    };

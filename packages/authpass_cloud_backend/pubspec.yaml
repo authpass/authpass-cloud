@@ -19,6 +19,7 @@ dependencies:
   clock: ^1.0.1
   mailer: ^3.0.4
   yaml: ^2.2.1
+  enough_mail: ^0.0.28
 
   openapi_base:
     path: ../../deps/openapi_dart/packages/openapi_base
