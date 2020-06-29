@@ -2,6 +2,7 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:meta/meta.dart';
 
 class EmailRepository {
@@ -41,5 +42,22 @@ class EmailRepository {
       }
     }
     throw StateError('Unable to find unique address after $_MAX_RETRY tries.');
+  }
+
+  Future<List<EmailMessage>> findEmailsForUser(
+    UserEntity user, {
+    @required int offset,
+    @required int limit,
+    @required DateTime until,
+    DateTime since,
+  }) async {
+    return await db.tables.email.findEmailsForUser(db, user,
+        offset: offset, limit: limit, until: until, since: since);
+  }
+
+  Future<String> findEmailMessageBody(UserEntity user,
+      {String messageId}) async {
+    return await db.tables.email
+        .findEmailMessageBody(db, user, messageId: messageId);
   }
 }

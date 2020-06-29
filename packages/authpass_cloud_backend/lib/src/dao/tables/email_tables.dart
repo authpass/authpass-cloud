@@ -2,8 +2,14 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/check.dart';
+
+import 'package:logging/logging.dart';
+
+final _logger = Logger('email_tables');
 
 class EmailTable extends TableBase with TableConstants {
   EmailTable({@required this.cryptoService}) : assert(cryptoService != null);
@@ -20,9 +26,12 @@ class EmailTable extends TableBase with TableConstants {
   static const _COLUMN_ADDRESS = 'address';
   static const _COLUMN_MAILBOX_ID = 'mailbox_id';
   static const _COLUMN_SUBJECT = 'subject';
+
+  /// message body (header + body) of the email.
   static const _COLUMN_MESSAGE = 'message';
   static const _COLUMN_SIZE = 'size';
   static const _COLUMN_SENDER = 'sender';
+  static const _COLUMN_READ_AT = 'readAt';
 
   final CryptoService cryptoService;
 
@@ -52,6 +61,7 @@ class EmailTable extends TableBase with TableConstants {
       $_COLUMN_SIZE INTEGER not null,
       $_COLUMN_SENDER VARCHAR not null,
       $_COLUMN_SUBJECT VARCHAR($SUBJECT_MAX_LENGTH) not null,
+      $_COLUMN_READ_AT $typeTimestamp,
       $specColumnCreatedAt
     );
     ''');
@@ -102,12 +112,77 @@ class EmailTable extends TableBase with TableConstants {
     final id = cryptoService.createSecureUuid();
     await db.executeInsert(_TABLE_EMAIL_MESSAGE, {
       columnId: id,
+      columnCreatedAt: clock.now(),
       _COLUMN_MAILBOX_ID: mailbox.id,
       _COLUMN_MESSAGE: message,
       _COLUMN_SENDER: sender,
       _COLUMN_SIZE: message.length,
       _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
+  }
+
+  Future<List<EmailMessage>> findEmailsForUser(
+    DatabaseTransaction db,
+    UserEntity user, {
+    @required int offset,
+    @required int limit,
+    @required DateTime until,
+    DateTime since,
+  }) async {
+    final sinceFilter = since == null ? '' : ' m.$columnCreatedAt > @since';
+    final result = await db.query('''
+    SELECT m.$columnId, m.$_COLUMN_SUBJECT, m.$_COLUMN_SENDER, 
+      m.$columnCreatedAt, m.$_COLUMN_MAILBOX_ID, m.$_COLUMN_SIZE,
+      m.$_COLUMN_READ_AT
+    FROM $_TABLE_EMAIL_MESSAGE m INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
+    WHERE m.$COLUMN_USER_ID = @userId AND m.$columnCreatedAt <= @until $sinceFilter
+    ORDER BY m.$columnCreatedAt DESC, m.$columnId
+    LIMIT @limit OFFSET @offset
+    ''', values: {
+      'userId': user.id,
+      'until': until,
+      'limit': limit,
+      'offset': offset,
+      if (since != null) 'since': since,
+    });
+    return result
+        .map((row) => EmailMessage(
+              id: row[0] as String,
+              subject: row[1] as String,
+              sender: row[2] as String,
+              createdAt: row[3] as DateTime,
+              mailboxEntryUuid: row[4] as String,
+              size: row[5] as int,
+              isRead: row[6] != null,
+            ))
+        .toList();
+  }
+
+  Future<String> findEmailMessageBody(DatabaseTransaction db, UserEntity user,
+      {String messageId}) async {
+    assert(user != null);
+    final message =
+        await db.query('''SELECT m.$_COLUMN_MESSAGE, mb.$COLUMN_USER_ID 
+    FROM $_TABLE_EMAIL_MESSAGE m 
+      INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
+    WHERE m.$columnId = :id
+      ''');
+    checkState(message.length <= 1);
+    if (message.isEmpty) {
+      _logger.warning('Unknown message id $messageId');
+      return null;
+    }
+    final row = message.first;
+
+    final body = row[0] as String;
+    final userId = row[1] as String;
+
+    if (userId != user.id) {
+      _logger.severe('User requested email which was not his own. '
+          '$userId vs ${user.id} for email $messageId');
+      return null;
+    }
+    return body;
   }
 }
 

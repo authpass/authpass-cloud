@@ -4,19 +4,24 @@ info:
   description: Never mind.
   version: 1.0.0
   x-dart-name: AuthPassCloud
+  contact:
+    url: 'https://authpass.app/'
+    email: herbert@authpass.app
+    name: Herbert Poul
 servers:
-  - url: 'https'
+  - url: https
 paths:
   /check:
     get:
-      summary: 'Health check.'
+      summary: Health check.
       security: []
       responses:
         '200':
-          description: 'Everything OK'
+          description: Everything OK
+      description: Health check of endpoint data
   /user/register:
     post:
-      summary: Create new user, or login the user using confirmation email.
+      summary: 'Create new user, or login the user using confirmation email.'
       security: []
       requestBody:
         required: true
@@ -36,7 +41,7 @@ paths:
       summary: Get the status of the current auth token (whether it was confirmed or not).
       responses:
         '200':
-          description: 'Whether it was confirmed or not.'
+          description: Whether it was confirmed or not.
           content:
             application/json:
               schema:
@@ -111,7 +116,7 @@ paths:
                   description: 'Client provided entry uuid to match with password entry, can be an empty string.'
       responses:
         '200':
-          description: 'Successfully created mailbox.'
+          description: Successfully created mailbox.
           content:
             application/json:
               schema:
@@ -120,6 +125,55 @@ paths:
                   address:
                     type: string
                     description: The address of the new mailbox.
+  /mailbox/list:
+    get:
+      summary: List all emails in all mailboxes of the current user.
+      responses:
+        '200':
+          description: Successful list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    $ref: '#/components/schemas/Page'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmailMessage'
+                required:
+                  - page
+                  - data
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: page_token
+          description: Page token as returned by Page
+        - schema:
+            type: string
+          in: query
+          name: since_token
+          description: As returned from a previous page object for a finished sync.
+      description: ''
+  /mailbox/message/{messageId}:
+    parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: MailboxMessageGet
+      summary: 'Fetch raw email message.'
+      responses:
+        '200':
+          description: Raw email message incluuding all headers, body and attachment.
+          content:
+            'text/plain':
+              schema:
+                type: string
   /email/receive:
     post:
       summary: Receive emails throw smtp bridge.
@@ -130,7 +184,7 @@ paths:
           schema:
             type: string
           required: true
-          description: 'Security token to validate origin from trusted server'
+          description: Security token to validate origin from trusted server
       security: []
       requestBody:
         required: true
@@ -141,9 +195,9 @@ paths:
               description: Email content (header and body)
       responses:
         '200':
-          description: 'Received and delivered successfully.'
+          description: Received and delivered successfully.
         '403':
-          description: 'Delivery not accepted.'
+          description: Delivery not accepted.
           content:
             text/plain:
               schema:
@@ -155,20 +209,20 @@ components:
       properties:
         email:
           type: string
-          description: 'Email address for the current user.'
+          description: Email address for the current user.
       required:
         - email
     RegisterResponse:
       properties:
         userUuid:
           type: string
-          description: 'Uuid of the newly registered user.'
+          description: Uuid of the newly registered user.
         authToken:
           type: string
           description: 'Auth token which can be used for authentication, once email is confirmed.'
         status:
           type: string
-          description: 'Status of the user and auth token (created or confirmed).'
+          description: Status of the user and auth token (created or confirmed).
           enum:
             - created
             - confirmed
@@ -176,6 +230,46 @@ components:
         - userUuid
         - authToken
         - status
+    Page:
+      title: Page
+      type: object
+      properties:
+        nextPageToken:
+          description: Token for the next page, might be null if there are no more pages.
+          type: string
+        sinceToken:
+          description: Once everything is synced, this token can be used for subsequent syncs.
+          type: string
+    EmailMessage:
+      title: EmailMessage
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        subject:
+          type: string
+        sender:
+          type: string
+        mailboxEntryUuid:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        size:
+          type: integer
+          description: 'Body size in bytes.'
+        isRead:
+          type: boolean
+          description: true if this mail was marked as read.
+      required:
+        - id
+        - subject
+        - sender
+        - mailboxEntryUuid
+        - createdAt
+        - size
+        - isRead
   securitySchemes:
     auth_token:
       type: http

@@ -70,6 +70,43 @@ const _$RegisterResponseStatusEnumMap = {
   RegisterResponseStatus.confirmed: 'confirmed',
 };
 
+Page _$PageFromJson(Map<String, dynamic> json) {
+  return Page(
+    nextPageToken: json['nextPageToken'] as String,
+    sinceToken: json['sinceToken'] as String,
+  );
+}
+
+Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
+      'nextPageToken': instance.nextPageToken,
+      'sinceToken': instance.sinceToken,
+    };
+
+EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) {
+  return EmailMessage(
+    id: json['id'] as String,
+    subject: json['subject'] as String,
+    sender: json['sender'] as String,
+    mailboxEntryUuid: json['mailboxEntryUuid'] as String,
+    createdAt: json['createdAt'] == null
+        ? null
+        : DateTime.parse(json['createdAt'] as String),
+    size: json['size'] as int,
+    isRead: json['isRead'] as bool,
+  );
+}
+
+Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'subject': instance.subject,
+      'sender': instance.sender,
+      'mailboxEntryUuid': instance.mailboxEntryUuid,
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'size': instance.size,
+      'isRead': instance.isRead,
+    };
+
 EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
     Map<String, dynamic> json) {
   return EmailStatusGetResponseBody200(
@@ -127,4 +164,24 @@ Map<String, dynamic> _$MailboxCreateSchemaToJson(
     <String, dynamic>{
       'label': instance.label,
       'entryUuid': instance.entryUuid,
+    };
+
+MailboxListGetResponseBody200 _$MailboxListGetResponseBody200FromJson(
+    Map<String, dynamic> json) {
+  return MailboxListGetResponseBody200(
+    page: json['page'] == null
+        ? null
+        : Page.fromJson(json['page'] as Map<String, dynamic>),
+    data: (json['data'] as List)
+        ?.map((e) =>
+            e == null ? null : EmailMessage.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$MailboxListGetResponseBody200ToJson(
+        MailboxListGetResponseBody200 instance) =>
+    <String, dynamic>{
+      'page': instance.page,
+      'data': instance.data,
     };

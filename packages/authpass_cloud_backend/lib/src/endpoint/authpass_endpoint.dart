@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
@@ -7,6 +9,7 @@ import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
 
@@ -138,4 +141,74 @@ class AuthPassCloudImpl extends AuthPassCloud {
     return MailboxCreatePostResponse.response200(
         MailboxCreatePostResponseBody200(address: address));
   }
+
+  @override
+  Future<MailboxListGetResponse> mailboxListGet({
+    String pageToken,
+    String sinceToken,
+  }) async {
+    final token = await _requireAuthToken();
+    final page = pageToken != null
+        ? PageToken.decode(pageToken)
+        : PageToken(
+            0,
+            clock.now().toUtc(),
+            DateTime.tryParse(sinceToken) ??
+                DateTime.fromMillisecondsSinceEpoch(0),
+          );
+
+    const limit = 50;
+
+    final emails = await emailRepository.findEmailsForUser(
+      token.user,
+      offset: page.offset,
+      limit: limit,
+      until: page.until,
+      since: page.since,
+    );
+    return MailboxListGetResponse.response200(
+      MailboxListGetResponseBody200(
+        page: Page(
+          nextPageToken:
+              emails.length < limit ? null : page.nextPage(limit).encode(),
+          sinceToken: page.until.toIso8601String(),
+        ),
+        data: emails,
+      ),
+    );
+  }
+
+  @override
+  Future<MailboxMessageGetResponse> mailboxMessageGet(
+      {String messageId}) async {
+    final token = await _requireAuthToken();
+    final body = await emailRepository.findEmailMessageBody(token.user,
+        messageId: messageId);
+    return MailboxMessageGetResponse.response200(body);
+  }
+}
+
+class PageToken {
+  PageToken(this.offset, this.until, this.since);
+  factory PageToken.decode(String pageToken) {
+    final split = utf8.decode(base64.decode(pageToken)).split(';');
+    return PageToken(
+      int.parse(split[0]),
+      _dec(split[1]),
+      _dec(split[2]),
+    );
+  }
+
+  final int offset;
+  final DateTime until;
+  final DateTime since;
+
+  static int _enc(DateTime dateTime) => dateTime.toUtc().millisecondsSinceEpoch;
+  static DateTime _dec(String value) =>
+      DateTime.fromMillisecondsSinceEpoch(int.parse(value), isUtc: true);
+
+  String encode() =>
+      base64.encode(utf8.encode('$offset;${_enc(until)};${_enc(since)}'));
+
+  PageToken nextPage(int skip) => PageToken(offset + skip, until, since);
 }
