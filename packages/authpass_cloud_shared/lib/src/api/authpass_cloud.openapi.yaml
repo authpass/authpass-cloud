@@ -98,6 +98,21 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+  /mailbox:
+    get:
+      summary: List of all mailboxes of the current user.
+      responses:
+        '200':
+          description: On Success returns unpaginated list (right now) of all mailboxes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mailbox'
   /mailbox/create:
     post:
       summary: Creates a new (random) email address mailbox.
@@ -270,6 +285,26 @@ components:
         - createdAt
         - size
         - isRead
+    Mailbox:
+      type: object
+      properties:
+        address:
+          type: string
+          description: Unique email address (a@example.com)
+        label:
+          type: string
+          description: Label as given during create. (Can be empty string)
+        entryUuid:
+          type: string
+          description: Entry uuid given during create. (Can be empty string)
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - address
+        - label
+        - entryUuid
+        - createdAt
   securitySchemes:
     auth_token:
       type: http

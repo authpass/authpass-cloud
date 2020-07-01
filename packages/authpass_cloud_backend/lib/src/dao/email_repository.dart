@@ -60,4 +60,8 @@ class EmailRepository {
     return await db.tables.email
         .findEmailMessageBody(db, user, messageId: messageId);
   }
+
+  Future<List<Mailbox>> findMailboxAll(UserEntity user) async {
+    return await db.tables.email.findMailboxAll(db, user);
+  }
 }

@@ -107,6 +107,24 @@ Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
       'isRead': instance.isRead,
     };
 
+Mailbox _$MailboxFromJson(Map<String, dynamic> json) {
+  return Mailbox(
+    address: json['address'] as String,
+    label: json['label'] as String,
+    entryUuid: json['entryUuid'] as String,
+    createdAt: json['createdAt'] == null
+        ? null
+        : DateTime.parse(json['createdAt'] as String),
+  );
+}
+
+Map<String, dynamic> _$MailboxToJson(Mailbox instance) => <String, dynamic>{
+      'address': instance.address,
+      'label': instance.label,
+      'entryUuid': instance.entryUuid,
+      'createdAt': instance.createdAt?.toIso8601String(),
+    };
+
 EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
     Map<String, dynamic> json) {
   return EmailStatusGetResponseBody200(
@@ -137,6 +155,22 @@ Map<String, dynamic> _$EmailConfirmSchemaToJson(EmailConfirmSchema instance) =>
     <String, dynamic>{
       'token': instance.token,
       'g-recaptcha-response': instance.gRecaptchaResponse,
+    };
+
+MailboxGetResponseBody200 _$MailboxGetResponseBody200FromJson(
+    Map<String, dynamic> json) {
+  return MailboxGetResponseBody200(
+    data: (json['data'] as List)
+        ?.map((e) =>
+            e == null ? null : Mailbox.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$MailboxGetResponseBody200ToJson(
+        MailboxGetResponseBody200 instance) =>
+    <String, dynamic>{
+      'data': instance.data,
     };
 
 MailboxCreatePostResponseBody200 _$MailboxCreatePostResponseBody200FromJson(

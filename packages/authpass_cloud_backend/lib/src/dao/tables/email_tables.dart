@@ -102,6 +102,27 @@ class EmailTable extends TableBase with TableConstants {
         ));
   }
 
+  Future<List<Mailbox>> findMailboxAll(
+      DatabaseTransaction db, UserEntity user) async {
+    final result = await db.query('''
+        SELECT $columnId, $_COLUMN_ADDRESS, $columnCreatedAt, 
+                $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID 
+        FROM $_TABLE_EMAIL_MAILBOX 
+        WHERE $COLUMN_USER_ID = @userId''', values: {
+      'userId': user.id,
+    });
+    return result
+        .map(
+          (row) => Mailbox(
+            address: row[1] as String,
+            createdAt: row[2] as DateTime,
+            label: row[3] as String,
+            entryUuid: row[4] as String,
+          ),
+        )
+        .toList();
+  }
+
   Future<void> insertMessage(
     DatabaseTransaction db, {
     @required MailboxEntity mailbox,
