@@ -1,11 +1,10 @@
 name: authpass_cloud_shared
 
 environment:
-  sdk: '>=2.9.0-15.0.dev <3.0.0'
+  sdk: '>=2.8.4 <3.0.0'
 
 dependencies:
-  openapi_base:
-    path: ../../deps/openapi_dart/packages/openapi_base
+  openapi_base: ^0.1.0
 
 dev_dependencies:
   openapi_code_builder:
