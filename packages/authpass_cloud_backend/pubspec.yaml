@@ -21,8 +21,7 @@ dependencies:
   yaml: ^2.2.1
   enough_mail: ^0.0.28
 
-  openapi_base:
-    path: ../../deps/openapi_dart/packages/openapi_base
+  openapi_base: ^0.1.1
   authpass_cloud_shared:
     path: ../authpass_cloud_shared
 
@@ -32,4 +31,8 @@ dev_dependencies:
   build_runner: ^1.10.0
   freezed: ^0.11.2
   json_serializable: ^3.3.0
+
+dependency_overrides:
+  openapi_base:
+    path: ../../deps/openapi_dart/packages/openapi_base
 
