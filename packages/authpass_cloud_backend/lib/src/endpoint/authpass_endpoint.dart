@@ -153,8 +153,9 @@ class AuthPassCloudImpl extends AuthPassCloud {
         : PageToken(
             0,
             clock.now().toUtc(),
-            DateTime.tryParse(sinceToken) ??
-                DateTime.fromMillisecondsSinceEpoch(0),
+            sinceToken != null
+                ? DateTime.parse(sinceToken)
+                : DateTime.fromMillisecondsSinceEpoch(0),
           );
 
     const limit = 50;
