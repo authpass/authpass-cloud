@@ -18,7 +18,8 @@ class CryptoService {
       Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
 
   static const _ADDRESS_LENGTH = 32;
-  static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789._-+';
+//  static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789._-+';
+  static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
   String createSecureUuid() => _uuid.v4();
 
