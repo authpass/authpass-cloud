@@ -382,7 +382,8 @@ class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse {
       {'status': status, 'contentType': contentType};
 }
 
-abstract class EmailConfirmGetResponse extends _i2.OpenApiResponse {
+abstract class EmailConfirmGetResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<String> {
   EmailConfirmGetResponse();
 
   /// /// OK
@@ -402,6 +403,15 @@ abstract class EmailConfirmGetResponse extends _i2.OpenApiResponse {
       on400((this as _EmailConfirmGetResponse400));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  @override
+  String requireSuccess() {
+    if (this is _EmailConfirmGetResponse200) {
+      return (this as _EmailConfirmGetResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
@@ -441,7 +451,8 @@ class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
       {'status': status, 'contentType': contentType};
 }
 
-abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse {
+abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<String> {
   EmailConfirmPostResponse();
 
   /// /// OK
@@ -461,6 +472,15 @@ abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse {
       on400((this as _EmailConfirmPostResponse400));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  @override
+  String requireSuccess() {
+    if (this is _EmailConfirmPostResponse200) {
+      return (this as _EmailConfirmPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
@@ -748,7 +768,8 @@ class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
-abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse {
+abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<String> {
   MailboxMessageGetResponse();
 
   /// /// Raw email message incluuding all headers, body and attachment.
@@ -761,6 +782,15 @@ abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse {
       on200((this as _MailboxMessageGetResponse200));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  @override
+  String requireSuccess() {
+    if (this is _MailboxMessageGetResponse200) {
+      return (this as _MailboxMessageGetResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
