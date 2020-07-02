@@ -129,6 +129,9 @@ paths:
                 entryUuid:
                   type: string
                   description: 'Client provided entry uuid to match with password entry, can be an empty string.'
+              required:
+                - label
+                - entryUuid
       responses:
         '200':
           description: Successfully created mailbox.

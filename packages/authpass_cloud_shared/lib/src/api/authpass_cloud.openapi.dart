@@ -9,7 +9,7 @@ part 'authpass_cloud.openapi.g.dart';
 
 @_i1.JsonSerializable()
 class RegisterRequest implements _i2.OpenApiContent {
-  RegisterRequest({@_i3.required this.email});
+  RegisterRequest({@_i3.required this.email}) : assert(email != null);
 
   factory RegisterRequest.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterRequestFromJson(jsonMap);
@@ -44,7 +44,10 @@ class RegisterResponse implements _i2.OpenApiContent {
   RegisterResponse(
       {@_i3.required this.userUuid,
       @_i3.required this.authToken,
-      @_i3.required this.status});
+      @_i3.required this.status})
+      : assert(userUuid != null),
+        assert(authToken != null),
+        assert(status != null);
 
   factory RegisterResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterResponseFromJson(jsonMap);
@@ -95,7 +98,14 @@ class EmailMessage implements _i2.OpenApiContent {
       @_i3.required this.mailboxEntryUuid,
       @_i3.required this.createdAt,
       @_i3.required this.size,
-      @_i3.required this.isRead});
+      @_i3.required this.isRead})
+      : assert(id != null),
+        assert(subject != null),
+        assert(sender != null),
+        assert(mailboxEntryUuid != null),
+        assert(createdAt != null),
+        assert(size != null),
+        assert(isRead != null);
 
   factory EmailMessage.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailMessageFromJson(jsonMap);
@@ -134,7 +144,11 @@ class Mailbox implements _i2.OpenApiContent {
       {@_i3.required this.address,
       @_i3.required this.label,
       @_i3.required this.entryUuid,
-      @_i3.required this.createdAt});
+      @_i3.required this.createdAt})
+      : assert(address != null),
+        assert(label != null),
+        assert(entryUuid != null),
+        assert(createdAt != null);
 
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
@@ -453,7 +467,10 @@ abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse {
 
 @_i1.JsonSerializable()
 class EmailConfirmSchema implements _i2.OpenApiContent {
-  EmailConfirmSchema({@_i3.required this.token, this.gRecaptchaResponse});
+  EmailConfirmSchema(
+      {@_i3.required this.token, @_i3.required this.gRecaptchaResponse})
+      : assert(token != null),
+        assert(gRecaptchaResponse != null);
 
   factory EmailConfirmSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailConfirmSchemaFromJson(jsonMap);
@@ -614,7 +631,9 @@ abstract class MailboxCreatePostResponse extends _i2.OpenApiResponse
 
 @_i1.JsonSerializable()
 class MailboxCreateSchema implements _i2.OpenApiContent {
-  MailboxCreateSchema({this.label, this.entryUuid});
+  MailboxCreateSchema({@_i3.required this.label, @_i3.required this.entryUuid})
+      : assert(label != null),
+        assert(entryUuid != null);
 
   factory MailboxCreateSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxCreateSchemaFromJson(jsonMap);
@@ -635,7 +654,9 @@ class MailboxCreateSchema implements _i2.OpenApiContent {
 @_i1.JsonSerializable()
 class MailboxListGetResponseBody200 implements _i2.OpenApiContent {
   MailboxListGetResponseBody200(
-      {@_i3.required this.page, @_i3.required this.data});
+      {@_i3.required this.page, @_i3.required this.data})
+      : assert(page != null),
+        assert(data != null);
 
   factory MailboxListGetResponseBody200.fromJson(
           Map<String, dynamic> jsonMap) =>
