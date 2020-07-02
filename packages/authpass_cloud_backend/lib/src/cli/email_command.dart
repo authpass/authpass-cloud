@@ -63,6 +63,8 @@ class EmailReceiveCommand extends Command<void> {
         },
         on403: (response) {
           print(response.body);
+          exitCode = 1;
+          print('Error during email delivery. $exitCode');
         },
       );
     } catch (e, stackTrace) {
