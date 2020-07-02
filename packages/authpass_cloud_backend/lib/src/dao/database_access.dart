@@ -34,6 +34,22 @@ class DatabaseTransaction {
         values: values, expectedResultCount: 1);
   }
 
+  bool _assertCorrectValues(Map<String, Object> values) {
+    if (values == null) {
+      return true;
+    }
+    for (final entry in values.entries) {
+      final value = entry.value;
+      if (value is DateTime) {
+        if (!value.isUtc) {
+          throw ArgumentError.value(
+              entry, 'Value for ${entry.key} is a non-UTC DateTime.');
+        }
+      }
+    }
+    return true;
+  }
+
   Future<int> execute(
     String fmtString, {
     Map<String, Object> values,
@@ -41,6 +57,8 @@ class DatabaseTransaction {
     int expectedResultCount,
   }) async {
     try {
+      assert(_assertCorrectValues(values));
+      _logger.finest('Executing query: $fmtString with values: $values');
       final result = await _conn.execute(fmtString,
           substitutionValues: values, timeoutInSeconds: timeoutInSeconds);
       if (expectedResultCount != null && result != expectedResultCount) {
@@ -60,6 +78,7 @@ class DatabaseTransaction {
       {Map<String, Object> values,
       bool allowReuse,
       int timeoutInSeconds}) async {
+    assert(_assertCorrectValues(values));
     return _conn.query(fmtString,
         substitutionValues: values,
         allowReuse: allowReuse,
@@ -148,7 +167,7 @@ class DatabaseAccess {
       });
     }
 
-    final migrationRun = clock.now();
+    final migrationRun = clock.now().toUtc();
     await run((conn) async {
       final migrations = Migrations.migrations();
       for (final migration in migrations) {

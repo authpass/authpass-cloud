@@ -133,7 +133,7 @@ class EmailTable extends TableBase with TableConstants {
     final id = cryptoService.createSecureUuid();
     await db.executeInsert(_TABLE_EMAIL_MESSAGE, {
       columnId: id,
-      columnCreatedAt: clock.now(),
+      columnCreatedAt: clock.now().toUtc(),
       _COLUMN_MAILBOX_ID: mailbox.id,
       _COLUMN_MESSAGE: message,
       _COLUMN_SENDER: sender,
@@ -150,13 +150,13 @@ class EmailTable extends TableBase with TableConstants {
     @required DateTime until,
     DateTime since,
   }) async {
-    final sinceFilter = since == null ? '' : ' m.$columnCreatedAt > @since';
+    final sinceFilter = since == null ? '' : ' AND m.$columnCreatedAt > @since';
     final result = await db.query('''
     SELECT m.$columnId, m.$_COLUMN_SUBJECT, m.$_COLUMN_SENDER, 
       m.$columnCreatedAt, m.$_COLUMN_MAILBOX_ID, m.$_COLUMN_SIZE,
       m.$_COLUMN_READ_AT
     FROM $_TABLE_EMAIL_MESSAGE m INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
-    WHERE m.$COLUMN_USER_ID = @userId AND m.$columnCreatedAt <= @until $sinceFilter
+    WHERE mb.$COLUMN_USER_ID = @userId AND m.$columnCreatedAt <= @until $sinceFilter
     ORDER BY m.$columnCreatedAt DESC, m.$columnId
     LIMIT @limit OFFSET @offset
     ''', values: {

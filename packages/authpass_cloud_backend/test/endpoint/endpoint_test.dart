@@ -7,6 +7,7 @@ import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
@@ -94,5 +95,35 @@ void main() {
       final status = (await endpoint.emailStatusGet()).requireSuccess();
       expect(status.status, EmailStatusGetResponseBody200Status.confirmed);
     }
+  });
+
+  endpointTest('list emails', (endpoint) async {
+    final db = endpoint.db;
+    final confirm =
+        await endpoint.db.tables.user.insertUser(endpoint.db, 'a@b.com');
+    await endpoint.userRepository.confirmEmailAddress(confirm.token);
+    const address = 'x@mail.authpass.app';
+    await endpoint.db.tables.email.insertMailbox(
+      endpoint.db,
+      userEntity: confirm.authToken.user,
+      label: '',
+      address: address,
+      clientEntryUuid: '',
+    );
+
+    final mailbox =
+        await endpoint.db.tables.email.findMailbox(db, address: address);
+    await endpoint.db.tables.email.insertMessage(
+      endpoint.db,
+      mailbox: mailbox,
+      sender: 'nobody@example.com',
+      subject: 'Lorem',
+      message: 'Ipsum',
+    );
+
+    when(endpoint.request.headerParameter('Authorization'))
+        .thenReturn(['Bearer ${confirm.authToken.token}']);
+    final list = await endpoint.mailboxListGet().requireSuccess();
+    expect(list.data, hasLength(1));
   });
 }

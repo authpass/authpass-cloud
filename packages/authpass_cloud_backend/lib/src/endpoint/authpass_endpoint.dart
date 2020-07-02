@@ -154,8 +154,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
             0,
             clock.now().toUtc(),
             sinceToken != null
-                ? DateTime.parse(sinceToken)
-                : DateTime.fromMillisecondsSinceEpoch(0),
+                ? DateTime.parse(sinceToken).toUtc()
+                : DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
           );
 
     const limit = 50;

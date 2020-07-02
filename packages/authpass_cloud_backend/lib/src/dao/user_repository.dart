@@ -36,7 +36,7 @@ class UserRepository {
         await db.tables.user.findEmailConfirmToken(db, token);
     if (emailConfirmToken.confirmedAt == null) {
       await db.tables.user.updateEmailConfirmToken(db, emailConfirmToken.token,
-          confirmedAt: clock.now());
+          confirmedAt: clock.now().toUtc());
       if (emailConfirmToken.authToken.status == AuthTokenStatus.created) {
         await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken.id,
             status: AuthTokenStatus.active);
