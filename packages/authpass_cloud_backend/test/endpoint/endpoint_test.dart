@@ -1,4 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
@@ -7,7 +9,6 @@ import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
-import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
@@ -61,6 +62,28 @@ void endpointTest(String description,
   });
 }
 
+Future<AuthTokenEntity> _createUserConfirmed(AuthPassCloudImpl endpoint) async {
+  final db = endpoint.db;
+  final confirm = await db.tables.user.insertUser(endpoint.db, 'a@b.com');
+  await endpoint.userRepository.confirmEmailAddress(confirm.token);
+  when(endpoint.request.headerParameter('Authorization'))
+      .thenReturn(['Bearer ${confirm.authToken.token}']);
+  return confirm.authToken;
+}
+
+Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
+  final authToken = await _createUserConfirmed(endpoint);
+  const address = 'x@mail.authpass.app';
+  await endpoint.db.tables.email.insertMailbox(
+    endpoint.db,
+    userEntity: authToken.user,
+    label: '',
+    address: address,
+    clientEntryUuid: '',
+  );
+  return endpoint.db.tables.email.findMailbox(endpoint.db, address: address);
+}
+
 void main() {
   PrintAppender.setupLogging();
   _logger.fine('starting tests...');
@@ -98,21 +121,7 @@ void main() {
   });
 
   endpointTest('list emails', (endpoint) async {
-    final db = endpoint.db;
-    final confirm =
-        await endpoint.db.tables.user.insertUser(endpoint.db, 'a@b.com');
-    await endpoint.userRepository.confirmEmailAddress(confirm.token);
-    const address = 'x@mail.authpass.app';
-    await endpoint.db.tables.email.insertMailbox(
-      endpoint.db,
-      userEntity: confirm.authToken.user,
-      label: '',
-      address: address,
-      clientEntryUuid: '',
-    );
-
-    final mailbox =
-        await endpoint.db.tables.email.findMailbox(db, address: address);
+    final mailbox = await _createUserWithMailbox(endpoint);
     await endpoint.db.tables.email.insertMessage(
       endpoint.db,
       mailbox: mailbox,
@@ -121,9 +130,21 @@ void main() {
       message: 'Ipsum',
     );
 
-    when(endpoint.request.headerParameter('Authorization'))
-        .thenReturn(['Bearer ${confirm.authToken.token}']);
     final list = await endpoint.mailboxListGet().requireSuccess();
     expect(list.data, hasLength(1));
+  });
+  endpointTest('fetch email body', (endpoint) async {
+    final mailbox = await _createUserWithMailbox(endpoint);
+    final id = await endpoint.db.tables.email.insertMessage(
+      endpoint.db,
+      mailbox: mailbox,
+      sender: 'nobody@example.com',
+      subject: 'Lorem',
+      message: 'Ipsum',
+    );
+
+    final body =
+        await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
+    expect(body, 'Ipsum');
   });
 }

@@ -123,7 +123,7 @@ class EmailTable extends TableBase with TableConstants {
         .toList();
   }
 
-  Future<void> insertMessage(
+  Future<String> insertMessage(
     DatabaseTransaction db, {
     @required MailboxEntity mailbox,
     @required String sender,
@@ -140,6 +140,7 @@ class EmailTable extends TableBase with TableConstants {
       _COLUMN_SIZE: message.length,
       _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
+    return id;
   }
 
   Future<List<EmailMessage>> findEmailsForUser(
@@ -180,14 +181,15 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<String> findEmailMessageBody(DatabaseTransaction db, UserEntity user,
-      {String messageId}) async {
+      {@required String messageId}) async {
     assert(user != null);
+    assert(messageId != null);
     final message =
         await db.query('''SELECT m.$_COLUMN_MESSAGE, mb.$COLUMN_USER_ID 
     FROM $_TABLE_EMAIL_MESSAGE m 
       INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
-    WHERE m.$columnId = :id
-      ''');
+    WHERE m.$columnId = @id
+      ''', values: {'id': messageId});
     checkState(message.length <= 1);
     if (message.isEmpty) {
       _logger.warning('Unknown message id $messageId');
