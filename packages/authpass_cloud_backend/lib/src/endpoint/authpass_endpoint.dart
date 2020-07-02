@@ -191,7 +191,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxGetResponse> mailboxGet() async {
     final token = await _requireAuthToken();
     final mailboxList = await emailRepository.findMailboxAll(token.user);
-    throw MailboxGetResponse.response200(
+    return MailboxGetResponse.response200(
         MailboxGetResponseBody200(data: mailboxList));
   }
 }
