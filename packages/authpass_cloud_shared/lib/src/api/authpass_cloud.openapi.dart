@@ -1293,7 +1293,11 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmGet(
-              token: paramToString(request.queryParameter('token'))));
+              token: param(
+                  isRequired: true,
+                  name: 'token',
+                  value: request.queryParameter('token'),
+                  decode: (value) => paramToString(value))));
     }, security: []);
     addRoute('/email/confirm', 'post', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
@@ -1326,9 +1330,16 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxListGet(
-              pageToken: paramToString(request.queryParameter('page_token')),
-              sinceToken:
-                  paramToString(request.queryParameter('since_token'))));
+              pageToken: param(
+                  isRequired: false,
+                  name: 'page_token',
+                  value: request.queryParameter('page_token'),
+                  decode: (value) => paramToString(value)),
+              sinceToken: param(
+                  isRequired: false,
+                  name: 'since_token',
+                  value: request.queryParameter('since_token'),
+                  decode: (value) => paramToString(value))));
     }, security: [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
@@ -1340,7 +1351,11 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageGet(
-              messageId: paramToString(request.pathParameter('messageId'))));
+              messageId: param(
+                  isRequired: true,
+                  name: 'messageId',
+                  value: request.pathParameter('messageId'),
+                  decode: (value) => paramToString(value))));
     }, security: [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
@@ -1352,8 +1367,11 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
           request,
           (AuthPassCloud impl) async => impl.emailReceivePost(
               await request.readBodyString(),
-              xAuthpassToken:
-                  paramToString(request.headerParameter('x-authpass-token'))));
+              xAuthpassToken: param(
+                  isRequired: true,
+                  name: 'x-authpass-token',
+                  value: request.headerParameter('x-authpass-token'),
+                  decode: (value) => paramToString(value))));
     }, security: []);
   }
 }
