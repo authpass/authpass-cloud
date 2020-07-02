@@ -15,6 +15,7 @@ class EmailDeliveryService {
 
     if (!fromLine.startsWith('From ')) {
       _logger.shout('Invalid format. expected From header as first line.');
+      _logger.finer('Email content was: $body');
       return MailSystemStatusCodes.errorNetworkMisc
           .withMessage('Missing From header.');
     }
