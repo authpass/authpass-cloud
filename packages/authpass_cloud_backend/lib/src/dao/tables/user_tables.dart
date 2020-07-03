@@ -296,6 +296,11 @@ class UserEntity {
   }) : assert(id != null);
 
   final String id;
+
+  @override
+  String toString() {
+    return 'UserEntity{id: $id}';
+  }
 }
 
 class EmailEntity {

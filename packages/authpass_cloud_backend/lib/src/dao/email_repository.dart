@@ -30,6 +30,15 @@ class EmailRepository {
     assert(label != null);
     assert(clientEntryUuid != null);
 
+    final mailboxes = await db.tables.email.findMailboxAll(db, userEntity);
+    if (mailboxes.length > 800) {
+      _logger.shout('More than 800 mailboxes for $userEntity');
+    }
+    if (mailboxes.length > 1000) {
+      throw StateError(
+          'We do not allow more than 1000 mailboxes per user right now.');
+    }
+
     const _MAX_RETRY = 10;
     for (var i = 0; i < _MAX_RETRY; i++) {
       final addressLocal = cryptoService.createRandomAddress();
