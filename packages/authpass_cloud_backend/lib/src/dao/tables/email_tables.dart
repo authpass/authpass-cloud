@@ -116,7 +116,9 @@ class EmailTable extends TableBase with TableConstants {
         SELECT $columnId, $_COLUMN_ADDRESS, $columnCreatedAt, 
                 $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID 
         FROM $_TABLE_EMAIL_MAILBOX 
-        WHERE $COLUMN_USER_ID = @userId''', values: {
+        WHERE $COLUMN_USER_ID = @userId
+        ORDER BY $columnCreatedAt DESC
+        ''', values: {
       'userId': user.id,
     });
     return result
