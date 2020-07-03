@@ -31,7 +31,7 @@ class EmailTable extends TableBase with TableConstants {
   static const _COLUMN_MESSAGE = 'message';
   static const _COLUMN_SIZE = 'size';
   static const _COLUMN_SENDER = 'sender';
-  static const _COLUMN_READ_AT = 'readAt';
+  static const _COLUMN_READ_AT = 'read_at';
 
   final CryptoService cryptoService;
 
@@ -143,6 +143,27 @@ class EmailTable extends TableBase with TableConstants {
     return id;
   }
 
+  Future<EmailMessage> findEmailForUser(
+    DatabaseTransaction db,
+    UserEntity user, {
+    @required String messageId,
+  }) async {
+    assert(user != null);
+    assert(messageId != null);
+    final list = await _findEmailsForUser(
+      db,
+      user,
+      offset: 0,
+      limit: 1,
+      until: null,
+      messageId: messageId,
+    );
+    if (list.isEmpty) {
+      return null;
+    }
+    return list.first;
+  }
+
   Future<List<EmailMessage>> findEmailsForUser(
     DatabaseTransaction db,
     UserEntity user, {
@@ -151,21 +172,43 @@ class EmailTable extends TableBase with TableConstants {
     @required DateTime until,
     DateTime since,
   }) async {
+    assert(until != null);
+    return await _findEmailsForUser(db, user,
+        offset: offset, limit: limit, until: until, since: since);
+  }
+
+  Future<List<EmailMessage>> _findEmailsForUser(
+    DatabaseTransaction db,
+    UserEntity user, {
+    @required int offset,
+    @required int limit,
+    @required DateTime until,
+    DateTime since,
+    String messageId,
+  }) async {
     final sinceFilter = since == null ? '' : ' AND m.$columnCreatedAt > @since';
+    final messageIdFilter = messageId == null ? '' : ' AND m.id = @messageId';
+    final untilFilter =
+        until == null ? '' : ' AND m.$columnCreatedAt <= @until ';
     final result = await db.query('''
     SELECT m.$columnId, m.$_COLUMN_SUBJECT, m.$_COLUMN_SENDER, 
       m.$columnCreatedAt, m.$_COLUMN_MAILBOX_ID, m.$_COLUMN_SIZE,
       m.$_COLUMN_READ_AT
     FROM $_TABLE_EMAIL_MESSAGE m INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
-    WHERE mb.$COLUMN_USER_ID = @userId AND m.$columnCreatedAt <= @until $sinceFilter
+    WHERE 
+      mb.$COLUMN_USER_ID = @userId 
+      $untilFilter
+      $sinceFilter
+      $messageIdFilter
     ORDER BY m.$columnCreatedAt DESC, m.$columnId
     LIMIT @limit OFFSET @offset
     ''', values: {
       'userId': user.id,
-      'until': until,
+      if (until != null) 'until': until,
       'limit': limit,
       'offset': offset,
       if (since != null) 'since': since,
+      if (messageId != null) 'messageId': messageId,
     });
     return result
         .map((row) => EmailMessage(
@@ -206,6 +249,21 @@ class EmailTable extends TableBase with TableConstants {
       return null;
     }
     return body;
+  }
+
+  /// update the read date of the given message.
+  /// Before calling this method, makee sure it is a valid message id and
+  /// the it belongs to the correct user.
+  Future<void> updateReadFor(
+    DatabaseTransaction db, {
+    @required String messageId,
+    @required DateTime readAt,
+  }) async {
+    assert(messageId != null);
+    await db.execute(
+        'UPDATE $_TABLE_EMAIL_MESSAGE SET $_COLUMN_READ_AT = @readAt WHERE id = @id',
+        values: {'id': messageId, 'readAt': readAt},
+        expectedResultCount: 1);
   }
 }
 

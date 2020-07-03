@@ -192,6 +192,19 @@ paths:
             'text/plain':
               schema:
                 type: string
+  /mailbox/message/{messageId}/read:
+    parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      operationId: MailboxMessageMarkRead
+      summary: 'Mark message as read'
+      responses:
+        '200':
+          description: 'Successfully marked as read.'
   /email/receive:
     post:
       summary: Receive emails throw smtp bridge.

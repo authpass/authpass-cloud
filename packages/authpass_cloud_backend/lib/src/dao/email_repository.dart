@@ -3,7 +3,12 @@ import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:meta/meta.dart';
+
+import 'package:logging/logging.dart';
+
+final _logger = Logger('email_repository');
 
 class EmailRepository {
   EmailRepository(
@@ -63,5 +68,21 @@ class EmailRepository {
 
   Future<List<Mailbox>> findMailboxAll(UserEntity user) async {
     return await db.tables.email.findMailboxAll(db, user);
+  }
+
+  /// true if mail was found, false otherwise.
+  Future<bool> markAsRead(UserEntity user, {String messageId}) async {
+    final mail =
+        await db.tables.email.findEmailForUser(db, user, messageId: messageId);
+    if (mail != null) {
+      if (mail.isRead) {
+        _logger.warning(
+            'Marking email as read although it already is read. $messageId');
+      }
+      await db.tables.email
+          .updateReadFor(db, messageId: messageId, readAt: clock.now().toUtc());
+      return true;
+    }
+    return false;
   }
 }

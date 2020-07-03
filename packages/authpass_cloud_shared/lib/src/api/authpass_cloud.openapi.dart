@@ -795,6 +795,40 @@ abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse
   }
 }
 
+class _MailboxMessageMarkReadResponse200
+    extends MailboxMessageMarkReadResponse {
+  /// /// Successfully marked as read.
+  _MailboxMessageMarkReadResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailboxMessageMarkReadResponse extends _i2.OpenApiResponse {
+  MailboxMessageMarkReadResponse();
+
+  /// /// Successfully marked as read.
+  factory MailboxMessageMarkReadResponse.response200() =>
+      _MailboxMessageMarkReadResponse200.response200();
+
+  void map(
+      {@_i3.required
+          _i2.ResponseMap<_MailboxMessageMarkReadResponse200> on200}) {
+    if (this is _MailboxMessageMarkReadResponse200) {
+      on200((this as _MailboxMessageMarkReadResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+}
+
 class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
   /// /// Received and delivered successfully.
   _EmailReceivePostResponse200.response200() : status = 200;
@@ -895,6 +929,11 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   Future<MailboxMessageGetResponse> mailboxMessageGet(
       {@_i3.required String messageId});
 
+  /// Mark message as read
+  /// put: /mailbox/message/{messageId}/read
+  Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
+      {@_i3.required String messageId});
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   /// [body]: Email content (header and body)
@@ -957,6 +996,12 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// get: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageGetResponse> mailboxMessageGet(
+      {@_i3.required String messageId});
+
+  /// Mark message as read
+  /// put: /mailbox/message/{messageId}/read
+  ///
+  Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
       {@_i3.required String messageId});
 
   /// Receive emails throw smtp bridge.
@@ -1148,6 +1193,26 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     });
   }
 
+  /// Mark message as read
+  /// put: /mailbox/message/{messageId}/read
+  ///
+  @override
+  Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
+      {@_i3.required String messageId}) async {
+    final request =
+        _i2.OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailboxMessageMarkReadResponse200.response200()
+    });
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -1280,6 +1345,22 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Mark message as read
+  /// put: /mailbox/message/{messageId}/read
+  ///
+  _i2.OpenApiClientRequest mailboxMessageMarkRead(
+      {@_i3.required String messageId}) {
+    final request =
+        _i2.OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return request;
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -1381,6 +1462,22 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageGet(
+              messageId: param(
+                  isRequired: true,
+                  name: 'messageId',
+                  value: request.pathParameter('messageId'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mailbox/message/{messageId}/read', 'put',
+        (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxMessageMarkRead(
               messageId: param(
                   isRequired: true,
                   name: 'messageId',

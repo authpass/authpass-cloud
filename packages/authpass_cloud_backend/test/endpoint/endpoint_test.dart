@@ -147,4 +147,25 @@ void main() {
         await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
     expect(body, 'Ipsum');
   });
+  endpointTest('mark as read', (endpoint) async {
+    final mailbox = await _createUserWithMailbox(endpoint);
+    final id = await endpoint.db.tables.email.insertMessage(
+      endpoint.db,
+      mailbox: mailbox,
+      sender: 'nobody@example.com',
+      subject: 'Lorem',
+      message: 'Ipsum',
+    );
+
+    {
+      final list = await endpoint.mailboxListGet().requireSuccess();
+      expect(list.data, hasLength(1));
+      expect(list.data.first.isRead, false);
+    }
+    await endpoint.mailboxMessageMarkRead(messageId: id);
+
+    final list = await endpoint.mailboxListGet().requireSuccess();
+    expect(list.data, hasLength(1));
+    expect(list.data.first.isRead, true);
+  });
 }

@@ -195,6 +195,16 @@ class AuthPassCloudImpl extends AuthPassCloud {
     return MailboxGetResponse.response200(
         MailboxGetResponseBody200(data: mailboxList));
   }
+
+  @override
+  Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
+      {String messageId}) async {
+    final token = await _requireAuthToken();
+    if (!await emailRepository.markAsRead(token.user, messageId: messageId)) {
+      throw NotFoundException('Message not found.');
+    }
+    return MailboxMessageMarkReadResponse.response200();
+  }
 }
 
 class PageToken {
