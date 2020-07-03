@@ -814,6 +814,49 @@ abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse
   }
 }
 
+class _MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
+  /// /// Message was deleted successfully.
+  _MailboxMessageDeleteResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailboxMessageDeleteResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
+  MailboxMessageDeleteResponse();
+
+  /// /// Message was deleted successfully.
+  factory MailboxMessageDeleteResponse.response200() =>
+      _MailboxMessageDeleteResponse200.response200();
+
+  void map(
+      {@_i3.required _i2.ResponseMap<_MailboxMessageDeleteResponse200> on200}) {
+    if (this is _MailboxMessageDeleteResponse200) {
+      on200((this as _MailboxMessageDeleteResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Message was deleted successfully.
+  @override
+  void requireSuccess() {
+    if (this is _MailboxMessageDeleteResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
 class _MailboxMessageMarkReadResponse200
     extends MailboxMessageMarkReadResponse {
   /// /// Successfully marked as read.
@@ -1015,6 +1058,11 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   Future<MailboxMessageGetResponse> mailboxMessageGet(
       {@_i3.required String messageId});
 
+  /// Delete the given message.
+  /// delete: /mailbox/message/{messageId}
+  Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
+      {@_i3.required String messageId});
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
@@ -1087,6 +1135,12 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// get: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageGetResponse> mailboxMessageGet(
+      {@_i3.required String messageId});
+
+  /// Delete the given message.
+  /// delete: /mailbox/message/{messageId}
+  ///
+  Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
       {@_i3.required String messageId});
 
   /// Mark message as read
@@ -1290,6 +1344,26 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     });
   }
 
+  /// Delete the given message.
+  /// delete: /mailbox/message/{messageId}
+  ///
+  @override
+  Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
+      {@_i3.required String messageId}) async {
+    final request =
+        _i2.OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailboxMessageDeleteResponse200.response200()
+    });
+  }
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
@@ -1462,6 +1536,22 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Delete the given message.
+  /// delete: /mailbox/message/{messageId}
+  ///
+  _i2.OpenApiClientRequest mailboxMessageDelete(
+      {@_i3.required String messageId}) {
+    final request =
+        _i2.OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return request;
+  }
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
@@ -1595,6 +1685,22 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageGet(
+              messageId: param(
+                  isRequired: true,
+                  name: 'messageId',
+                  value: request.pathParameter('messageId'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mailbox/message/{messageId}', 'delete',
+        (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxMessageDelete(
               messageId: param(
                   isRequired: true,
                   name: 'messageId',

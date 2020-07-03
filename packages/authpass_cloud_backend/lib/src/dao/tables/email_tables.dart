@@ -32,6 +32,7 @@ class EmailTable extends TableBase with TableConstants {
   static const _COLUMN_SIZE = 'size';
   static const _COLUMN_SENDER = 'sender';
   static const _COLUMN_READ_AT = 'read_at';
+  static const _COLUMN_DELETED_AT = 'deleted_at';
 
   final CryptoService cryptoService;
 
@@ -40,6 +41,7 @@ class EmailTable extends TableBase with TableConstants {
         _TABLE_EMAIL_MAILBOX,
         _TABLE_EMAIL_MESSAGE,
       ];
+
   Future<void> createTables(DatabaseTransaction db) async {
     await db.execute('''
     CREATE TABLE $_TABLE_EMAIL_MAILBOX (
@@ -64,6 +66,12 @@ class EmailTable extends TableBase with TableConstants {
       $_COLUMN_READ_AT $typeTimestamp,
       $specColumnCreatedAt
     );
+    ''');
+  }
+
+  Future<void> migrate4(DatabaseTransaction db) async {
+    await db.execute('''
+    ALTER TABLE $_TABLE_EMAIL_MESSAGE ADD COLUMN $_COLUMN_DELETED_AT $typeTimestamp
     ''');
   }
 
@@ -143,7 +151,7 @@ class EmailTable extends TableBase with TableConstants {
     return id;
   }
 
-  Future<EmailMessage> findEmailForUser(
+  Future<EmailMessageEntity> findEmailForUser(
     DatabaseTransaction db,
     UserEntity user, {
     @required String messageId,
@@ -164,7 +172,7 @@ class EmailTable extends TableBase with TableConstants {
     return list.first;
   }
 
-  Future<List<EmailMessage>> findEmailsForUser(
+  Future<List<EmailMessageEntity>> findEmailsForUser(
     DatabaseTransaction db,
     UserEntity user, {
     @required int offset,
@@ -177,7 +185,7 @@ class EmailTable extends TableBase with TableConstants {
         offset: offset, limit: limit, until: until, since: since);
   }
 
-  Future<List<EmailMessage>> _findEmailsForUser(
+  Future<List<EmailMessageEntity>> _findEmailsForUser(
     DatabaseTransaction db,
     UserEntity user, {
     @required int offset,
@@ -193,10 +201,11 @@ class EmailTable extends TableBase with TableConstants {
     final result = await db.query('''
     SELECT m.$columnId, m.$_COLUMN_SUBJECT, m.$_COLUMN_SENDER, 
       m.$columnCreatedAt, m.$_COLUMN_MAILBOX_ID, m.$_COLUMN_SIZE,
-      m.$_COLUMN_READ_AT
+      m.$_COLUMN_READ_AT, m.$_COLUMN_DELETED_AT
     FROM $_TABLE_EMAIL_MESSAGE m INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
     WHERE 
       mb.$COLUMN_USER_ID = @userId 
+      AND m.$_COLUMN_DELETED_AT IS NULL
       $untilFilter
       $sinceFilter
       $messageIdFilter
@@ -211,14 +220,15 @@ class EmailTable extends TableBase with TableConstants {
       if (messageId != null) 'messageId': messageId,
     });
     return result
-        .map((row) => EmailMessage(
+        .map((row) => EmailMessageEntity(
               id: row[0] as String,
               subject: row[1] as String,
               sender: row[2] as String,
               createdAt: row[3] as DateTime,
               mailboxEntryUuid: row[4] as String,
               size: row[5] as int,
-              isRead: row[6] != null,
+              readAt: row[6] as DateTime,
+              deletedAt: row[7] as DateTime,
             ))
         .toList();
   }
@@ -254,16 +264,19 @@ class EmailTable extends TableBase with TableConstants {
   /// update the read date of the given message.
   /// Before calling this method, makee sure it is a valid message id and
   /// the it belongs to the correct user.
-  Future<void> updateReadFor(
+  Future<void> updateMailMessage(
     DatabaseTransaction db, {
     @required String messageId,
     @required DateTime readAt,
+    @required DateTime deletedAt,
   }) async {
     assert(messageId != null);
-    await db.execute(
-        'UPDATE $_TABLE_EMAIL_MESSAGE SET $_COLUMN_READ_AT = @readAt WHERE id = @id',
-        values: {'id': messageId, 'readAt': readAt},
-        expectedResultCount: 1);
+    await db.executeUpdate(_TABLE_EMAIL_MESSAGE, set: {
+      _COLUMN_READ_AT: readAt,
+      _COLUMN_DELETED_AT: deletedAt,
+    }, where: {
+      'id': messageId
+    });
   }
 }
 
@@ -281,4 +294,45 @@ class MailboxEntity {
 
   final String id;
   final String address;
+}
+
+class EmailMessageEntity {
+  EmailMessageEntity({
+    @required this.id,
+    @required this.subject,
+    @required this.sender,
+    @required this.mailboxEntryUuid,
+    @required this.createdAt,
+    @required this.size,
+    @required this.readAt,
+    @required this.deletedAt,
+  });
+
+  final String id;
+
+  final String subject;
+
+  final String sender;
+
+  final String mailboxEntryUuid;
+
+  final DateTime createdAt;
+
+  final int size;
+
+  final DateTime readAt;
+
+  bool get isRead => readAt != null;
+
+  final DateTime deletedAt;
+
+  EmailMessage toEmailMessage() => EmailMessage(
+        id: id,
+        subject: subject,
+        sender: sender,
+        mailboxEntryUuid: mailboxEntryUuid,
+        createdAt: createdAt,
+        size: size,
+        isRead: readAt != null,
+      );
 }

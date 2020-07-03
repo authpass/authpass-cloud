@@ -192,6 +192,12 @@ paths:
             'text/plain':
               schema:
                 type: string
+    delete:
+      operationId: MailboxMessageDelete
+      summary: 'Delete the given message.'
+      responses:
+        '200':
+          description: Message was deleted successfully.
   /mailbox/message/{messageId}/read:
     parameters:
       - name: messageId

@@ -120,55 +120,76 @@ void main() {
     }
   });
 
-  endpointTest('list emails', (endpoint) async {
-    final mailbox = await _createUserWithMailbox(endpoint);
-    await endpoint.db.tables.email.insertMessage(
-      endpoint.db,
-      mailbox: mailbox,
-      sender: 'nobody@example.com',
-      subject: 'Lorem',
-      message: 'Ipsum',
-    );
+  group('Email', () {
+    endpointTest('list emails', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      await endpoint.db.tables.email.insertMessage(
+        endpoint.db,
+        mailbox: mailbox,
+        sender: 'nobody@example.com',
+        subject: 'Lorem',
+        message: 'Ipsum',
+      );
 
-    final list = await endpoint.mailboxListGet().requireSuccess();
-    expect(list.data, hasLength(1));
-  });
-  endpointTest('fetch email body', (endpoint) async {
-    final mailbox = await _createUserWithMailbox(endpoint);
-    final id = await endpoint.db.tables.email.insertMessage(
-      endpoint.db,
-      mailbox: mailbox,
-      sender: 'nobody@example.com',
-      subject: 'Lorem',
-      message: 'Ipsum',
-    );
+      final list = await endpoint.mailboxListGet().requireSuccess();
+      expect(list.data, hasLength(1));
+    });
+    endpointTest('fetch email body', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      final id = await endpoint.db.tables.email.insertMessage(
+        endpoint.db,
+        mailbox: mailbox,
+        sender: 'nobody@example.com',
+        subject: 'Lorem',
+        message: 'Ipsum',
+      );
 
-    final body =
-        await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
-    expect(body, 'Ipsum');
-  });
-  endpointTest('mark as read', (endpoint) async {
-    final mailbox = await _createUserWithMailbox(endpoint);
-    final id = await endpoint.db.tables.email.insertMessage(
-      endpoint.db,
-      mailbox: mailbox,
-      sender: 'nobody@example.com',
-      subject: 'Lorem',
-      message: 'Ipsum',
-    );
+      final body =
+          await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
+      expect(body, 'Ipsum');
+    });
+    endpointTest('mark as read', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      final id = await endpoint.db.tables.email.insertMessage(
+        endpoint.db,
+        mailbox: mailbox,
+        sender: 'nobody@example.com',
+        subject: 'Lorem',
+        message: 'Ipsum',
+      );
 
-    final list = await endpoint.mailboxListGet().requireSuccess();
-    expect(list.data, hasLength(1));
-    expect(list.data.first.isRead, false);
+      final list = await endpoint.mailboxListGet().requireSuccess();
+      expect(list.data, hasLength(1));
+      expect(list.data.first.isRead, false);
 
-    await endpoint.mailboxMessageMarkRead(messageId: id).requireSuccess();
+      await endpoint.mailboxMessageMarkRead(messageId: id).requireSuccess();
 
-    final l2 = await endpoint.mailboxListGet().requireSuccess();
-    expect(l2.data.single.isRead, true);
+      final l2 = await endpoint.mailboxListGet().requireSuccess();
+      expect(l2.data.single.isRead, true);
 
-    await endpoint.mailboxMessageMarkUnRead(messageId: id).requireSuccess();
+      await endpoint.mailboxMessageMarkUnRead(messageId: id).requireSuccess();
 
-    final l3 = await endpoint.mailboxListGet().requireSuccess();
-    expect(l3.data.single.isRead, false);
+      final l3 = await endpoint.mailboxListGet().requireSuccess();
+      expect(l3.data.single.isRead, false);
+    });
+    endpointTest('delete message', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      final id = await endpoint.db.tables.email.insertMessage(
+        endpoint.db,
+        mailbox: mailbox,
+        sender: 'nobody@example.com',
+        subject: 'Lorem',
+        message: 'Ipsum',
+      );
+
+      final list = await endpoint.mailboxListGet().requireSuccess();
+      expect(list.data, hasLength(1));
+      expect(list.data.first.isRead, false);
+
+      await endpoint.mailboxMessageDelete(messageId: id).requireSuccess();
+
+      final l2 = await endpoint.mailboxListGet().requireSuccess();
+      expect(l2.data, isEmpty);
+    });
   });
 }

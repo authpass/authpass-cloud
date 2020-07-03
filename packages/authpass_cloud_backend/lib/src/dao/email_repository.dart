@@ -1,4 +1,5 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
@@ -49,7 +50,7 @@ class EmailRepository {
     throw StateError('Unable to find unique address after $_MAX_RETRY tries.');
   }
 
-  Future<List<EmailMessage>> findEmailsForUser(
+  Future<List<EmailMessageEntity>> findEmailsForUser(
     UserEntity user, {
     @required int offset,
     @required int limit,
@@ -82,8 +83,24 @@ class EmailRepository {
         _logger.warning('Marking email as read=$isRead although it already is.'
             ' $messageId (${mail.isRead} vs $isRead)');
       }
-      await db.tables.email.updateReadFor(db,
-          messageId: messageId, readAt: isRead ? clock.now().toUtc() : null);
+      await db.tables.email.updateMailMessage(db,
+          messageId: messageId,
+          readAt: isRead ? clock.now().toUtc() : null,
+          deletedAt: mail.deletedAt);
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> deleteMessage(UserEntity user,
+      {@required String messageId}) async {
+    final mail =
+        await db.tables.email.findEmailForUser(db, user, messageId: messageId);
+    if (mail != null) {
+      await db.tables.email.updateMailMessage(db,
+          messageId: messageId,
+          readAt: mail.readAt,
+          deletedAt: clock.now().toUtc());
       return true;
     }
     return false;

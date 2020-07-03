@@ -18,7 +18,7 @@ class DatabaseTransaction {
   final Tables tables;
   static final columnNamePattern = RegExp(r'^[a-z_]+$');
 
-  Future<int> executeInsert(String table, Map<String, Object> values) async {
+  void _assertColumnNames(Map<String, Object> values) {
     assert((() {
       for (final key in values.keys) {
         if (!columnNamePattern.hasMatch(key)) {
@@ -27,11 +27,38 @@ class DatabaseTransaction {
       }
       return true;
     })());
+  }
+
+  Future<int> executeInsert(String table, Map<String, Object> values) async {
+    _assertColumnNames(values);
     final entries = values.entries.toList();
     final columnList = entries.map((e) => e.key).join(',');
     final bindList = entries.map((e) => '@${e.key}').join(',');
     return await execute('INSERT INTO $table ($columnList) VALUES ($bindList)',
         values: values, expectedResultCount: 1);
+  }
+
+  Future<int> executeUpdate(
+    String table, {
+    @required Map<String, Object> set,
+    @required Map<String, Object> where,
+  }) async {
+    assert(set != null);
+    assert(where != null);
+    _assertColumnNames(set);
+    _assertColumnNames(where);
+    assert(!where.keys.any((key) => set.containsKey(key)));
+    assert(!where.values.contains(null), 'where values must not be null.');
+    final setStatement =
+        set.entries.map((e) => '${e.key} = @${e.key}').join(',');
+    final whereStatement = where.entries.map((e) => '${e.key} = @${e.key}');
+    return await execute(
+        'UPDATE $table SET $setStatement WHERE $whereStatement',
+        values: {
+          ...set,
+          ...where,
+        },
+        expectedResultCount: 1);
   }
 
   bool _assertCorrectValues(Map<String, Object> values) {
@@ -272,7 +299,12 @@ class Migrations {
             await db.tables.email.createTables(db);
           }),
       // dummy migration to indicate a required clean database ;)
-      Migrations(id: 3, up: (db) async {})
+      Migrations(id: 3, up: (db) async {}),
+      Migrations(
+          id: 4,
+          up: (db) async {
+            await db.tables.email.migrate4(db);
+          })
     ];
   }
 }

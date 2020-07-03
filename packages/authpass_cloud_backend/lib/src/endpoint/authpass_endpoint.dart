@@ -174,7 +174,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
               emails.length < limit ? null : page.nextPage(limit).encode(),
           sinceToken: page.until.toIso8601String(),
         ),
-        data: emails,
+        data: emails.map((e) => e.toEmailMessage()).toList(),
       ),
     );
   }
@@ -216,6 +216,17 @@ class AuthPassCloudImpl extends AuthPassCloud {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageMarkUnReadResponse.response200();
+  }
+
+  @override
+  Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
+      {String messageId}) async {
+    final token = await _requireAuthToken();
+    if (!await emailRepository.deleteMessage(token.user,
+        messageId: messageId)) {
+      throw NotFoundException('Message not found.');
+    }
+    return MailboxMessageDeleteResponse.response200();
   }
 }
 

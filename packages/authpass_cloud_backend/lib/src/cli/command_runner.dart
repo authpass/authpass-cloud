@@ -33,14 +33,14 @@ class MainCommandRunner extends CommandRunner<void> {
   }
 
   @override
-  Future<void> runCommand(ArgResults argResults) async {
-    if (argResults[ARG_QUIET] as bool) {
+  Future<void> runCommand(ArgResults topLevelResults) async {
+    if (topLevelResults[ARG_QUIET] as bool) {
       PrintAppender.setupLogging(level: Level.SEVERE);
     } else {
       PrintAppender.setupLogging();
       _logger.finer('Starting…');
     }
-    return await super.runCommand(argResults);
+    return await super.runCommand(topLevelResults);
   }
 }
 

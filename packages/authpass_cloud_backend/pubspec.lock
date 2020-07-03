@@ -399,7 +399,7 @@ packages:
       path: "../../deps/openapi_dart/packages/openapi_base"
       relative: true
     source: path
-    version: "0.1.1"
+    version: "0.1.2"
   package_config:
     dependency: transitive
     description:

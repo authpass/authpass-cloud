@@ -45,6 +45,9 @@ jobs:
     - run: cd packages/authpass_cloud_backend && dart pub get && dart run --enable-asserts bin/authpass_backend.dart setupdb
       env:
         DBCONFIG: '{"host": "postgres"}'
+    - run: cd packages/authpass_cloud_backend && dart test
+      env:
+        DBCONFIG: '{"host": "postgres"}'
     - run: mkdir schema && pg_dump -h postgres  -s authpass -Uauthpass > schema/schema.sql
       env:
         PGPASSWORD: blubb

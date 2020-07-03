@@ -2,9 +2,6 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:authpass_cloud_backend/src/cli/command_runner.dart';
-import 'package:logging/logging.dart';
-
-final _logger = Logger('server');
 
 Future<void> main(List<String> args) async {
   try {
