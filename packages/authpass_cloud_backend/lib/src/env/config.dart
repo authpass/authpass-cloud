@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -135,8 +138,9 @@ class DatabaseConfig {
 
   factory DatabaseConfig.fromJson(Map<String, dynamic> json) =>
       _$DatabaseConfigFromJson(json);
+
   factory DatabaseConfig.defaults() =>
-      DatabaseConfig.fromJson(<String, dynamic>{});
+      DatabaseConfig.fromJson(_jsonFromEnvironment());
   Map<String, dynamic> toJson() => _$DatabaseConfigToJson(this);
 
   @JsonKey(defaultValue: 'localhost')
@@ -158,4 +162,12 @@ class DatabaseConfig {
         username: username,
         password: password,
       );
+}
+
+Map<String, dynamic> _jsonFromEnvironment() {
+  final dbConfig = Platform.environment['DBCONFIG'];
+  if (dbConfig != null) {
+    return json.decode(dbConfig) as Map<String, dynamic>;
+  }
+  return <String, dynamic>{};
 }

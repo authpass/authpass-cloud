@@ -19,10 +19,7 @@ class Server {
 
   final Env env;
 
-  Future<void> run() async {
-    PrintAppender.setupLogging();
-    _logger.fine('Starting Server ... ${BuildInfo.asString()}');
-
+  Future<ServiceProvider> prepareServiceProviderAndDatabase() async {
     final serviceProvider = ServiceProvider(
       env: env,
       cryptoService: CryptoService(),
@@ -32,6 +29,14 @@ class Server {
     final db = serviceProvider.createDatabaseAccess();
     await db.prepareDatabase();
     await db.dispose();
+    return serviceProvider;
+  }
+
+  Future<void> run() async {
+    PrintAppender.setupLogging();
+    _logger.fine('Starting Server ... ${BuildInfo.asString()}');
+
+    final serviceProvider = await prepareServiceProviderAndDatabase();
 
     final server = OpenApiShelfServer(
         AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
