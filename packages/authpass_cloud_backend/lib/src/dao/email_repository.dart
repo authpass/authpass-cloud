@@ -71,16 +71,19 @@ class EmailRepository {
   }
 
   /// true if mail was found, false otherwise.
-  Future<bool> markAsRead(UserEntity user, {String messageId}) async {
+  Future<bool> markAsRead(UserEntity user,
+      {@required String messageId, @required bool isRead}) async {
+    assert(messageId != null);
+    assert(isRead != null);
     final mail =
         await db.tables.email.findEmailForUser(db, user, messageId: messageId);
     if (mail != null) {
-      if (mail.isRead) {
-        _logger.warning(
-            'Marking email as read although it already is read. $messageId');
+      if (mail.isRead != isRead) {
+        _logger.warning('Marking email as read=$isRead although it already is.'
+            ' $messageId (${mail.isRead} vs $isRead)');
       }
-      await db.tables.email
-          .updateReadFor(db, messageId: messageId, readAt: clock.now().toUtc());
+      await db.tables.email.updateReadFor(db,
+          messageId: messageId, readAt: isRead ? clock.now().toUtc() : null);
       return true;
     }
     return false;

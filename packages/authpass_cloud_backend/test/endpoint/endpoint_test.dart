@@ -157,15 +157,18 @@ void main() {
       message: 'Ipsum',
     );
 
-    {
-      final list = await endpoint.mailboxListGet().requireSuccess();
-      expect(list.data, hasLength(1));
-      expect(list.data.first.isRead, false);
-    }
-    await endpoint.mailboxMessageMarkRead(messageId: id);
-
     final list = await endpoint.mailboxListGet().requireSuccess();
     expect(list.data, hasLength(1));
-    expect(list.data.first.isRead, true);
+    expect(list.data.first.isRead, false);
+
+    await endpoint.mailboxMessageMarkRead(messageId: id).requireSuccess();
+
+    final l2 = await endpoint.mailboxListGet().requireSuccess();
+    expect(l2.data.single.isRead, true);
+
+    await endpoint.mailboxMessageMarkUnRead(messageId: id).requireSuccess();
+
+    final l3 = await endpoint.mailboxListGet().requireSuccess();
+    expect(l3.data.single.isRead, false);
   });
 }

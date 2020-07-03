@@ -188,7 +188,8 @@ class _CheckGetResponse200 extends CheckGetResponse {
       {'status': status, 'contentType': contentType};
 }
 
-abstract class CheckGetResponse extends _i2.OpenApiResponse {
+abstract class CheckGetResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
   CheckGetResponse();
 
   /// /// Everything OK
@@ -199,6 +200,16 @@ abstract class CheckGetResponse extends _i2.OpenApiResponse {
       on200((this as _CheckGetResponse200));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Everything OK
+  @override
+  void requireSuccess() {
+    if (this is _CheckGetResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
@@ -248,6 +259,7 @@ abstract class UserRegisterPostResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  OK
   @override
   RegisterResponse requireSuccess() {
     if (this is _UserRegisterPostResponse200) {
@@ -337,6 +349,7 @@ abstract class EmailStatusGetResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  Whether it was confirmed or not.
   @override
   EmailStatusGetResponseBody200 requireSuccess() {
     if (this is _EmailStatusGetResponse200) {
@@ -406,6 +419,7 @@ abstract class EmailConfirmGetResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  OK
   @override
   String requireSuccess() {
     if (this is _EmailConfirmGetResponse200) {
@@ -475,6 +489,7 @@ abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  OK
   @override
   String requireSuccess() {
     if (this is _EmailConfirmPostResponse200) {
@@ -565,6 +580,7 @@ abstract class MailboxGetResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  On Success returns unpaginated list (right now) of all mailboxes.
   @override
   MailboxGetResponseBody200 requireSuccess() {
     if (this is _MailboxGetResponse200) {
@@ -639,6 +655,7 @@ abstract class MailboxCreatePostResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  Successfully created mailbox.
   @override
   MailboxCreatePostResponseBody200 requireSuccess() {
     if (this is _MailboxCreatePostResponse200) {
@@ -738,6 +755,7 @@ abstract class MailboxListGetResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  Successful list
   @override
   MailboxListGetResponseBody200 requireSuccess() {
     if (this is _MailboxListGetResponse200) {
@@ -785,6 +803,7 @@ abstract class MailboxMessageGetResponse extends _i2.OpenApiResponse
     }
   }
 
+  /// status 200:  Raw email message incluuding all headers, body and attachment.
   @override
   String requireSuccess() {
     if (this is _MailboxMessageGetResponse200) {
@@ -811,7 +830,8 @@ class _MailboxMessageMarkReadResponse200
       {'status': status, 'contentType': contentType};
 }
 
-abstract class MailboxMessageMarkReadResponse extends _i2.OpenApiResponse {
+abstract class MailboxMessageMarkReadResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
   MailboxMessageMarkReadResponse();
 
   /// /// Successfully marked as read.
@@ -825,6 +845,61 @@ abstract class MailboxMessageMarkReadResponse extends _i2.OpenApiResponse {
       on200((this as _MailboxMessageMarkReadResponse200));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully marked as read.
+  @override
+  void requireSuccess() {
+    if (this is _MailboxMessageMarkReadResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _MailboxMessageMarkUnReadResponse200
+    extends MailboxMessageMarkUnReadResponse {
+  /// /// Successfully marked as unread.
+  _MailboxMessageMarkUnReadResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailboxMessageMarkUnReadResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
+  MailboxMessageMarkUnReadResponse();
+
+  /// /// Successfully marked as unread.
+  factory MailboxMessageMarkUnReadResponse.response200() =>
+      _MailboxMessageMarkUnReadResponse200.response200();
+
+  void map(
+      {@_i3.required
+          _i2.ResponseMap<_MailboxMessageMarkUnReadResponse200> on200}) {
+    if (this is _MailboxMessageMarkUnReadResponse200) {
+      on200((this as _MailboxMessageMarkUnReadResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully marked as unread.
+  @override
+  void requireSuccess() {
+    if (this is _MailboxMessageMarkUnReadResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
@@ -864,7 +939,8 @@ class _EmailReceivePostResponse403 extends EmailReceivePostResponse
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
-abstract class EmailReceivePostResponse extends _i2.OpenApiResponse {
+abstract class EmailReceivePostResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
   EmailReceivePostResponse();
 
   /// /// Received and delivered successfully.
@@ -884,6 +960,16 @@ abstract class EmailReceivePostResponse extends _i2.OpenApiResponse {
       on403((this as _EmailReceivePostResponse403));
     } else {
       throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Received and delivered successfully.
+  @override
+  void requireSuccess() {
+    if (this is _EmailReceivePostResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
     }
   }
 }
@@ -932,6 +1018,11 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
+      {@_i3.required String messageId});
+
+  /// Mark message as unread (again)
+  /// delete: /mailbox/message/{messageId}/read
+  Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
       {@_i3.required String messageId});
 
   /// Receive emails throw smtp bridge.
@@ -1002,6 +1093,12 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// put: /mailbox/message/{messageId}/read
   ///
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
+      {@_i3.required String messageId});
+
+  /// Mark message as unread (again)
+  /// delete: /mailbox/message/{messageId}/read
+  ///
+  Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
       {@_i3.required String messageId});
 
   /// Receive emails throw smtp bridge.
@@ -1213,6 +1310,26 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     });
   }
 
+  /// Mark message as unread (again)
+  /// delete: /mailbox/message/{messageId}/read
+  ///
+  @override
+  Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
+      {@_i3.required String messageId}) async {
+    final request = _i2.OpenApiClientRequest(
+        'delete', '/mailbox/message/{messageId}/read', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailboxMessageMarkUnReadResponse200.response200()
+    });
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -1361,6 +1478,22 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Mark message as unread (again)
+  /// delete: /mailbox/message/{messageId}/read
+  ///
+  _i2.OpenApiClientRequest mailboxMessageMarkUnRead(
+      {@_i3.required String messageId}) {
+    final request = _i2.OpenApiClientRequest(
+        'delete', '/mailbox/message/{messageId}/read', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('messageId', encodeString(messageId));
+    return request;
+  }
+
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   ///
@@ -1478,6 +1611,22 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageMarkRead(
+              messageId: param(
+                  isRequired: true,
+                  name: 'messageId',
+                  value: request.pathParameter('messageId'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mailbox/message/{messageId}/read', 'delete',
+        (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxMessageMarkUnRead(
               messageId: param(
                   isRequired: true,
                   name: 'messageId',

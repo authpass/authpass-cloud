@@ -205,6 +205,12 @@ paths:
       responses:
         '200':
           description: 'Successfully marked as read.'
+    delete:
+      operationId: MailboxMessageMarkUnRead
+      summary: 'Mark message as unread (again)'
+      responses:
+        '200':
+          description: 'Successfully marked as unread.'
   /email/receive:
     post:
       summary: Receive emails throw smtp bridge.
