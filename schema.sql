@@ -112,7 +112,8 @@ CREATE TABLE public.email_message (
     sender character varying NOT NULL,
     subject character varying(200) NOT NULL,
     read_at timestamp without time zone,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
