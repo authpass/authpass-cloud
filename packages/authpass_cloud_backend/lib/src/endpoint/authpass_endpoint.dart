@@ -242,7 +242,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
     )) {
       return MailboxUpdateResponse.response200();
     }
-    throw NotFoundException('Invalid mailboxId.');
+    throw NotFoundException('Invalid mailboxAddress $mailboxAddress.');
   }
 }
 
