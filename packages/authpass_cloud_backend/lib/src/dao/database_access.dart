@@ -8,6 +8,8 @@ import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
+import 'package:quiver/check.dart';
+import 'package:quiver/core.dart';
 
 final _logger = Logger('database_access');
 
@@ -42,6 +44,7 @@ class DatabaseTransaction {
     String table, {
     @required Map<String, Object> set,
     @required Map<String, Object> where,
+    bool setContainsOptional = false,
   }) async {
     assert(set != null);
     assert(where != null);
@@ -49,9 +52,16 @@ class DatabaseTransaction {
     _assertColumnNames(where);
     assert(!where.keys.any((key) => set.containsKey(key)));
     assert(!where.values.contains(null), 'where values must not be null.');
+    assert(!setContainsOptional || set.values.whereType<Optional>().isEmpty);
+    if (setContainsOptional) {
+      set.removeWhere((key, value) => value == null);
+      set = set.map((key, value) =>
+          MapEntry(key, value is Optional ? value.orNull : value));
+    }
     final setStatement =
         set.entries.map((e) => '${e.key} = @${e.key}').join(',');
-    final whereStatement = where.entries.map((e) => '${e.key} = @${e.key}');
+    final whereStatement =
+        where.entries.map((e) => '${e.key} = @${e.key}').join(' AND ');
     return await execute(
         'UPDATE $table SET $setStatement WHERE $whereStatement',
         values: {
@@ -300,11 +310,24 @@ class Migrations {
           }),
       // dummy migration to indicate a required clean database ;)
       Migrations(id: 3, up: (db) async {}),
-      Migrations(
-          id: 4,
-          up: (db) async {
-            await db.tables.email.migrate4(db);
-          })
+      Migrations(id: 4, up: (db) async => await db.tables.email.migrate4(db)),
+      Migrations(id: 5, up: (db) async => await db.tables.email.migrate5(db)),
     ];
   }
+}
+
+class SimpleWhere {
+  SimpleWhere(this.conditions, {bool filterNullValues = false})
+      : assert(filterNullValues || !conditions.values.contains(null),
+            'where values must not be null.') {
+    if (filterNullValues) {
+      conditions.removeWhere((key, value) => value == null);
+    }
+    checkState(conditions.isNotEmpty);
+  }
+
+  final Map<String, Object> conditions;
+
+  String sql() =>
+      conditions.entries.map((e) => '${e.key} = @${e.key}').join(' AND ');
 }

@@ -73,7 +73,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<EmailConfirmPostResponse> emailConfirmPost(
-      EmailConfirmSchema body) async {
+      EmailConfirmPostSchema body) async {
     final success =
         await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
     if (success) {
@@ -131,7 +131,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxCreatePostResponse> mailboxCreatePost(
-      MailboxCreateSchema body) async {
+      MailboxCreatePostSchema body) async {
     final token = await _requireAuthToken();
     final address = await emailRepository.createAddress(
       token.user,
@@ -227,6 +227,22 @@ class AuthPassCloudImpl extends AuthPassCloud {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageDeleteResponse.response200();
+  }
+
+  @override
+  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
+      {String mailboxId}) async {
+    final token = await _requireAuthToken();
+    if (await emailRepository.updateMailbox(
+      token.user,
+      mailboxId: mailboxId,
+      label: body.label,
+      entryUuid: body.entryUuid,
+      isDeleted: body.isDeleted,
+    )) {
+      return MailboxUpdateResponse.response200();
+    }
+    throw NotFoundException('Invalid mailboxId.');
   }
 }
 

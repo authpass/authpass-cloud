@@ -23,10 +23,8 @@ class MailSystemStatusCodes {
     OTHER,
   );
   static const failureBadDestinationAddress = MailSystemStatusCodes._(
-    CLASS_PERMANENT_FAILURE,
-    '1',
-    '1',
-  );
+      CLASS_PERMANENT_FAILURE, '1', '1',
+      message: 'Bad destination address.');
 
   static const CLASS_SUCCESS = '2';
   static const CLASS_PERSISTENT_TRANSIENT_ERROR = '4';

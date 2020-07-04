@@ -175,6 +175,34 @@ paths:
           name: since_token
           description: As returned from a previous page object for a finished sync.
       description: ''
+  /mailbox/update/{mailboxId}:
+    parameters:
+      - name: mailboxId
+        in: path
+        schema:
+          type: string
+        required: true
+    put:
+      operationId: MailboxUpdate
+      summary: 'Update information about mailbox'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                label:
+                  type: string
+                entryUuid:
+                  type: string
+                isDeleted:
+                  type: boolean
+                isDisabled:
+                  type: boolean
+                isHidden:
+                  type: boolean
+      responses:
+        '200':
+          description: 'Success.'
   /mailbox/message/{messageId}:
     parameters:
       - name: messageId
@@ -328,11 +356,14 @@ components:
         createdAt:
           type: string
           format: date-time
+        isDisabled:
+          type: boolean
       required:
         - address
         - label
         - entryUuid
         - createdAt
+        - isDisabled
   securitySchemes:
     auth_token:
       type: http

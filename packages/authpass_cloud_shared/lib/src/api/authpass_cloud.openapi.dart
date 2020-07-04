@@ -144,11 +144,13 @@ class Mailbox implements _i2.OpenApiContent {
       {@_i3.required this.address,
       @_i3.required this.label,
       @_i3.required this.entryUuid,
-      @_i3.required this.createdAt})
+      @_i3.required this.createdAt,
+      @_i3.required this.isDisabled})
       : assert(address != null),
         assert(label != null),
         assert(entryUuid != null),
-        assert(createdAt != null);
+        assert(createdAt != null),
+        assert(isDisabled != null);
 
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
@@ -167,6 +169,9 @@ class Mailbox implements _i2.OpenApiContent {
 
   @_i1.JsonKey(name: 'createdAt')
   final DateTime createdAt;
+
+  @_i1.JsonKey(name: 'isDisabled')
+  final bool isDisabled;
 
   Map<String, dynamic> toJson() => _$MailboxToJson(this);
   @override
@@ -501,14 +506,14 @@ abstract class EmailConfirmPostResponse extends _i2.OpenApiResponse
 }
 
 @_i1.JsonSerializable()
-class EmailConfirmSchema implements _i2.OpenApiContent {
-  EmailConfirmSchema(
+class EmailConfirmPostSchema implements _i2.OpenApiContent {
+  EmailConfirmPostSchema(
       {@_i3.required this.token, @_i3.required this.gRecaptchaResponse})
       : assert(token != null),
         assert(gRecaptchaResponse != null);
 
-  factory EmailConfirmSchema.fromJson(Map<String, dynamic> jsonMap) =>
-      _$EmailConfirmSchemaFromJson(jsonMap);
+  factory EmailConfirmPostSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$EmailConfirmPostSchemaFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'token')
   final String token;
@@ -516,7 +521,7 @@ class EmailConfirmSchema implements _i2.OpenApiContent {
   @_i1.JsonKey(name: 'g-recaptcha-response')
   final String gRecaptchaResponse;
 
-  Map<String, dynamic> toJson() => _$EmailConfirmSchemaToJson(this);
+  Map<String, dynamic> toJson() => _$EmailConfirmPostSchemaToJson(this);
   @override
   String toString() => toJson().toString();
 }
@@ -667,13 +672,14 @@ abstract class MailboxCreatePostResponse extends _i2.OpenApiResponse
 }
 
 @_i1.JsonSerializable()
-class MailboxCreateSchema implements _i2.OpenApiContent {
-  MailboxCreateSchema({@_i3.required this.label, @_i3.required this.entryUuid})
+class MailboxCreatePostSchema implements _i2.OpenApiContent {
+  MailboxCreatePostSchema(
+      {@_i3.required this.label, @_i3.required this.entryUuid})
       : assert(label != null),
         assert(entryUuid != null);
 
-  factory MailboxCreateSchema.fromJson(Map<String, dynamic> jsonMap) =>
-      _$MailboxCreateSchemaFromJson(jsonMap);
+  factory MailboxCreatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$MailboxCreatePostSchemaFromJson(jsonMap);
 
   /// label for this mailbox, can be an empty string.
   @_i1.JsonKey(name: 'label')
@@ -683,7 +689,7 @@ class MailboxCreateSchema implements _i2.OpenApiContent {
   @_i1.JsonKey(name: 'entryUuid')
   final String entryUuid;
 
-  Map<String, dynamic> toJson() => _$MailboxCreateSchemaToJson(this);
+  Map<String, dynamic> toJson() => _$MailboxCreatePostSchemaToJson(this);
   @override
   String toString() => toJson().toString();
 }
@@ -764,6 +770,80 @@ abstract class MailboxListGetResponse extends _i2.OpenApiResponse
       throw StateError('Expected success response, but got $this');
     }
   }
+}
+
+class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
+  /// /// Success.
+  _MailboxUpdateResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailboxUpdateResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
+  MailboxUpdateResponse();
+
+  /// /// Success.
+  factory MailboxUpdateResponse.response200() =>
+      _MailboxUpdateResponse200.response200();
+
+  void map({@_i3.required _i2.ResponseMap<_MailboxUpdateResponse200> on200}) {
+    if (this is _MailboxUpdateResponse200) {
+      on200((this as _MailboxUpdateResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Success.
+  @override
+  void requireSuccess() {
+    if (this is _MailboxUpdateResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+@_i1.JsonSerializable()
+class MailboxUpdateSchema implements _i2.OpenApiContent {
+  MailboxUpdateSchema(
+      {this.label,
+      this.entryUuid,
+      this.isDeleted,
+      this.isDisabled,
+      this.isHidden});
+
+  factory MailboxUpdateSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$MailboxUpdateSchemaFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'label')
+  final String label;
+
+  @_i1.JsonKey(name: 'entryUuid')
+  final String entryUuid;
+
+  @_i1.JsonKey(name: 'isDeleted')
+  final bool isDeleted;
+
+  @_i1.JsonKey(name: 'isDisabled')
+  final bool isDisabled;
+
+  @_i1.JsonKey(name: 'isHidden')
+  final bool isHidden;
+
+  Map<String, dynamic> toJson() => _$MailboxUpdateSchemaToJson(this);
+  @override
+  String toString() => toJson().toString();
 }
 
 class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
@@ -1037,7 +1117,8 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
 
   /// Confirm with recaptcha
   /// post: /email/confirm
-  Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
+  Future<EmailConfirmPostResponse> emailConfirmPost(
+      EmailConfirmPostSchema body);
 
   /// List of all mailboxes of the current user.
   /// get: /mailbox
@@ -1045,13 +1126,19 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
 
   /// Creates a new (random) email address mailbox.
   /// post: /mailbox/create
-  Future<MailboxCreatePostResponse> mailboxCreatePost(MailboxCreateSchema body);
+  Future<MailboxCreatePostResponse> mailboxCreatePost(
+      MailboxCreatePostSchema body);
 
   /// List all emails in all mailboxes of the current user.
   ///
   /// get: /mailbox/list
   Future<MailboxListGetResponse> mailboxListGet(
       {String pageToken, String sinceToken});
+
+  /// Update information about mailbox
+  /// put: /mailbox/update/{mailboxId}
+  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
+      {@_i3.required String mailboxId});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -1110,7 +1197,8 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// Confirm with recaptcha
   /// post: /email/confirm
   ///
-  Future<EmailConfirmPostResponse> emailConfirmPost(EmailConfirmSchema body);
+  Future<EmailConfirmPostResponse> emailConfirmPost(
+      EmailConfirmPostSchema body);
 
   /// List of all mailboxes of the current user.
   /// get: /mailbox
@@ -1120,7 +1208,8 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// Creates a new (random) email address mailbox.
   /// post: /mailbox/create
   ///
-  Future<MailboxCreatePostResponse> mailboxCreatePost(MailboxCreateSchema body);
+  Future<MailboxCreatePostResponse> mailboxCreatePost(
+      MailboxCreatePostSchema body);
 
   /// List all emails in all mailboxes of the current user.
   ///
@@ -1130,6 +1219,12 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
   Future<MailboxListGetResponse> mailboxListGet(
       {String pageToken, String sinceToken});
+
+  /// Update information about mailbox
+  /// put: /mailbox/update/{mailboxId}
+  ///
+  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
+      {@_i3.required String mailboxId});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -1245,7 +1340,7 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   ///
   @override
   Future<EmailConfirmPostResponse> emailConfirmPost(
-      EmailConfirmSchema body) async {
+      EmailConfirmPostSchema body) async {
     final request = _i2.OpenApiClientRequest('post', '/email/confirm', []);
     request.setHeader('content-type', 'application/x-www-form-urlencoded');
     request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
@@ -1281,7 +1376,7 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   ///
   @override
   Future<MailboxCreatePostResponse> mailboxCreatePost(
-      MailboxCreateSchema body) async {
+      MailboxCreatePostSchema body) async {
     final request = _i2.OpenApiClientRequest('post', '/mailbox/create', [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
@@ -1320,6 +1415,28 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
           _MailboxListGetResponse200.response200(
               MailboxListGetResponseBody200.fromJson(
                   await response.responseBodyJson()))
+    });
+  }
+
+  /// Update information about mailbox
+  /// put: /mailbox/update/{mailboxId}
+  ///
+  @override
+  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
+      {@_i3.required String mailboxId}) async {
+    final request =
+        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxId}', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('mailboxId', encodeString(mailboxId));
+    request.setHeader('content-type', 'application/json');
+    request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailboxUpdateResponse200.response200()
     });
   }
 
@@ -1521,6 +1638,21 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Update information about mailbox
+  /// put: /mailbox/update/{mailboxId}
+  ///
+  _i2.OpenApiClientRequest mailboxUpdate({@_i3.required String mailboxId}) {
+    final request =
+        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxId}', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter('mailboxId', encodeString(mailboxId));
+    return request;
+  }
+
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   ///
@@ -1637,7 +1769,7 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmPost(
-              EmailConfirmSchema.fromJson(
+              EmailConfirmPostSchema.fromJson(
                   await request.readUrlEncodedBodyFlat())));
     }, security: []);
     addRoute('/mailbox', 'get', (_i2.OpenApiRequest request) async {
@@ -1653,7 +1785,7 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxCreatePost(
-              MailboxCreateSchema.fromJson(await request.readJsonBody())));
+              MailboxCreatePostSchema.fromJson(await request.readJsonBody())));
     }, security: [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
@@ -1673,6 +1805,23 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
                   isRequired: false,
                   name: 'since_token',
                   value: request.queryParameter('since_token'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mailbox/update/{mailboxId}', 'put',
+        (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxUpdate(
+              MailboxUpdateSchema.fromJson(await request.readJsonBody()),
+              mailboxId: param(
+                  isRequired: true,
+                  name: 'mailboxId',
+                  value: request.pathParameter('mailboxId'),
                   decode: (value) => paramToString(value))));
     }, security: [
       _i2.SecurityRequirement(schemes: [

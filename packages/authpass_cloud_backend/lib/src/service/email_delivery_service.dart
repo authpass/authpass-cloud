@@ -30,6 +30,10 @@ class EmailDeliveryService {
       _logger.warning('Invalid destination address {$recipient}');
       return MailSystemStatusCodes.failureBadDestinationAddress;
     }
+    if (mailbox.disabledAt != null) {
+      _logger.warning('Disabled mailbox $mailbox');
+      return MailSystemStatusCodes.failureBadDestinationAddress;
+    }
     final subject = message.decodeHeaderValue('subject');
     await db.tables.email.insertMessage(
       db,

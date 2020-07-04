@@ -112,7 +112,7 @@ void main() {
         .thenAnswer((realInvocation) async => true);
 
     await endpoint.emailConfirmPost(
-        EmailConfirmSchema(token: emailToken, gRecaptchaResponse: ''));
+        EmailConfirmPostSchema(token: emailToken, gRecaptchaResponse: ''));
 
     {
       final status = (await endpoint.emailStatusGet()).requireSuccess();

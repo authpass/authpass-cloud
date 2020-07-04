@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:quiver/check.dart';
 
 import 'package:logging/logging.dart';
+import 'package:quiver/core.dart';
 
 final _logger = Logger('email_tables');
 
@@ -33,6 +34,8 @@ class EmailTable extends TableBase with TableConstants {
   static const _COLUMN_SENDER = 'sender';
   static const _COLUMN_READ_AT = 'read_at';
   static const _COLUMN_DELETED_AT = 'deleted_at';
+  static const _COLUMN_DISABLED_AT = 'disabled_at';
+  static const _COLUMN_HIDDEN_AT = 'hidden_at';
 
   final CryptoService cryptoService;
 
@@ -75,6 +78,14 @@ class EmailTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate5(DatabaseTransaction db) async {
+    await db.execute('''
+    ALTER TABLE $_TABLE_EMAIL_MAILBOX ADD COLUMN $_COLUMN_DELETED_AT $typeTimestamp;
+    ALTER TABLE $_TABLE_EMAIL_MAILBOX ADD COLUMN $_COLUMN_DISABLED_AT $typeTimestamp;
+    ALTER TABLE $_TABLE_EMAIL_MAILBOX ADD COLUMN $_COLUMN_HIDDEN_AT $typeTimestamp;
+    ''');
+  }
+
   Future<void> insertMailbox(
     DatabaseTransaction db, {
     @required UserEntity userEntity,
@@ -96,17 +107,47 @@ class EmailTable extends TableBase with TableConstants {
     });
   }
 
+  Future<void> updateMailbox(
+    DatabaseTransaction db,
+    String mailboxId, {
+    Optional<String> label,
+    Optional<String> clientEntryUuid,
+    Optional<DateTime> deletedAt,
+    Optional<DateTime> disabledAt,
+    Optional<DateTime> hiddenAt,
+  }) async {
+    await db.executeUpdate(
+      _TABLE_EMAIL_MAILBOX,
+      set: {
+        _COLUMN_LABEL: label,
+        _COLUMN_CLIENT_ENTRY_UUID: clientEntryUuid,
+        _COLUMN_DELETED_AT: deletedAt,
+        _COLUMN_DISABLED_AT: disabledAt,
+        _COLUMN_HIDDEN_AT: hiddenAt,
+      },
+      where: {'id': mailboxId},
+      setContainsOptional: true,
+    );
+  }
+
   Future<MailboxEntity> findMailbox(DatabaseTransaction db,
-      {@required String address}) async {
-    assert(address != null);
+      {String address, String mailboxId}) async {
+    assert(address != null || mailboxId != null);
     assert(db != null);
+    final where = SimpleWhere({
+      _COLUMN_ADDRESS: address,
+      columnId: mailboxId,
+    }, filterNullValues: true);
     return await db.query(
-        'SELECT $columnId, $_COLUMN_ADDRESS FROM $_TABLE_EMAIL_MAILBOX WHERE $_COLUMN_ADDRESS = @address',
-        values: {
-          'address': address
-        }).singleOrNull((row) => MailboxEntity(
+        '''SELECT $columnId, $_COLUMN_ADDRESS, $COLUMN_USER_ID, $_COLUMN_DISABLED_AT 
+            FROM $_TABLE_EMAIL_MAILBOX
+            WHERE $_COLUMN_DELETED_AT IS NULL AND ${where.sql()}''',
+        values: where.conditions).singleOrNull((row) => MailboxEntity(
           id: row[0] as String,
           address: row[1] as String,
+          user: UserEntity(id: row[2] as String),
+          deletedAt: null,
+          disabledAt: row[3] as DateTime,
         ));
   }
 
@@ -114,7 +155,8 @@ class EmailTable extends TableBase with TableConstants {
       DatabaseTransaction db, UserEntity user) async {
     final result = await db.query('''
         SELECT $columnId, $_COLUMN_ADDRESS, $columnCreatedAt, 
-                $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID 
+                $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID,
+                $_COLUMN_DISABLED_AT,
         FROM $_TABLE_EMAIL_MAILBOX 
         WHERE $COLUMN_USER_ID = @userId
         ORDER BY $columnCreatedAt DESC
@@ -128,6 +170,7 @@ class EmailTable extends TableBase with TableConstants {
             createdAt: row[2] as DateTime,
             label: row[3] as String,
             entryUuid: row[4] as String,
+            isDisabled: row[5] != null,
           ),
         )
         .toList();
@@ -292,10 +335,21 @@ extension on String {
 }
 
 class MailboxEntity {
-  MailboxEntity({this.id, this.address});
+  MailboxEntity({
+    @required this.id,
+    @required this.address,
+    @required this.user,
+    @required this.disabledAt,
+    @required this.deletedAt,
+  })  : assert(id != null),
+        assert(address != null),
+        assert(user != null);
 
   final String id;
   final String address;
+  final UserEntity user;
+  final DateTime disabledAt;
+  final DateTime deletedAt;
 }
 
 class EmailMessageEntity {

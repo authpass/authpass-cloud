@@ -8,6 +8,7 @@ import 'package:clock/clock.dart';
 import 'package:meta/meta.dart';
 
 import 'package:logging/logging.dart';
+import 'package:quiver/core.dart';
 
 final _logger = Logger('email_repository');
 
@@ -57,6 +58,42 @@ class EmailRepository {
       }
     }
     throw StateError('Unable to find unique address after $_MAX_RETRY tries.');
+  }
+
+  /// return false if mailbox can't be found (or the given user is not owner)
+  Future<bool> updateMailbox(
+    UserEntity user, {
+    @required String mailboxId,
+    String label,
+    String entryUuid,
+    bool isDeleted,
+    bool isDisabled,
+    bool isHidden,
+  }) async {
+    assert(user != null);
+    assert(mailboxId != null);
+    final mailbox = await db.tables.email.findMailbox(db, mailboxId: mailboxId);
+    if (mailbox == null || mailbox.user.id != user.id) {
+      return false;
+    }
+    final now = clock.now().toUtc();
+    Optional<DateTime> nowIfTrue(bool value) {
+      if (value == null) {
+        return null;
+      }
+      return value ? Optional.of(now) : const Optional.absent();
+    }
+
+    await db.tables.email.updateMailbox(
+      db,
+      mailboxId,
+      label: Optional.fromNullable(label),
+      clientEntryUuid: Optional.fromNullable(entryUuid),
+      deletedAt: nowIfTrue(isDeleted),
+      hiddenAt: nowIfTrue(isHidden),
+      disabledAt: nowIfTrue(isDisabled),
+    );
+    return true;
   }
 
   Future<List<EmailMessageEntity>> findEmailsForUser(
