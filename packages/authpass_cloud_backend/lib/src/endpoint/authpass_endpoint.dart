@@ -239,6 +239,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
       label: body.label,
       entryUuid: body.entryUuid,
       isDeleted: body.isDeleted,
+      isDisabled: body.isDisabled,
     )) {
       return MailboxUpdateResponse.response200();
     }
