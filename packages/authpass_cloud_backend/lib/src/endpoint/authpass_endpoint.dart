@@ -231,11 +231,11 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {String mailboxId}) async {
+      {String mailboxAddress}) async {
     final token = await _requireAuthToken();
     if (await emailRepository.updateMailbox(
       token.user,
-      mailboxId: mailboxId,
+      mailboxAddress: mailboxAddress,
       label: body.label,
       entryUuid: body.entryUuid,
       isDeleted: body.isDeleted,

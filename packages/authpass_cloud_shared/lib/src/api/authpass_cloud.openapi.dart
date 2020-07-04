@@ -1136,9 +1136,9 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
       {String pageToken, String sinceToken});
 
   /// Update information about mailbox
-  /// put: /mailbox/update/{mailboxId}
+  /// put: /mailbox/update/{mailboxAddress}
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i3.required String mailboxId});
+      {@_i3.required String mailboxAddress});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -1221,10 +1221,10 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
       {String pageToken, String sinceToken});
 
   /// Update information about mailbox
-  /// put: /mailbox/update/{mailboxId}
+  /// put: /mailbox/update/{mailboxAddress}
   ///
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i3.required String mailboxId});
+      {@_i3.required String mailboxAddress});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -1419,19 +1419,19 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
   }
 
   /// Update information about mailbox
-  /// put: /mailbox/update/{mailboxId}
+  /// put: /mailbox/update/{mailboxAddress}
   ///
   @override
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i3.required String mailboxId}) async {
+      {@_i3.required String mailboxAddress}) async {
     final request =
-        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxId}', [
+        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
             scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('mailboxId', encodeString(mailboxId));
+    request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
     request.setHeader('content-type', 'application/json');
     request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
     return await sendRequest(request, {
@@ -1639,17 +1639,18 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
   }
 
   /// Update information about mailbox
-  /// put: /mailbox/update/{mailboxId}
+  /// put: /mailbox/update/{mailboxAddress}
   ///
-  _i2.OpenApiClientRequest mailboxUpdate({@_i3.required String mailboxId}) {
+  _i2.OpenApiClientRequest mailboxUpdate(
+      {@_i3.required String mailboxAddress}) {
     final request =
-        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxId}', [
+        _i2.OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(
             scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('mailboxId', encodeString(mailboxId));
+    request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
     return request;
   }
 
@@ -1812,16 +1813,16 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
             scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    addRoute('/mailbox/update/{mailboxId}', 'put',
+    addRoute('/mailbox/update/{mailboxAddress}', 'put',
         (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxUpdate(
               MailboxUpdateSchema.fromJson(await request.readJsonBody()),
-              mailboxId: param(
+              mailboxAddress: param(
                   isRequired: true,
-                  name: 'mailboxId',
-                  value: request.pathParameter('mailboxId'),
+                  name: 'mailboxAddress',
+                  value: request.pathParameter('mailboxAddress'),
                   decode: (value) => paramToString(value))));
     }, security: [
       _i2.SecurityRequirement(schemes: [

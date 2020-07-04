@@ -63,7 +63,7 @@ class EmailRepository {
   /// return false if mailbox can't be found (or the given user is not owner)
   Future<bool> updateMailbox(
     UserEntity user, {
-    @required String mailboxId,
+    @required String mailboxAddress,
     String label,
     String entryUuid,
     bool isDeleted,
@@ -71,8 +71,9 @@ class EmailRepository {
     bool isHidden,
   }) async {
     assert(user != null);
-    assert(mailboxId != null);
-    final mailbox = await db.tables.email.findMailbox(db, mailboxId: mailboxId);
+    assert(mailboxAddress != null);
+    final mailbox =
+        await db.tables.email.findMailbox(db, address: mailboxAddress);
     if (mailbox == null || mailbox.user.id != user.id) {
       return false;
     }
@@ -86,7 +87,7 @@ class EmailRepository {
 
     await db.tables.email.updateMailbox(
       db,
-      mailboxId,
+      mailbox.id,
       label: Optional.fromNullable(label),
       clientEntryUuid: Optional.fromNullable(entryUuid),
       deletedAt: nowIfTrue(isDeleted),

@@ -175,9 +175,9 @@ paths:
           name: since_token
           description: As returned from a previous page object for a finished sync.
       description: ''
-  /mailbox/update/{mailboxId}:
+  /mailbox/update/{mailboxAddress}:
     parameters:
-      - name: mailboxId
+      - name: mailboxAddress
         in: path
         schema:
           type: string
