@@ -156,7 +156,7 @@ class EmailTable extends TableBase with TableConstants {
     final result = await db.query('''
         SELECT $columnId, $_COLUMN_ADDRESS, $columnCreatedAt, 
                 $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID,
-                $_COLUMN_DISABLED_AT,
+                $_COLUMN_DISABLED_AT
         FROM $_TABLE_EMAIL_MAILBOX 
         WHERE $COLUMN_USER_ID = @userId
         ORDER BY $columnCreatedAt DESC
