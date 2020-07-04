@@ -251,6 +251,7 @@ class EmailTable extends TableBase with TableConstants {
     WHERE 
       mb.$COLUMN_USER_ID = @userId 
       AND m.$_COLUMN_DELETED_AT IS NULL
+      AND mb.$_COLUMN_DELETED_AT IS NULL
       $untilFilter
       $sinceFilter
       $messageIdFilter
