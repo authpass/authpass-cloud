@@ -158,7 +158,7 @@ class EmailTable extends TableBase with TableConstants {
                 $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID,
                 $_COLUMN_DISABLED_AT
         FROM $_TABLE_EMAIL_MAILBOX 
-        WHERE $COLUMN_USER_ID = @userId
+        WHERE $COLUMN_USER_ID = @userId AND $_COLUMN_DELETED_AT IS NULL
         ORDER BY $columnCreatedAt DESC
         ''', values: {
       'userId': user.id,
