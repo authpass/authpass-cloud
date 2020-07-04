@@ -324,6 +324,60 @@ class EmailTable extends TableBase with TableConstants {
       'id': messageId
     });
   }
+
+  Future<UserEmailStatusEntity> userStatus(
+      DatabaseTransaction db, UserEntity user) async {
+    final result = await db.query('''
+    SELECT count(m.id) 
+    FROM $_TABLE_EMAIL_MESSAGE m 
+      INNER JOIN $_TABLE_EMAIL_MAILBOX mb ON mb.$columnId = m.$_COLUMN_MAILBOX_ID
+    WHERE mb.$_COLUMN_DELETED_AT IS NULL 
+      AND m.$_COLUMN_DELETED_AT IS NULL 
+      AND m.$_COLUMN_READ_AT IS NULL
+      AND mb.$COLUMN_USER_ID = @userId
+     ''', values: {'userId': user.id});
+
+    final row = result.single;
+    return UserEmailStatusEntity(messagesUnread: row[0] as int);
+  }
+
+  Future<int> messageMassUpdate(
+    DatabaseTransaction db,
+    UserEntity user,
+    MailMassupdatePostSchemaFilter filter, {
+    List<String> messageIds,
+    Optional<DateTime> readAt,
+  }) async {
+    String where;
+    final whereValues = <String, Object>{
+      'userId': user.id,
+    };
+    switch (filter) {
+      case MailMassupdatePostSchemaFilter.messageIds:
+        checkNotNull(messageIds);
+        where = ' AND m.$columnId IN @messageIds';
+        whereValues['messageIds'] = messageIds;
+        break;
+      case MailMassupdatePostSchemaFilter.all:
+        where = '';
+        break;
+    }
+    if (readAt == null) {
+      throw StateError('Right now we only support marking as read.');
+    }
+    return await db.execute('''
+        UPDATE $_TABLE_EMAIL_MESSAGE m 
+        SET m.$_COLUMN_READ_AT = @readAt 
+        FROM $_TABLE_EMAIL_MAILBOX mb 
+        WHERE mb.$COLUMN_USER_ID = @userId $where''',
+        values: {'userId': user.id, ...whereValues});
+  }
+}
+
+class UserEmailStatusEntity {
+  UserEmailStatusEntity({@required this.messagesUnread})
+      : assert(messagesUnread != null);
+  final int messagesUnread;
 }
 
 extension on String {

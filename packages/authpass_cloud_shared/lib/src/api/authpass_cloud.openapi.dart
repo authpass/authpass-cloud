@@ -527,6 +527,92 @@ class EmailConfirmPostSchema implements _i2.OpenApiContent {
 }
 
 @_i1.JsonSerializable()
+class StatusGetResponseBody200Mail implements _i2.OpenApiContent {
+  StatusGetResponseBody200Mail({@_i3.required this.messagesUnread})
+      : assert(messagesUnread != null);
+
+  factory StatusGetResponseBody200Mail.fromJson(Map<String, dynamic> jsonMap) =>
+      _$StatusGetResponseBody200MailFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'messagesUnread')
+  final num messagesUnread;
+
+  Map<String, dynamic> toJson() => _$StatusGetResponseBody200MailToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class StatusGetResponseBody200 implements _i2.OpenApiContent {
+  StatusGetResponseBody200({@_i3.required this.mail}) : assert(mail != null);
+
+  factory StatusGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
+      _$StatusGetResponseBody200FromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'mail')
+  final StatusGetResponseBody200Mail mail;
+
+  Map<String, dynamic> toJson() => _$StatusGetResponseBody200ToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+class _StatusGetResponse200 extends StatusGetResponse
+    implements _i2.OpenApiResponseBodyJson {
+  /// /// Information of the logged in account.
+  _StatusGetResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final StatusGetResponseBody200 body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final _i2.OpenApiContentType contentType =
+      _i2.OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class StatusGetResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<StatusGetResponseBody200> {
+  StatusGetResponse();
+
+  /// /// Information of the logged in account.
+  factory StatusGetResponse.response200(StatusGetResponseBody200 body) =>
+      _StatusGetResponse200.response200(body);
+
+  void map({@_i3.required _i2.ResponseMap<_StatusGetResponse200> on200}) {
+    if (this is _StatusGetResponse200) {
+      on200((this as _StatusGetResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Information of the logged in account.
+  @override
+  StatusGetResponseBody200 requireSuccess() {
+    if (this is _StatusGetResponse200) {
+      return (this as _StatusGetResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+@_i1.JsonSerializable()
 class MailboxGetResponseBody200 implements _i2.OpenApiContent {
   MailboxGetResponseBody200({this.data});
 
@@ -770,6 +856,89 @@ abstract class MailboxListGetResponse extends _i2.OpenApiResponse
       throw StateError('Expected success response, but got $this');
     }
   }
+}
+
+class _MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
+  /// /// Update finished.
+  _MailMassupdatePostResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailMassupdatePostResponse extends _i2.OpenApiResponse
+    implements _i2.HasSuccessResponse<void> {
+  MailMassupdatePostResponse();
+
+  /// /// Update finished.
+  factory MailMassupdatePostResponse.response200() =>
+      _MailMassupdatePostResponse200.response200();
+
+  void map(
+      {@_i3.required _i2.ResponseMap<_MailMassupdatePostResponse200> on200}) {
+    if (this is _MailMassupdatePostResponse200) {
+      on200((this as _MailMassupdatePostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Update finished.
+  @override
+  void requireSuccess() {
+    if (this is _MailMassupdatePostResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+enum MailMassupdatePostSchemaFilter {
+  @_i1.JsonValue('messageIds')
+  messageIds,
+  @_i1.JsonValue('all')
+  all,
+}
+
+extension MailMassupdatePostSchemaFilterExt on MailMassupdatePostSchemaFilter {
+  static final Map<String, MailMassupdatePostSchemaFilter> _names = {
+    'messageIds': MailMassupdatePostSchemaFilter.messageIds,
+    'all': MailMassupdatePostSchemaFilter.all
+  };
+  static MailMassupdatePostSchemaFilter fromName(String name) => _names[name];
+  String get name => toString().substring(31);
+}
+
+@_i1.JsonSerializable()
+class MailMassupdatePostSchema implements _i2.OpenApiContent {
+  MailMassupdatePostSchema(
+      {@_i3.required this.filter, this.messageIds, this.isRead})
+      : assert(filter != null);
+
+  factory MailMassupdatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$MailMassupdatePostSchemaFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'filter')
+  final MailMassupdatePostSchemaFilter filter;
+
+  /// Only used if filter=messageIds
+  @_i1.JsonKey(name: 'messageIds')
+  final List<String> messageIds;
+
+  @_i1.JsonKey(name: 'isRead')
+  final bool isRead;
+
+  Map<String, dynamic> toJson() => _$MailMassupdatePostSchemaToJson(this);
+  @override
+  String toString() => toJson().toString();
 }
 
 class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
@@ -1120,6 +1289,10 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
 
+  /// Get status of the user account.
+  /// get: /status
+  Future<StatusGetResponse> statusGet();
+
   /// List of all mailboxes of the current user.
   /// get: /mailbox
   Future<MailboxGetResponse> mailboxGet();
@@ -1134,6 +1307,11 @@ abstract class AuthPassCloud implements _i2.ApiEndpoint {
   /// get: /mailbox/list
   Future<MailboxListGetResponse> mailboxListGet(
       {String pageToken, String sinceToken});
+
+  /// Apply the given update to all matching mails.
+  /// post: /mail/massupdate
+  Future<MailMassupdatePostResponse> mailMassupdatePost(
+      MailMassupdatePostSchema body);
 
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
@@ -1200,6 +1378,11 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
 
+  /// Get status of the user account.
+  /// get: /status
+  ///
+  Future<StatusGetResponse> statusGet();
+
   /// List of all mailboxes of the current user.
   /// get: /mailbox
   ///
@@ -1219,6 +1402,12 @@ abstract class AuthPassCloudClient implements _i2.OpenApiClient {
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
   Future<MailboxListGetResponse> mailboxListGet(
       {String pageToken, String sinceToken});
+
+  /// Apply the given update to all matching mails.
+  /// post: /mail/massupdate
+  ///
+  Future<MailMassupdatePostResponse> mailMassupdatePost(
+      MailMassupdatePostSchema body);
 
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
@@ -1353,6 +1542,24 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
     });
   }
 
+  /// Get status of the user account.
+  /// get: /status
+  ///
+  @override
+  Future<StatusGetResponse> statusGet() async {
+    final request = _i2.OpenApiClientRequest('get', '/status', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _StatusGetResponse200.response200(StatusGetResponseBody200.fromJson(
+              await response.responseBodyJson()))
+    });
+  }
+
   /// List of all mailboxes of the current user.
   /// get: /mailbox
   ///
@@ -1415,6 +1622,26 @@ class _AuthPassCloudClientImpl extends _i2.OpenApiClientBase
           _MailboxListGetResponse200.response200(
               MailboxListGetResponseBody200.fromJson(
                   await response.responseBodyJson()))
+    });
+  }
+
+  /// Apply the given update to all matching mails.
+  /// post: /mail/massupdate
+  ///
+  @override
+  Future<MailMassupdatePostResponse> mailMassupdatePost(
+      MailMassupdatePostSchema body) async {
+    final request = _i2.OpenApiClientRequest('post', '/mail/massupdate', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(_i2.OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (_i2.OpenApiClientResponse response) async =>
+          _MailMassupdatePostResponse200.response200()
     });
   }
 
@@ -1593,6 +1820,19 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Get status of the user account.
+  /// get: /status
+  ///
+  _i2.OpenApiClientRequest statusGet() {
+    final request = _i2.OpenApiClientRequest('get', '/status', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// List of all mailboxes of the current user.
   /// get: /mailbox
   ///
@@ -1635,6 +1875,19 @@ class AuthPassCloudUrlResolve with _i2.OpenApiUrlEncodeMixin {
     ]);
     request.addQueryParameter('page_token', encodeString(pageToken));
     request.addQueryParameter('since_token', encodeString(sinceToken));
+    return request;
+  }
+
+  /// Apply the given update to all matching mails.
+  /// post: /mail/massupdate
+  ///
+  _i2.OpenApiClientRequest mailMassupdatePost() {
+    final request = _i2.OpenApiClientRequest('post', '/mail/massupdate', [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     return request;
   }
 
@@ -1773,6 +2026,15 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
               EmailConfirmPostSchema.fromJson(
                   await request.readUrlEncodedBodyFlat())));
     }, security: []);
+    addRoute('/status', 'get', (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request, (AuthPassCloud impl) async => impl.statusGet());
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/mailbox', 'get', (_i2.OpenApiRequest request) async {
       return await impl.invoke(
           request, (AuthPassCloud impl) async => impl.mailboxGet());
@@ -1807,6 +2069,17 @@ class AuthPassCloudRouter extends _i2.OpenApiServerRouterBase {
                   name: 'since_token',
                   value: request.queryParameter('since_token'),
                   decode: (value) => paramToString(value))));
+    }, security: [
+      _i2.SecurityRequirement(schemes: [
+        _i2.SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mail/massupdate', 'post', (_i2.OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailMassupdatePost(
+              MailMassupdatePostSchema.fromJson(await request.readJsonBody())));
     }, security: [
       _i2.SecurityRequirement(schemes: [
         _i2.SecurityRequirementScheme(

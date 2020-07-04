@@ -208,6 +208,17 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
+  Future<MailMassupdatePostResponse> mailMassupdatePost(
+      MailMassupdatePostSchema body) async {
+    final token = await _requireAuthToken();
+    final updated = await emailRepository.messageMassUpdate(
+        token.user, body.filter,
+        messageIds: body.messageIds, isRead: body.isRead);
+    _logger.fine('Updated $updated messages for $body');
+    return MailMassupdatePostResponse.response200();
+  }
+
+  @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
       {String messageId}) async {
     final token = await _requireAuthToken();
@@ -244,6 +255,15 @@ class AuthPassCloudImpl extends AuthPassCloud {
       return MailboxUpdateResponse.response200();
     }
     throw NotFoundException('Invalid mailboxAddress $mailboxAddress.');
+  }
+
+  @override
+  Future<StatusGetResponse> statusGet() async {
+    final token = await _requireAuthToken();
+    final status = await emailRepository.generateUserStatus(token.user);
+    return StatusGetResponse.response200(StatusGetResponseBody200(
+        mail: StatusGetResponseBody200Mail(
+            messagesUnread: status.messagesUnread)));
   }
 }
 

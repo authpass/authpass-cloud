@@ -77,24 +77,24 @@ class EmailRepository {
     if (mailbox == null || mailbox.user.id != user.id) {
       return false;
     }
-    final now = clock.now().toUtc();
-    Optional<DateTime> nowIfTrue(bool value) {
-      if (value == null) {
-        return null;
-      }
-      return value ? Optional.of(now) : const Optional.absent();
-    }
 
     await db.tables.email.updateMailbox(
       db,
       mailbox.id,
       label: label == null ? null : Optional.of(label),
       clientEntryUuid: label == null ? null : Optional.of(entryUuid),
-      deletedAt: nowIfTrue(isDeleted),
-      hiddenAt: nowIfTrue(isHidden),
-      disabledAt: nowIfTrue(isDisabled),
+      deletedAt: _nowIfTrue(isDeleted),
+      hiddenAt: _nowIfTrue(isHidden),
+      disabledAt: _nowIfTrue(isDisabled),
     );
     return true;
+  }
+
+  Optional<DateTime> _nowIfTrue(bool value) {
+    if (value == null) {
+      return null;
+    }
+    return value ? Optional.of(clock.now().toUtc()) : const Optional.absent();
   }
 
   Future<List<EmailMessageEntity>> findEmailsForUser(
@@ -139,6 +139,16 @@ class EmailRepository {
     return false;
   }
 
+  Future<int> messageMassUpdate(
+    UserEntity entity,
+    MailMassupdatePostSchemaFilter filter, {
+    List<String> messageIds,
+    bool isRead,
+  }) async {
+    return await db.tables.email.messageMassUpdate(db, entity, filter,
+        messageIds: messageIds, readAt: _nowIfTrue(isRead));
+  }
+
   Future<bool> deleteMessage(UserEntity user,
       {@required String messageId}) async {
     final mail =
@@ -151,5 +161,9 @@ class EmailRepository {
       return true;
     }
     return false;
+  }
+
+  Future<UserEmailStatusEntity> generateUserStatus(UserEntity user) async {
+    return await db.tables.email.userStatus(db, user);
   }
 }

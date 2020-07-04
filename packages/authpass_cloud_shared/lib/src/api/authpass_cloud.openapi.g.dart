@@ -161,6 +161,35 @@ Map<String, dynamic> _$EmailConfirmPostSchemaToJson(
       'g-recaptcha-response': instance.gRecaptchaResponse,
     };
 
+StatusGetResponseBody200Mail _$StatusGetResponseBody200MailFromJson(
+    Map<String, dynamic> json) {
+  return StatusGetResponseBody200Mail(
+    messagesUnread: json['messagesUnread'] as num,
+  );
+}
+
+Map<String, dynamic> _$StatusGetResponseBody200MailToJson(
+        StatusGetResponseBody200Mail instance) =>
+    <String, dynamic>{
+      'messagesUnread': instance.messagesUnread,
+    };
+
+StatusGetResponseBody200 _$StatusGetResponseBody200FromJson(
+    Map<String, dynamic> json) {
+  return StatusGetResponseBody200(
+    mail: json['mail'] == null
+        ? null
+        : StatusGetResponseBody200Mail.fromJson(
+            json['mail'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$StatusGetResponseBody200ToJson(
+        StatusGetResponseBody200 instance) =>
+    <String, dynamic>{
+      'mail': instance.mail,
+    };
+
 MailboxGetResponseBody200 _$MailboxGetResponseBody200FromJson(
     Map<String, dynamic> json) {
   return MailboxGetResponseBody200(
@@ -224,6 +253,29 @@ Map<String, dynamic> _$MailboxListGetResponseBody200ToJson(
       'page': instance.page,
       'data': instance.data,
     };
+
+MailMassupdatePostSchema _$MailMassupdatePostSchemaFromJson(
+    Map<String, dynamic> json) {
+  return MailMassupdatePostSchema(
+    filter: _$enumDecodeNullable(
+        _$MailMassupdatePostSchemaFilterEnumMap, json['filter']),
+    messageIds: (json['messageIds'] as List)?.map((e) => e as String)?.toList(),
+    isRead: json['isRead'] as bool,
+  );
+}
+
+Map<String, dynamic> _$MailMassupdatePostSchemaToJson(
+        MailMassupdatePostSchema instance) =>
+    <String, dynamic>{
+      'filter': _$MailMassupdatePostSchemaFilterEnumMap[instance.filter],
+      'messageIds': instance.messageIds,
+      'isRead': instance.isRead,
+    };
+
+const _$MailMassupdatePostSchemaFilterEnumMap = {
+  MailMassupdatePostSchemaFilter.messageIds: 'messageIds',
+  MailMassupdatePostSchemaFilter.all: 'all',
+};
 
 MailboxUpdateSchema _$MailboxUpdateSchemaFromJson(Map<String, dynamic> json) {
   return MailboxUpdateSchema(

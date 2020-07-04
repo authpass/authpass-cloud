@@ -98,6 +98,26 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+  /status:
+    get:
+      summary: Get status of the user account.
+      responses:
+        '200':
+          description: Information of the logged in account.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mail:
+                    type: object
+                    properties:
+                      messagesUnread:
+                        type: number
+                    required:
+                      - messagesUnread
+                required:
+                  - mail
   /mailbox:
     get:
       summary: List of all mailboxes of the current user.
@@ -175,6 +195,31 @@ paths:
           name: since_token
           description: As returned from a previous page object for a finished sync.
       description: ''
+  /mail/massupdate:
+    post:
+      description: Apply the given update to all matching mails.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                filter:
+                  type: string
+                  enum:
+                    - messageIds
+                    - all
+                messageIds:
+                  description: 'Only used if filter=messageIds'
+                  type: array
+                  items:
+                    type: string
+                isRead:
+                  type: boolean
+              required:
+                - filter
+      responses:
+        '200':
+          description: Update finished.
   /mailbox/update/{mailboxAddress}:
     parameters:
       - name: mailboxAddress
