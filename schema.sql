@@ -94,7 +94,10 @@ CREATE TABLE public.email_mailbox (
     label character varying NOT NULL,
     client_entry_uuid character varying NOT NULL,
     user_id uuid NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp without time zone,
+    disabled_at timestamp without time zone,
+    hidden_at timestamp without time zone
 );
 
 
