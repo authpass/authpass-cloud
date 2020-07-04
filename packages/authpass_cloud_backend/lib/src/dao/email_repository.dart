@@ -88,8 +88,8 @@ class EmailRepository {
     await db.tables.email.updateMailbox(
       db,
       mailbox.id,
-      label: Optional.fromNullable(label),
-      clientEntryUuid: Optional.fromNullable(entryUuid),
+      label: label == null ? null : Optional.of(label),
+      clientEntryUuid: label == null ? null : Optional.of(entryUuid),
       deletedAt: nowIfTrue(isDeleted),
       hiddenAt: nowIfTrue(isHidden),
       disabledAt: nowIfTrue(isDisabled),
