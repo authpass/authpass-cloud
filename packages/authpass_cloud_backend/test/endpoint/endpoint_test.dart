@@ -84,6 +84,17 @@ Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
   return endpoint.db.tables.email.findMailbox(endpoint.db, address: address);
 }
 
+Future<String> _createMessage(
+    AuthPassCloudImpl endpoint, MailboxEntity mailbox) async {
+  return await endpoint.db.tables.email.insertMessage(
+    endpoint.db,
+    mailbox: mailbox,
+    sender: 'nobody@example.com',
+    subject: 'Lorem',
+    message: 'Ipsum',
+  );
+}
+
 void main() {
   PrintAppender.setupLogging();
   _logger.fine('starting tests...');
@@ -174,14 +185,7 @@ void main() {
     });
     endpointTest('delete message', (endpoint) async {
       final mailbox = await _createUserWithMailbox(endpoint);
-      final id = await endpoint.db.tables.email.insertMessage(
-        endpoint.db,
-        mailbox: mailbox,
-        sender: 'nobody@example.com',
-        subject: 'Lorem',
-        message: 'Ipsum',
-      );
-
+      final id = await _createMessage(endpoint, mailbox);
       final list = await endpoint.mailboxListGet().requireSuccess();
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
@@ -190,6 +194,21 @@ void main() {
 
       final l2 = await endpoint.mailboxListGet().requireSuccess();
       expect(l2.data, isEmpty);
+    });
+    endpointTest('mark all read', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      await _createMessage(endpoint, mailbox);
+      await _createMessage(endpoint, mailbox);
+      await _createMessage(endpoint, mailbox);
+      await _createMessage(endpoint, mailbox);
+      final status = await endpoint.statusGet().requireSuccess();
+      expect(status.mail.messagesUnread, 4);
+      await endpoint
+          .mailMassupdatePost(MailMassupdatePostSchema(
+              filter: MailMassupdatePostSchemaFilter.all, isRead: true))
+          .requireSuccess();
+      final statusAfter = await endpoint.statusGet().requireSuccess();
+      expect(statusAfter.mail.messagesUnread, 0);
     });
   });
 }

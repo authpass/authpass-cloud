@@ -362,15 +362,18 @@ class EmailTable extends TableBase with TableConstants {
         where = '';
         break;
     }
-    if (readAt == null) {
-      throw StateError('Right now we only support marking as read.');
-    }
+
+    final update = UpdateQueryHelper();
+    update.addSetOptional(_COLUMN_READ_AT, readAt);
+    update.checkHasValues();
     return await db.execute('''
         UPDATE $_TABLE_EMAIL_MESSAGE m 
-        SET m.$_COLUMN_READ_AT = @readAt 
+        SET ${update.setQuery}
         FROM $_TABLE_EMAIL_MAILBOX mb 
-        WHERE mb.$COLUMN_USER_ID = @userId $where''',
-        values: {'userId': user.id, ...whereValues});
+        WHERE mb.$COLUMN_USER_ID = @userId $where''', values: {
+      ...whereValues,
+      ...update.setValues,
+    });
   }
 }
 
@@ -378,6 +381,35 @@ class UserEmailStatusEntity {
   UserEmailStatusEntity({@required this.messagesUnread})
       : assert(messagesUnread != null);
   final int messagesUnread;
+}
+
+class UpdateQueryHelper {
+  final Map<String, Object> setValues = {};
+  final List<String> _setQueryList = [];
+  int varCount = 0;
+
+  String get setQuery => _setQueryList.join(',');
+
+  /// Attributes which were added using [addSetOptional] but were ignored
+  /// because the value was null.
+  final List<String> ignoredAttributes = [];
+
+  void addSetOptional(String attribute, Optional value) {
+    if (value == null) {
+      ignoredAttributes.add(attribute);
+      return;
+    }
+    final varName = 'setVar${varCount++}';
+    setValues[varName] = value.orNull;
+    _setQueryList.add('$attribute = @$varName');
+  }
+
+  void checkHasValues() {
+    if (setValues.isEmpty) {
+      throw ArgumentError('No updates where specified. one of those have '
+          'to be non-null: $ignoredAttributes');
+    }
+  }
 }
 
 extension on String {

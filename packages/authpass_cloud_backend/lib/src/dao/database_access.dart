@@ -54,9 +54,7 @@ class DatabaseTransaction {
     assert(!where.values.contains(null), 'where values must not be null.');
     assert(!setContainsOptional || set.values.whereType<Optional>().isEmpty);
     if (setContainsOptional) {
-      set.removeWhere((key, value) => value == null);
-      set = set.map((key, value) =>
-          MapEntry(key, value is Optional ? value.orNull : value));
+      set = flattenOptionals(set);
     }
     final setStatement =
         set.entries.map((e) => '${e.key} = @${e.key}').join(',');
@@ -69,6 +67,15 @@ class DatabaseTransaction {
           ...where,
         },
         expectedResultCount: 1);
+  }
+
+  /// Removes entries in [values] which have a `null` value, and replaces
+  /// all [Optional] values with their actual value.
+  Map<String, Object> flattenOptionals(Map<String, Object> values) {
+    Object unwrap(Object value) => value is Optional ? value.orNull : value;
+    return Map.fromEntries(values.entries
+        .where((element) => element != null)
+        .map((e) => MapEntry(e.key, unwrap(e.value))));
   }
 
   bool _assertCorrectValues(Map<String, Object> values) {
