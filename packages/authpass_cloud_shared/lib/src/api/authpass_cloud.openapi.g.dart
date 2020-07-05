@@ -164,7 +164,7 @@ Map<String, dynamic> _$EmailConfirmPostSchemaToJson(
 StatusGetResponseBody200Mail _$StatusGetResponseBody200MailFromJson(
     Map<String, dynamic> json) {
   return StatusGetResponseBody200Mail(
-    messagesUnread: json['messagesUnread'] as num,
+    messagesUnread: json['messagesUnread'] as int,
   );
 }
 

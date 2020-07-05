@@ -6,3 +6,4 @@
 /.blackbox/secring.gpg
 dev_hp.exe
 /docker/config/prod.yaml
+.test_coverage.dart

@@ -535,7 +535,7 @@ class StatusGetResponseBody200Mail implements _i2.OpenApiContent {
       _$StatusGetResponseBody200MailFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'messagesUnread')
-  final num messagesUnread;
+  final int messagesUnread;
 
   Map<String, dynamic> toJson() => _$StatusGetResponseBody200MailToJson(this);
   @override

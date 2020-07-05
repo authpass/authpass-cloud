@@ -113,7 +113,7 @@ paths:
                     type: object
                     properties:
                       messagesUnread:
-                        type: number
+                        type: integer
                     required:
                       - messagesUnread
                 required:
