@@ -59,3 +59,12 @@ services:
         order: start-first
         monitor: 5m
         failure_action: rollback
+  dev:
+    image: google/dart:2.9-dev
+    depends_on:
+      - pgdb
+    volumes:
+      - ..:/src
+    deploy:
+      replicas: 0
+
