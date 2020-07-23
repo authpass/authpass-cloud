@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:postgres_utils/postgres_utils.dart';
 
 class TestUtils {
   static final config = DatabaseConfig.defaults();

@@ -1,10 +1,10 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:meta/meta.dart';
+import 'package:postgres_utils/postgres_utils.dart';
 import 'package:quiver/check.dart';
 
 import 'package:logging/logging.dart';
@@ -45,7 +45,7 @@ class EmailTable extends TableBase with TableConstants {
         _TABLE_EMAIL_MESSAGE,
       ];
 
-  Future<void> createTables(DatabaseTransaction db) async {
+  Future<void> createTables(DatabaseTransactionBase db) async {
     await db.execute('''
     CREATE TABLE $_TABLE_EMAIL_MAILBOX (
       $specColumnIdPrimaryKey,
@@ -72,13 +72,13 @@ class EmailTable extends TableBase with TableConstants {
     ''');
   }
 
-  Future<void> migrate4(DatabaseTransaction db) async {
+  Future<void> migrate4(DatabaseTransactionBase db) async {
     await db.execute('''
     ALTER TABLE $_TABLE_EMAIL_MESSAGE ADD COLUMN $_COLUMN_DELETED_AT $typeTimestamp
     ''');
   }
 
-  Future<void> migrate5(DatabaseTransaction db) async {
+  Future<void> migrate5(DatabaseTransactionBase db) async {
     await db.execute('''
     ALTER TABLE $_TABLE_EMAIL_MAILBOX ADD COLUMN $_COLUMN_DELETED_AT $typeTimestamp;
     ALTER TABLE $_TABLE_EMAIL_MAILBOX ADD COLUMN $_COLUMN_DISABLED_AT $typeTimestamp;
@@ -87,7 +87,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<void> insertMailbox(
-    DatabaseTransaction db, {
+    DatabaseTransactionBase db, {
     @required UserEntity userEntity,
     @required String label,
     @required String address,
@@ -108,7 +108,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<void> updateMailbox(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     String mailboxId, {
     Optional<String> label,
     Optional<String> clientEntryUuid,
@@ -130,7 +130,7 @@ class EmailTable extends TableBase with TableConstants {
     );
   }
 
-  Future<MailboxEntity> findMailbox(DatabaseTransaction db,
+  Future<MailboxEntity> findMailbox(DatabaseTransactionBase db,
       {String address, String mailboxId}) async {
     assert(address != null || mailboxId != null);
     assert(db != null);
@@ -152,7 +152,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<List<Mailbox>> findMailboxAll(
-      DatabaseTransaction db, UserEntity user) async {
+      DatabaseTransactionBase db, UserEntity user) async {
     final result = await db.query('''
         SELECT $columnId, $_COLUMN_ADDRESS, $columnCreatedAt, 
                 $_COLUMN_LABEL, $_COLUMN_CLIENT_ENTRY_UUID,
@@ -177,7 +177,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<String> insertMessage(
-    DatabaseTransaction db, {
+    DatabaseTransactionBase db, {
     @required MailboxEntity mailbox,
     @required String sender,
     @required String subject,
@@ -197,7 +197,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<EmailMessageEntity> findEmailForUser(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     UserEntity user, {
     @required String messageId,
   }) async {
@@ -218,7 +218,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<List<EmailMessageEntity>> findEmailsForUser(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     UserEntity user, {
     @required int offset,
     @required int limit,
@@ -231,7 +231,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<List<EmailMessageEntity>> _findEmailsForUser(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     UserEntity user, {
     @required int offset,
     @required int limit,
@@ -279,7 +279,8 @@ class EmailTable extends TableBase with TableConstants {
         .toList();
   }
 
-  Future<String> findEmailMessageBody(DatabaseTransaction db, UserEntity user,
+  Future<String> findEmailMessageBody(
+      DatabaseTransactionBase db, UserEntity user,
       {@required String messageId}) async {
     assert(user != null);
     assert(messageId != null);
@@ -311,7 +312,7 @@ class EmailTable extends TableBase with TableConstants {
   /// Before calling this method, makee sure it is a valid message id and
   /// the it belongs to the correct user.
   Future<void> updateMailMessage(
-    DatabaseTransaction db, {
+    DatabaseTransactionBase db, {
     @required String messageId,
     @required DateTime readAt,
     @required DateTime deletedAt,
@@ -326,7 +327,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<UserEmailStatusEntity> userStatus(
-      DatabaseTransaction db, UserEntity user) async {
+      DatabaseTransactionBase db, UserEntity user) async {
     final result = await db.query('''
     SELECT count(m.id) 
     FROM $_TABLE_EMAIL_MESSAGE m 
@@ -342,7 +343,7 @@ class EmailTable extends TableBase with TableConstants {
   }
 
   Future<int> messageMassUpdate(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     UserEntity user,
     MailMassupdatePostSchemaFilter filter, {
     List<String> messageIds,

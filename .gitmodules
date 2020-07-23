@@ -1,3 +1,6 @@
 [submodule "deps/openapi_dart"]
 	path = deps/openapi_dart
 	url = ../../hpoul/openapi_dart
+[submodule "deps/postgres_utils.dart"]
+	path = deps/postgres_utils.dart
+	url = ../../authpass/postgres_utils.dart

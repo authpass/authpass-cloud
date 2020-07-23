@@ -350,7 +350,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.8"
+    version: "1.2.2"
   mime:
     dependency: transitive
     description:
@@ -420,7 +420,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.2"
   petitparser:
     dependency: transitive
     description:
@@ -449,6 +449,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  postgres_utils:
+    dependency: "direct main"
+    description:
+      path: "../../deps/postgres_utils.dart"
+      relative: true
+    source: path
+    version: "0.0.0"
   pub_semver:
     dependency: transitive
     description:
@@ -630,7 +637,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   vm_service:
     dependency: transitive
     description:

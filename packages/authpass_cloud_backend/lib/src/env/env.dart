@@ -1,6 +1,7 @@
 import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:logging/logging.dart';
+import 'package:postgres_utils/postgres_utils.dart';
 
 final _logger = Logger('env');
 //

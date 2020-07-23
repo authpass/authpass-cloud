@@ -11,10 +11,10 @@ Future<void> main() async {
   _logger.fine('Starting Client ...');
   final requestSender = HttpRequestSender();
 //  const baseUri = 'https://virtserver.swaggerhub.com/hpoul/Testapi/1.0.0';
-  const baseUri = 'http://localhost:8080';
+  const baseUri = 'https://cloud.authpass.app';
   final client = AuthPassCloudClient(Uri.parse(baseUri), requestSender);
   final registerResponse = (await client
-          .userRegisterPost(RegisterRequest(email: 'herbert.hell@m.poul.at')))
+          .userRegisterPost(RegisterRequest(email: 'hpoul.spain@gmail.com')))
       .requireSuccess();
   _logger.info('Success! ${registerResponse.userUuid}');
   final authToken = registerResponse.authToken;

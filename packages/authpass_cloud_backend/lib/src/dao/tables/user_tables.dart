@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/dao/tables/base_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:postgres_utils/postgres_utils.dart';
 
 final _logger = Logger('user_tables');
 
@@ -52,7 +51,7 @@ class UserTable extends TableBase with TableConstants {
   @override
   List<String> get types => [_TYPE_STATUS];
 
-  Future<void> createTables(DatabaseTransaction conn) async {
+  Future<void> createTables(DatabaseTransactionBase conn) async {
     await conn.execute('''
     CREATE TABLE $TABLE_USER (
       $columnId uuid primary key,
@@ -93,7 +92,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailEntity> findUserByEmail(
-      DatabaseTransaction db, String email) async {
+      DatabaseTransactionBase db, String email) async {
     email = _normalizeEmail(email);
     final query = await db.query('''
       SELECT u.$columnId, e.$columnId FROM $TABLE_USER u 
@@ -112,7 +111,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<AuthTokenEntity> insertAuthToken(
-    DatabaseTransaction db,
+    DatabaseTransactionBase db,
     UserEntity user,
   ) async {
     final tokenUuid = cryptoService.createSecureUuid();
@@ -135,7 +134,7 @@ class UserTable extends TableBase with TableConstants {
     );
   }
 
-  Future<EmailConfirmEntity> insertEmailConfirmToken(DatabaseTransaction db,
+  Future<EmailConfirmEntity> insertEmailConfirmToken(DatabaseTransactionBase db,
       EmailEntity email, AuthTokenEntity authToken) async {
     final emailToken =
         cryptoService.createSecureToken(type: TokenType.emailConfirm);
@@ -156,7 +155,8 @@ class UserTable extends TableBase with TableConstants {
     );
   }
 
-  Future<bool> isValidEmailToken(DatabaseTransaction db, String token) async {
+  Future<bool> isValidEmailToken(
+      DatabaseTransactionBase db, String token) async {
     final result = await db.query(
         '''SELECT $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL_CONFIRM WHERE token = @token''',
         values: {'token': token});
@@ -171,7 +171,7 @@ class UserTable extends TableBase with TableConstants {
     return true;
   }
 
-  Future<AuthTokenEntity> findAuthToken(DatabaseTransaction db,
+  Future<AuthTokenEntity> findAuthToken(DatabaseTransactionBase db,
       {String authToken, String tokenId}) async {
     assert(authToken != null || tokenId != null);
     final where =
@@ -191,7 +191,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailConfirmEntity> findEmailConfirmToken(
-      DatabaseTransaction db, String token) async {
+      DatabaseTransactionBase db, String token) async {
     return await db.query('''SELECT $_COLUMN_EMAIL_ID,
      $_COLUMN_TOKEN, $_COLUMN_AUTH_TOKEN_ID, $_COLUMN_CONFIRMED_AT 
      FROM $_TABLE_EMAIL_CONFIRM WHERE $_COLUMN_TOKEN = @token ''',
@@ -210,7 +210,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailEntity> findEmailById(
-      DatabaseTransaction db, String emailId) async {
+      DatabaseTransactionBase db, String emailId) async {
     return db.query('''SELECT $COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS, 
     $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL WHERE $columnId = @id''',
         values: {'id': emailId}).singleOrNull((row) {
@@ -223,7 +223,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailConfirmEntity> insertUser(
-      DatabaseTransaction db, String email) async {
+      DatabaseTransactionBase db, String email) async {
     email = _normalizeEmail(email);
     final userUuid = cryptoService.createSecureUuid();
     final emailUuid = cryptoService.createSecureUuid();
@@ -256,7 +256,7 @@ class UserTable extends TableBase with TableConstants {
     );
   }
 
-  Future<void> updateAuthToken(DatabaseTransaction db, String id,
+  Future<void> updateAuthToken(DatabaseTransactionBase db, String id,
       {AuthTokenStatus status}) async {
     await db.execute(
       '''UPDATE $_TABLE_AUTH_TOKEN SET $_COLUMN_STATUS = @status WHERE $columnId = @id''',
@@ -265,7 +265,7 @@ class UserTable extends TableBase with TableConstants {
     );
   }
 
-  Future<void> updateEmailConfirmToken(DatabaseTransaction db, String token,
+  Future<void> updateEmailConfirmToken(DatabaseTransactionBase db, String token,
       {DateTime confirmedAt}) async {
     await db.execute(
       '''UPDATE $_TABLE_EMAIL_CONFIRM SET $_COLUMN_CONFIRMED_AT = @confirmedAt WHERE token = @token''',
