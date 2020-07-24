@@ -6,6 +6,7 @@ import 'package:authpass_cloud_backend/src/cli/email_command.dart';
 import 'package:authpass_cloud_backend/src/cli/http_command.dart';
 import 'package:authpass_cloud_backend/src/cli/serve_command.dart';
 import 'package:authpass_cloud_backend/src/cli/smtpd_command.dart';
+import 'package:authpass_cloud_backend/src/cli/smtpd_healtcheck_command.dart';
 import 'package:authpass_cloud_backend/src/cli/version_command.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
@@ -31,6 +32,7 @@ class MainCommandRunner extends CommandRunner<void> {
       ..addCommand(VersionCommand())
       ..addCommand(ServeCommand())
       ..addCommand(SmtpdCommand())
+      ..addCommand(SmtpdHealthCheck())
       ..addCommand(SetupDbCommand());
   }
 
@@ -42,7 +44,12 @@ class MainCommandRunner extends CommandRunner<void> {
       PrintAppender.setupLogging();
       _logger.finer('Starting…');
     }
-    return await super.runCommand(topLevelResults);
+    try {
+      return await super.runCommand(topLevelResults);
+    } catch (e, stackTrace) {
+      _logger.severe('Error while executing command.', e, stackTrace);
+      rethrow;
+    }
   }
 }
 
