@@ -78,5 +78,5 @@ class DevEnv extends Env {
         fromAddress: 'fake@address.com',
       ),
       secrets: EmptySecrets(),
-      database: DatabaseConfig.defaults());
+      database: DatabaseConfig.fromEnvironment());
 }

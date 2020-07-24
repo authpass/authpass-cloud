@@ -5,7 +5,7 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
 class TestUtils {
-  static final config = DatabaseConfig.defaults();
+  static final config = DatabaseConfig.fromEnvironment();
 
   static DatabaseAccess createDatabaseAccess(DatabaseConfig config) {
     return DatabaseAccess(cryptoService: CryptoService(), config: config);
