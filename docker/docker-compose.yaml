@@ -3,8 +3,6 @@ services:
   pgdb:
     # postgres:12.3
     image: postgres@sha256:222c12ec1601f38cee2c84fd044756e32815cf11ce36151735c37cb4ead60855
-    ports: ##REMOVELINE
-      - 5432:5432 ##REMOVELINE
     environment:
       POSTGRES_USER: authpass
       POSTGRES_PASSWORD: blubb
@@ -69,7 +67,7 @@ services:
     depends_on:
       - pgdb
     healthcheck:
-      test: ['/authpass_backend.exe', 'smtpd-healthcheck']
+      test: ['CMD', '/authpass_backend.exe', 'smtpd-healthcheck']
       interval: 1m
       retries: 3
       start_period: 2s
