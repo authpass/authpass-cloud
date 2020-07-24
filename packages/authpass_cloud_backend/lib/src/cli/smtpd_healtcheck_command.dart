@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:enough_mail/enough_mail.dart';
-
 import 'package:logging/logging.dart';
 
 final _logger = Logger('smtpd_healtcheck_command');
@@ -26,8 +25,8 @@ class SmtpdHealthCheckCommand extends Command<void> {
       final response =
           await client.connectToServer('localhost', port, isSecure: false);
       _logger.fine('Connection response: ${response.debugString}');
-      final ehloResponse = await client.ehlo();
-      _logger.fine('ehlo response: ${ehloResponse.debugString}');
+//      final ehloResponse = await client.ehlo();
+//      _logger.fine('ehlo response: ${ehloResponse.debugString}');
       await client.quit();
       exitCode = 0;
       exit(0);
