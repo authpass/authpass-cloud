@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
 import 'package:authpass_cloud_backend/src/cli/serve_command.dart';
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
