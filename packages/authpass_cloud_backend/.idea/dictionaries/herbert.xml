@@ -5,6 +5,7 @@
       <w>authpass</w>
       <w>massupdate</w>
       <w>smtp</w>
+      <w>smtpd</w>
     </words>
   </dictionary>
 </component>

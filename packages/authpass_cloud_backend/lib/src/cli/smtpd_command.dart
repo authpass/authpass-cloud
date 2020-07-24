@@ -8,8 +8,8 @@ import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
 
-class HttpCommand extends BaseBackendCommand {
-  HttpCommand() {
+class SmtpdCommand extends BaseBackendCommand {
+  SmtpdCommand() {
     argParser.addOption(
       'port',
       abbr: 'p',
