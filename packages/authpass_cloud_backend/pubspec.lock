@@ -519,6 +519,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.3"
+  smtpd:
+    dependency: "direct main"
+    description:
+      path: "../../deps/smtpd.dart"
+      relative: true
+    source: path
+    version: "0.1.0"
   source_gen:
     dependency: transitive
     description:

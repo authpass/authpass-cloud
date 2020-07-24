@@ -59,6 +59,26 @@ services:
         order: start-first
         monitor: 5m
         failure_action: rollback
+  smtpd:
+    image: docker.pkg.github.com/authpass/authpass-cloud/authpass-backend
+    ports:
+      - 9561:25
+    command: /authpass_backend.exe smtpd -c config/prod.yaml
+    volumes:
+      - ./config:/config
+    depends_on:
+      - pgdb
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3000
+        window: 120s
+      update_config:
+        delay: 30s
+        order: start-first
+        monitor: 5m
+        failure_action: rollback
   dev:
     image: google/dart:2.9-dev
     depends_on:

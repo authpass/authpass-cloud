@@ -1,7 +1,8 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:enough_mail/enough_mail.dart';
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
+import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('email_delivery_service');
 
@@ -19,12 +20,34 @@ class EmailDeliveryService {
       return MailSystemStatusCodes.errorNetworkMisc
           .withMessage('Missing From header.');
     }
-    final fromAddress = fromLine.split(' ')[1];
+    final sender = fromLine.split(' ')[1];
     final message = MimeMessage();
     message.bodyRaw = rawMessage;
     message.parse();
     final recipient = message.decodeHeaderValue('delivered-to');
+    return await _deliverEmailTo(db, sender, recipient, message);
+  }
 
+  Future<MailSystemStatusCodes> deliverEmailTo(
+    DatabaseTransaction db, {
+    @required String sender,
+    @required String recipient,
+    @required String content,
+  }) async {
+    final message = MimeMessage();
+    message.bodyRaw = content;
+    message.parse();
+    return await _deliverEmailTo(db, sender, recipient, message);
+  }
+
+  Future<bool> verifyAddressValid(
+      DatabaseTransaction db, String recipient) async {
+    final mailbox = await db.tables.email.findMailbox(db, address: recipient);
+    return mailbox != null;
+  }
+
+  Future<MailSystemStatusCodes> _deliverEmailTo(DatabaseTransaction db,
+      String sender, String recipient, MimeMessage message) async {
     final mailbox = await db.tables.email.findMailbox(db, address: recipient);
     if (mailbox == null) {
       _logger.warning('Invalid destination address {$recipient}');
@@ -38,14 +61,14 @@ class EmailDeliveryService {
     await db.tables.email.insertMessage(
       db,
       mailbox: mailbox,
-      sender: fromAddress,
+      sender: sender,
       subject: subject ?? '',
-      message: rawMessage,
+      message: message.bodyRaw,
     );
 
     _logger.info('Received email for {$recipient}.'
-        ' (from {$fromAddress})'
-        ' With the following body:\n\n$body');
+        ' (from {$sender})'
+        ' With the following body:\n\n${message.bodyRaw}');
     return MailSystemStatusCodes.success;
   }
 }

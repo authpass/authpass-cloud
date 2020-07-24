@@ -20,6 +20,8 @@ dependencies:
   mailer: ^3.0.4
   yaml: ^2.2.1
   enough_mail: ^0.0.28
+  smtpd:
+    path: ../../deps/smtpd.dart
 
   openapi_base: ^0.1.2
   authpass_cloud_shared:

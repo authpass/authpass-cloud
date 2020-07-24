@@ -14,8 +14,8 @@ import 'package:openapi_base/openapi_base.dart';
 
 final _logger = Logger('server');
 
-class Server {
-  Server({@required this.env}) : assert(env != null);
+class BackendServer {
+  BackendServer({@required this.env}) : assert(env != null);
 
   final Env env;
 
@@ -32,6 +32,21 @@ class Server {
     return serviceProvider;
   }
 
+  EmailService _createEmailService(Env env) {
+    if (env.config.email.smtp is EmailSmtpConfig) {
+      return MailerEmailService(emailConfig: env.config.email);
+    }
+    if (!env.assertEnabled) {
+      throw StateError('Assertions are not enabled, '
+          'no fake email service allowed.');
+    }
+    return FakeEmailService();
+  }
+}
+
+class Server extends BackendServer {
+  Server({@required Env env}) : super(env: env);
+
   Future<void> run() async {
     PrintAppender.setupLogging();
     _logger.fine('Starting Server ... ${BuildInfo.asString()}');
@@ -46,17 +61,6 @@ class Server {
     );
     final exitCode = await process.exitCode;
     _logger.fine('exitCode from server: $exitCode');
-  }
-
-  EmailService _createEmailService(Env env) {
-    if (env.config.email.smtp is EmailSmtpConfig) {
-      return MailerEmailService(emailConfig: env.config.email);
-    }
-    if (!env.assertEnabled) {
-      throw StateError('Assertions are not enabled, '
-          'no fake email service allowed.');
-    }
-    return FakeEmailService();
   }
 }
 

@@ -4,11 +4,11 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
-import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_delivery_service.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
+import 'package:smtpd/smtpd.dart';
 import 'package:test/test.dart';
 
 import '../test_utils.dart';

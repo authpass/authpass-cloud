@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
+import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('email_command');
 

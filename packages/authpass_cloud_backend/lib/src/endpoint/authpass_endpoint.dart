@@ -6,12 +6,12 @@ import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
-import 'package:authpass_cloud_backend/src/mail/mail_system_status_codes.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
+import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('authpass_service');
 
