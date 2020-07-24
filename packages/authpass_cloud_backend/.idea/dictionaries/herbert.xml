@@ -4,6 +4,7 @@
       <w>abcdefghijklmnopqrstuvwxyz</w>
       <w>authpass</w>
       <w>ehlo</w>
+      <w>healthcheck</w>
       <w>massupdate</w>
       <w>smtp</w>
       <w>smtpd</w>

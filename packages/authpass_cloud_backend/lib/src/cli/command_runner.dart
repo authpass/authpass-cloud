@@ -32,7 +32,7 @@ class MainCommandRunner extends CommandRunner<void> {
       ..addCommand(VersionCommand())
       ..addCommand(ServeCommand())
       ..addCommand(SmtpdCommand())
-      ..addCommand(SmtpdHealthCheck())
+      ..addCommand(SmtpdHealthCheckCommand())
       ..addCommand(SetupDbCommand());
   }
 

@@ -7,13 +7,13 @@ import 'package:logging/logging.dart';
 
 final _logger = Logger('smtpd_healtcheck_command');
 
-class SmtpdHealthCheck extends Command<void> {
-  SmtpdHealthCheck() {
+class SmtpdHealthCheckCommand extends Command<void> {
+  SmtpdHealthCheckCommand() {
     argParser.addOption('port', defaultsTo: '25');
   }
 
   @override
-  String get name => 'smtpd-health-check';
+  String get name => 'smtpd-healthcheck';
 
   @override
   String get description => 'Checks if smtpd is correctly running';
@@ -27,7 +27,7 @@ class SmtpdHealthCheck extends Command<void> {
           await client.connectToServer('localhost', port, isSecure: false);
       _logger.fine('Connection response: ${response.debugString}');
       final ehloResponse = await client.ehlo();
-      _logger.fine('ehlo response: ${response.debugString}');
+      _logger.fine('ehlo response: ${ehloResponse.debugString}');
       await client.quit();
       exitCode = 0;
       exit(0);
