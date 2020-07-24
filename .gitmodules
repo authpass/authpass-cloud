@@ -4,3 +4,6 @@
 [submodule "deps/postgres_utils.dart"]
 	path = deps/postgres_utils.dart
 	url = ../../authpass/postgres_utils.dart
+[submodule "deps/smtpd.dart"]
+	path = deps/smtpd.dart
+	url = ../../authpass/smtpd.dart

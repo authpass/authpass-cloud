@@ -30,7 +30,7 @@ class DatabaseAccess
   }
 }
 
-class AuthPassTables extends Tables {
+class AuthPassTables extends TablesBase {
   AuthPassTables({
     @required CryptoService cryptoService,
   })  : user = UserTable(cryptoService: cryptoService),
@@ -41,8 +41,8 @@ class AuthPassTables extends Tables {
 
   @override
   List<TableBase> get tables => [
-        migration,
         user,
+        email,
       ];
 }
 
