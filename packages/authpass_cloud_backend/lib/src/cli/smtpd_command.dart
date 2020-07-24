@@ -8,6 +8,8 @@ import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
 
+const HEALTHCHECK_ADDRESS = 'healthcheck@localhost';
+
 class SmtpdCommand extends BaseBackendCommand {
   SmtpdCommand() {
     argParser.addOption(
@@ -74,8 +76,11 @@ class AuthPassMailHandler extends MailHandler {
 
   @override
   Future<SmtpStatusMessage> handleMail(
-      SmtpClient client, MailObject mailObject) {
-    return databaseAccess.run((db) async {
+      SmtpClient client, MailObject mailObject) async {
+    if (HEALTHCHECK_ADDRESS == mailObject.envelope.recipient.first) {
+      return SmtpStatusMessage.successCompleted;
+    }
+    return await databaseAccess.run((db) async {
       for (final recipient in mailObject.envelope.recipient) {
         await serviceProvider.emailDeliveryService.deliverEmailTo(
           db,
@@ -91,6 +96,9 @@ class AuthPassMailHandler extends MailHandler {
   @override
   Future<SmtpStatusMessage> verifyAddress(
       SmtpClient client, String address) async {
+    if (HEALTHCHECK_ADDRESS == address) {
+      return SmtpStatusMessage.successCompleted;
+    }
     return await databaseAccess.run((db) async {
       if (!await serviceProvider.emailDeliveryService
           .verifyAddressValid(db, address)) {

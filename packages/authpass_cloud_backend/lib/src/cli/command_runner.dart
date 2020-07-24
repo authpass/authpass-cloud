@@ -6,7 +6,7 @@ import 'package:authpass_cloud_backend/src/cli/email_command.dart';
 import 'package:authpass_cloud_backend/src/cli/http_command.dart';
 import 'package:authpass_cloud_backend/src/cli/serve_command.dart';
 import 'package:authpass_cloud_backend/src/cli/smtpd_command.dart';
-import 'package:authpass_cloud_backend/src/cli/smtpd_healtcheck_command.dart';
+import 'package:authpass_cloud_backend/src/cli/smtpd_healthcheck_command.dart';
 import 'package:authpass_cloud_backend/src/cli/version_command.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';

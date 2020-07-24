@@ -1,13 +1,11 @@
-import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 import 'package:quiver/check.dart';
-
-import 'package:logging/logging.dart';
 import 'package:quiver/core.dart';
 
 final _logger = Logger('email_tables');
