@@ -8,9 +8,13 @@ import 'package:mailer/smtp_server.dart' as mailer;
 
 final _logger = Logger('smtpd_healthcheck_command');
 
+const _ARG_PORT = 'port';
+const _ARG_HOST = 'host';
+
 class SmtpdHealthCheckCommand extends Command<void> {
   SmtpdHealthCheckCommand() {
-    argParser.addOption('port', defaultsTo: '25');
+    argParser.addOption(_ARG_HOST, defaultsTo: 'localhost');
+    argParser.addOption(_ARG_PORT, defaultsTo: '25');
   }
 
   @override
@@ -22,7 +26,8 @@ class SmtpdHealthCheckCommand extends Command<void> {
   @override
   Future<void> run() async {
     try {
-      final port = int.parse(argResults['port'] as String);
+      final host = argResults[_ARG_HOST] as String;
+      final port = int.parse(argResults[_ARG_PORT] as String);
       final message = mailer.Message()
         ..from = HEALTHCHECK_ADDRESS
         ..recipients.add(HEALTHCHECK_ADDRESS)
@@ -30,7 +35,7 @@ class SmtpdHealthCheckCommand extends Command<void> {
         ..text = 'Health Check';
 //      mailer.
       final server = mailer.SmtpServer(
-        'localhost',
+        host,
         port: port,
         allowInsecure: true,
       );
