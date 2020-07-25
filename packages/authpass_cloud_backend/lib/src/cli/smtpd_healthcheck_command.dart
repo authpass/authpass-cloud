@@ -25,6 +25,7 @@ class SmtpdHealthCheckCommand extends Command<void> {
 
   @override
   Future<void> run() async {
+    final watch = Stopwatch()..start();
     try {
       final host = argResults[_ARG_HOST] as String;
       final port = int.parse(argResults[_ARG_PORT] as String);
@@ -51,10 +52,13 @@ class SmtpdHealthCheckCommand extends Command<void> {
       }
 
       exitCode = 0;
-      exit(0);
     } catch (e, stackTrace) {
       _logger.severe('Error during smtp.', e, stackTrace);
       exitCode = 1;
+    } finally {
+      print('@@@@ RESULT: ${exitCode == 0 ? 'SUCCESS' : 'ERROR'}');
+      print('@@@@ EXIT_CODE: $exitCode');
+      print('@@@@ DURATION: ${watch.elapsedMilliseconds}');
     }
   }
 }
