@@ -28,19 +28,27 @@ class SmtpdHealthCheckCommand extends Command<void> {
     try {
       final host = argResults[_ARG_HOST] as String;
       final port = int.parse(argResults[_ARG_PORT] as String);
-      final message = mailer.Message()
-        ..from = HEALTHCHECK_ADDRESS
-        ..recipients.add(HEALTHCHECK_ADDRESS)
-        ..subject = 'Health check'
-        ..text = 'Health Check';
-//      mailer.
       final server = mailer.SmtpServer(
         host,
         port: port,
         allowInsecure: true,
       );
-      final report = await mailer.send(message, server);
-      _logger.fine('Successfully sent mail. $report');
+      final conn = mailer.PersistentConnection(server);
+      final message = mailer.Message()
+        ..from = HEALTHCHECK_ADDRESS
+        ..recipients.add(HEALTHCHECK_ADDRESS)
+        ..subject = 'Health check'
+        ..text = 'Health Check';
+      try {
+        final report = await conn.send(message);
+        _logger.fine('Successfully sent mail. $report');
+      } catch (e, stackTrace) {
+        _logger.warning('Error while sending mail.', e, stackTrace);
+        exitCode = 1;
+        return;
+      } finally {
+        await conn.close();
+      }
 
       exitCode = 0;
       exit(0);

@@ -8,7 +8,8 @@ import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
 
-const HEALTHCHECK_ADDRESS = 'healthcheck@localhost';
+const HEALTHCHECK_LOCAL = 'HealthCheck';
+const HEALTHCHECK_ADDRESS = '$HEALTHCHECK_LOCAL@mail.authpass.app';
 
 class SmtpdCommand extends BaseBackendCommand {
   SmtpdCommand() {
@@ -20,7 +21,7 @@ class SmtpdCommand extends BaseBackendCommand {
     );
     argParser.addOption(
       'hostname',
-      help: 'Local hostname to annouce to clients.',
+      help: 'Local hostname to announce to clients.',
       defaultsTo: Platform.localHostname,
     );
   }
