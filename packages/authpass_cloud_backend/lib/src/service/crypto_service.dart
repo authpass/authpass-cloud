@@ -17,7 +17,9 @@ class CryptoService {
   final Uuid _uuid =
       Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
 
-  static const _ADDRESS_LENGTH = 32;
+//  static const _ADDRESS_LENGTH = 32;
+  // for now limit length to 10 characters, that should be more than enough.
+  static const _ADDRESS_LENGTH = 10;
 //  static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789._-+';
   static const _ADDRESS_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
