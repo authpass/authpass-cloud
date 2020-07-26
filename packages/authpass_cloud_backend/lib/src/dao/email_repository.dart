@@ -4,6 +4,7 @@ import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:smtpd/smtpd.dart';
 import 'package:clock/clock.dart';
 import 'package:meta/meta.dart';
 
@@ -42,7 +43,17 @@ class EmailRepository {
 
     const _MAX_RETRY = 10;
     for (var i = 0; i < _MAX_RETRY; i++) {
+      if (i > 1) {
+        _logger.shout('We had more than two collisions while trying '
+            'to generate email address.');
+      }
+
       final addressLocal = cryptoService.createRandomAddress();
+      // make sure we don't incidentally create a reserved addres.
+      if (ReservedEmailAddresses.isReserved(addressLocal)) {
+        _logger.warning('Generated a reserved address. $addressLocal');
+        continue;
+      }
       final address = '$addressLocal@${env.config.mailbox.defaultHost}';
 
       final mailbox = db.tables.email.findMailbox(db, address: address);
