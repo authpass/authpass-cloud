@@ -10,11 +10,16 @@ final _logger = Logger('smtpd_healthcheck_command');
 
 const _ARG_PORT = 'port';
 const _ARG_HOST = 'host';
+const _ARG_FROM = 'from';
+const _ARG_RCPT_PREFIX = 'rcptPrefix';
 
 class SmtpdHealthCheckCommand extends Command<void> {
   SmtpdHealthCheckCommand() {
     argParser.addOption(_ARG_HOST, defaultsTo: 'localhost');
     argParser.addOption(_ARG_PORT, defaultsTo: '25');
+    argParser.addOption(_ARG_FROM,
+        defaultsTo: '$healthCheckLocal@$healthCheckHost');
+    argParser.addOption(_ARG_RCPT_PREFIX, defaultsTo: '');
   }
 
   @override
@@ -29,6 +34,8 @@ class SmtpdHealthCheckCommand extends Command<void> {
     try {
       final host = argResults[_ARG_HOST] as String;
       final port = int.parse(argResults[_ARG_PORT] as String);
+      final from = argResults[_ARG_FROM] as String;
+      final prefix = argResults[_ARG_RCPT_PREFIX] as String;
       final server = mailer.SmtpServer(
         host,
         port: port,
@@ -36,8 +43,8 @@ class SmtpdHealthCheckCommand extends Command<void> {
       );
       final conn = mailer.PersistentConnection(server);
       final message = mailer.Message()
-        ..from = HEALTHCHECK_ADDRESS
-        ..recipients.add(HEALTHCHECK_ADDRESS)
+        ..from = from
+        ..recipients.add(healthcheckAddress(prefix))
         ..subject = 'Health check'
         ..text = 'Health Check';
       try {

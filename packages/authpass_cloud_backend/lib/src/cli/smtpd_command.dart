@@ -8,8 +8,16 @@ import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
 
-const HEALTHCHECK_LOCAL = 'HealthCheck';
-const HEALTHCHECK_ADDRESS = '$HEALTHCHECK_LOCAL@mail.authpass.app';
+const healthCheckLocal = 'HealthCheck';
+const healthCheckHost = 'mail.authpass.app';
+final healthCheckPattern = RegExp([
+  RegExp.escape(healthCheckLocal),
+  r'-([a-z0-9\-\.]+)',
+  RegExp.escape(healthCheckHost)
+].join(''));
+String healthcheckAddress([String prefix = '']) =>
+    '$healthCheckLocal-$prefix${DateTime.now().millisecondsSinceEpoch}'
+    '@$healthCheckHost';
 
 class SmtpdCommand extends BaseBackendCommand {
   SmtpdCommand() {
@@ -78,7 +86,7 @@ class AuthPassMailHandler extends MailHandler {
   @override
   Future<SmtpStatusMessage> handleMail(
       SmtpClient client, MailObject mailObject) async {
-    if (HEALTHCHECK_ADDRESS == mailObject.envelope.recipient.first) {
+    if (healthCheckPattern.hasMatch(mailObject.envelope.recipient.first)) {
       return SmtpStatusMessage.successCompleted;
     }
     return await databaseAccess.run((db) async {
@@ -97,7 +105,7 @@ class AuthPassMailHandler extends MailHandler {
   @override
   Future<SmtpStatusMessage> verifyAddress(
       SmtpClient client, String address) async {
-    if (HEALTHCHECK_ADDRESS == address) {
+    if (healthCheckPattern.hasMatch(address)) {
       return SmtpStatusMessage.successCompleted;
     }
     return await databaseAccess.run((db) async {

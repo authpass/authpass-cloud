@@ -410,8 +410,9 @@ components:
         - createdAt
         - isDisabled
   securitySchemes:
-    auth_token:
-      type: http
-      scheme: bearer
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
 security:
-  - auth_token: []
+  - apiKey: []
