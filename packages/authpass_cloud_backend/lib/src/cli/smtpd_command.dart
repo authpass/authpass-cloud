@@ -5,14 +5,17 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
+
+final _logger = Logger('smtpd_command');
 
 const healthCheckLocal = 'HealthCheck';
 const healthCheckHost = 'mail.authpass.app';
 final healthCheckPattern = RegExp([
   RegExp.escape(healthCheckLocal),
-  r'-([a-z0-9\-\.]+)',
+  r'-([a-z0-9\-\.]+)@',
   RegExp.escape(healthCheckHost)
 ].join(''));
 String healthcheckAddress([String prefix = '']) =>
@@ -64,6 +67,7 @@ class SmtpBackendServer extends BackendServer {
   final SmtpConfig config;
 
   Future<void> start() async {
+    _logger.fine('Starting smtpd. healthcheck: ${healthCheckPattern.pattern}');
     final serviceProvider = await prepareServiceProviderAndDatabase();
     final server = SmtpServer(
       config,
