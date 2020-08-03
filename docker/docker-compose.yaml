@@ -67,7 +67,7 @@ services:
     depends_on:
       - pgdb
     healthcheck:
-      test: ['CMD', '/authpass_backend.exe', 'smtpd-healthcheck']
+      test: ['CMD', '/authpass_backend.exe', 'smtpd-healthcheck', '--rcptPrefix', 'docker-']
       interval: 10s
       retries: 3
       start_period: 2s

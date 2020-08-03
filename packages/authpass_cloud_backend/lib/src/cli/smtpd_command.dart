@@ -109,12 +109,13 @@ class AuthPassMailHandler extends MailHandler {
   @override
   Future<SmtpStatusMessage> verifyAddress(
       SmtpClient client, String address) async {
-    if (healthCheckPattern.hasMatch(address)) {
-      return SmtpStatusMessage.successCompleted;
-    }
     return await databaseAccess.run((db) async {
       if (!await serviceProvider.emailDeliveryService
           .verifyAddressValid(db, address)) {
+        if (healthCheckPattern.hasMatch(address)) {
+          return SmtpStatusMessage.successCompleted;
+        }
+
         return SmtpStatusMessage.errorMailboxUnavailable;
       }
       return SmtpStatusMessage.successCompleted;
