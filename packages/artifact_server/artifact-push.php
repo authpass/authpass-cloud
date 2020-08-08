@@ -35,11 +35,14 @@ class ArtifactMatch {
 
 function isAllowedArtifact($filename) {
     // language=RegExp
-    $versionPattern = '[\d._]+';
+    $versionPattern = '[\d._\+]+';
     $allowedArtifacts = array(
         "(authpass-linux-)($versionPattern)(.tar.gz)",
         "(authpass-sideload-)(\d+)(.apk)",
         "(testartifact-)($versionPattern)(.tar.gz)",
+        "(AuthPassSetup-)($versionPattern)(.exe)",
+        "(AuthPass-setup-)($versionPattern)(.exe)",
+        "(authpass_)($versionPattern)(_amd64.snap)",
     );
 
 
@@ -67,7 +70,7 @@ if ($artifact === null) {
 $dir = 'artifacts';
 $target = $dir . '/' . $filename;
 $symlink = $dir . '/' . $artifact->prefix . 'latest' . $artifact->extension;
-$versionFile = $dir . '/' . $artifact->prefix . 'latest' . '.txt';
+$versionFile = $dir . '/' . $artifact->prefix . 'latest' . $artifact->extension . '.txt';
 
 if (file_exists($target)) {
     fatalError('file already exists at ' . $target);
