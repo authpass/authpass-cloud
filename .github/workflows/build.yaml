@@ -23,16 +23,13 @@ jobs:
         echo "::set-output name=buildnumber::$buildnumber"
     - name: docker build
       run: cd docker && docker-compose build backend
-    - uses: azure/docker-login@v1
-      with:
-        login-server: 'docker.pkg.github.com'
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - name: docker push
-      run: cd docker && docker-compose push backend
+    - name: docker login and push
+      run: |
+        echo '${{ secrets.CONTAINER_ACCESS_TOKEN }}' | docker login https://containers.pkg.github.com -u ${{ secrets.CONTAINER_USER }} --password-stdin
+        cd docker && docker-compose push backend
     - name: extract executable from image
       run: |
-        image=$( docker create docker.pkg.github.com/authpass/authpass-cloud/authpass-backend )
+        image=$( docker create containers.pkg.github.com/authpass/authpass-backend )
         docker cp ${image}:/authpass_backend.exe .
         docker rm ${image}
     - uses: actions/upload-artifact@v2
