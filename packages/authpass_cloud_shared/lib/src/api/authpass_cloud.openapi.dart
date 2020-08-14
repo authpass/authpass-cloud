@@ -1564,7 +1564,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       {@_i2.required String token}) async {
     final request = OpenApiClientRequest('get', '/email/confirm', []);
     request.addQueryParameter('token', encodeString(token));
-    request.addQueryParameter('token', encodeString(token));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _EmailConfirmGetResponse200.response200(
@@ -1662,8 +1661,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('since_token', encodeString(sinceToken));
     request.addQueryParameter('since_token', encodeString(sinceToken));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
@@ -1705,7 +1702,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
-    request.addQueryParameter('mailboxAddress', encodeString(mailboxAddress));
     request.setHeader('content-type', 'application/json');
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
     return await sendRequest(request, {
@@ -1727,7 +1723,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageGetResponse200.response200(
@@ -1748,7 +1743,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageDeleteResponse200.response200()
@@ -1768,7 +1762,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageMarkReadResponse200.response200()
@@ -1788,7 +1781,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageMarkUnReadResponse200.response200()
@@ -1806,7 +1798,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
     final request = OpenApiClientRequest('post', '/email/receive', []);
     request.addHeaderParameter(
         'x-authpass-token', encodeString(xAuthpassToken));
-    request.addQueryParameter('x-authpass-token', encodeString(xAuthpassToken));
     request.setHeader('content-type', 'text/plain');
     request.setBody(OpenApiClientRequestBodyText(body));
     return await sendRequest(request, {
@@ -1829,7 +1820,6 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addQueryParameter('url', encodeString(url));
     request.addQueryParameter('url', encodeString(url));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
@@ -1876,7 +1866,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// * [token]: Unique token which was sent to email address.
   OpenApiClientRequest emailConfirmGet({@_i2.required String token}) {
     final request = OpenApiClientRequest('get', '/email/confirm', []);
-    request.addQueryParameter('token', encodeString(token));
     request.addQueryParameter('token', encodeString(token));
     return request;
   }
@@ -1938,8 +1927,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('since_token', encodeString(sinceToken));
     request.addQueryParameter('since_token', encodeString(sinceToken));
     return request;
   }
@@ -1967,7 +1954,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
-    request.addQueryParameter('mailboxAddress', encodeString(mailboxAddress));
     return request;
   }
 
@@ -1982,7 +1968,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return request;
   }
 
@@ -1997,7 +1982,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return request;
   }
 
@@ -2013,7 +1997,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return request;
   }
 
@@ -2029,7 +2012,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
       ])
     ]);
     request.addPathParameter('messageId', encodeString(messageId));
-    request.addQueryParameter('messageId', encodeString(messageId));
     return request;
   }
 
@@ -2041,7 +2023,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     final request = OpenApiClientRequest('post', '/email/receive', []);
     request.addHeaderParameter(
         'x-authpass-token', encodeString(xAuthpassToken));
-    request.addQueryParameter('x-authpass-token', encodeString(xAuthpassToken));
     return request;
   }
 
@@ -2054,7 +2035,6 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addQueryParameter('url', encodeString(url));
     request.addQueryParameter('url', encodeString(url));
     return request;
   }
