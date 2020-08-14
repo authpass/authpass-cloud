@@ -84,7 +84,7 @@ Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
 
 EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) {
   return EmailMessage(
-    id: json['id'] as String,
+    id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
     subject: json['subject'] as String,
     sender: json['sender'] as String,
     mailboxEntryUuid: json['mailboxEntryUuid'] as String,
@@ -98,7 +98,7 @@ EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'id': const ApiUuidJsonConverter().toJson(instance.id),
       'subject': instance.subject,
       'sender': instance.sender,
       'mailboxEntryUuid': instance.mailboxEntryUuid,

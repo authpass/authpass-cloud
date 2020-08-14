@@ -3,9 +3,13 @@
     <words>
       <w>abcdefghijklmnopqrstuvwxyz</w>
       <w>authpass</w>
+      <w>besticon</w>
+      <w>dartx</w>
       <w>ehlo</w>
+      <w>favico</w>
       <w>healthcheck</w>
       <w>massupdate</w>
+      <w>precomposed</w>
       <w>smtp</w>
       <w>smtpd</w>
     </words>

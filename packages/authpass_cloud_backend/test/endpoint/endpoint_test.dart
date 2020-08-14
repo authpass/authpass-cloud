@@ -2,6 +2,7 @@ import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
@@ -38,10 +39,11 @@ void endpointTest(String description,
     try {
       await db.run((db) async {
         final env = DevEnv();
+        final cryptoService = CryptoService();
         final endpoint = AuthPassCloudImpl(
           ServiceProvider(
             env: env,
-            cryptoService: CryptoService(),
+            cryptoService: cryptoService,
             emailService: MockEmailService(),
             recaptchaService: MockRecaptchaService(),
           ),
@@ -50,9 +52,10 @@ void endpointTest(String description,
           UserRepository(db),
           EmailRepository(
             db: db,
-            cryptoService: CryptoService(),
+            cryptoService: cryptoService,
             env: env,
           ),
+          WebsiteRepository(db, cryptoService),
         );
         await body(endpoint);
       });

@@ -319,6 +319,23 @@ paths:
               schema:
                 type: string
                 description: 'Email error codes similar to https://tools.ietf.org/html/rfc3463 expected.'
+  /website/image:
+    get:
+      summary: Load the best image for the given website.
+      parameters:
+        - name: url
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Image'
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
 components:
   schemas:
     RegisterRequest:
@@ -410,9 +427,8 @@ components:
         - createdAt
         - isDisabled
   securitySchemes:
-    apiKey:
-      type: apiKey
-      in: header
-      name: X-API-KEY
+    auth_token:
+      type: http
+      scheme: bearer
 security:
-  - apiKey: []
+  - auth_token: []

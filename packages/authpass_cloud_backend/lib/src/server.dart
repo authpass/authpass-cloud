@@ -1,5 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/config.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
@@ -84,6 +85,7 @@ class AuthPassEndpointProvider extends ApiEndpointProvider<AuthPassCloudImpl> {
             cryptoService: serviceProvider.cryptoService,
             env: serviceProvider.env,
           ),
+          WebsiteRepository(conn, serviceProvider.cryptoService),
         ));
       });
     } finally {

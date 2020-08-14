@@ -4,6 +4,7 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
@@ -22,16 +23,19 @@ class AuthPassCloudImpl extends AuthPassCloud {
     this.db,
     this.userRepository,
     this.emailRepository,
+    this.websiteRepository,
   )   : assert(serviceProvider != null),
         assert(db != null),
         assert(userRepository != null),
-        assert(emailRepository != null);
+        assert(emailRepository != null),
+        assert(websiteRepository != null);
 
   final ServiceProvider serviceProvider;
   final OpenApiRequest request;
   final DatabaseTransaction db;
   final UserRepository userRepository;
   final EmailRepository emailRepository;
+  final WebsiteRepository websiteRepository;
 
   Env get _env => serviceProvider.env;
 
@@ -264,6 +268,24 @@ class AuthPassCloudImpl extends AuthPassCloud {
     return StatusGetResponse.response200(StatusGetResponseBody200(
         mail: StatusGetResponseBody200Mail(
             messagesUnread: status.messagesUnread)));
+  }
+
+  @override
+  Future<WebsiteImageGetResponse> websiteImageGet({String url}) async {
+    final uri = Uri.parse(url);
+    final image = await websiteRepository.findBestImage(uri);
+    if (image == null) {
+      throw NotFoundException('Unable to find image for $uri ($url)');
+    }
+    const maxAge = Duration(days: 7);
+    return WebsiteImageGetResponse.response200(
+        OpenApiContentType.parse(image.mimeType), image.bytes)
+      ..headers.addAll({
+        'x-brightness': [image.brightness.toString()],
+        'x-size': ['${image.width}x${image.height}'],
+        'x-original-url': [image.uri],
+        'cache-control': ['public, max-age=${maxAge.inSeconds}']
+      });
   }
 }
 

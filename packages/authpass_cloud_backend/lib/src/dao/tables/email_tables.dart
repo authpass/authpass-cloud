@@ -4,6 +4,7 @@ import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:openapi_base/openapi_base.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 import 'package:quiver/check.dart';
 import 'package:quiver/core.dart';
@@ -469,7 +470,7 @@ class EmailMessageEntity {
   final DateTime deletedAt;
 
   EmailMessage toEmailMessage() => EmailMessage(
-        id: id,
+        id: ApiUuid.parse(id),
         subject: subject,
         sender: sender,
         mailboxEntryUuid: mailboxEntryUuid,
