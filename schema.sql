@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.3 (Debian 12.3-1.pgdg100+1)
--- Dumped by pg_dump version 12.3 (Debian 12.3-1.pgdg100+1)
+-- Dumped from database version 12.4 (Debian 12.4-1.pgdg100+1)
+-- Dumped by pg_dump version 12.4 (Debian 12.4-1.pgdg100+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -165,6 +165,41 @@ CREATE TABLE public.user_email_confirm (
 ALTER TABLE public.user_email_confirm OWNER TO authpass;
 
 --
+-- Name: website; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.website (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    best_image_id uuid,
+    url character varying NOT NULL,
+    url_canonical character varying NOT NULL
+);
+
+
+ALTER TABLE public.website OWNER TO authpass;
+
+--
+-- Name: website_image; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.website_image (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    website_id uuid NOT NULL,
+    url character varying NOT NULL,
+    mime_type character varying NOT NULL,
+    bytes bytea NOT NULL,
+    width integer NOT NULL,
+    height integer NOT NULL,
+    brightness double precision NOT NULL,
+    image_type character varying NOT NULL
+);
+
+
+ALTER TABLE public.website_image OWNER TO authpass;
+
+--
 -- Name: authpass_migration id; Type: DEFAULT; Schema: public; Owner: authpass
 --
 
@@ -252,10 +287,41 @@ ALTER TABLE ONLY public."user"
 
 
 --
+-- Name: website_image website_image_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.website_image
+    ADD CONSTRAINT website_image_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: website website_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.website
+    ADD CONSTRAINT website_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: website website_url_key; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.website
+    ADD CONSTRAINT website_url_key UNIQUE (url);
+
+
+--
 -- Name: mailbox_address; Type: INDEX; Schema: public; Owner: authpass
 --
 
 CREATE INDEX mailbox_address ON public.email_mailbox USING btree (address);
+
+
+--
+-- Name: website_url_canonical_idx; Type: INDEX; Schema: public; Owner: authpass
+--
+
+CREATE INDEX website_url_canonical_idx ON public.website USING btree (url_canonical);
 
 
 --
@@ -304,6 +370,22 @@ ALTER TABLE ONLY public.user_email_confirm
 
 ALTER TABLE ONLY public.user_email
     ADD CONSTRAINT user_email_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: website website_best_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.website
+    ADD CONSTRAINT website_best_image_id_fkey FOREIGN KEY (best_image_id) REFERENCES public.website_image(id);
+
+
+--
+-- Name: website_image website_image_website_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.website_image
+    ADD CONSTRAINT website_image_website_id_fkey FOREIGN KEY (website_id) REFERENCES public.website(id);
 
 
 --
