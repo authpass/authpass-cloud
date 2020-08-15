@@ -158,8 +158,9 @@ void main() {
         message: 'Ipsum',
       );
 
-      final body =
-          await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
+      final body = await endpoint
+          .mailboxMessageGet(messageId: ApiUuid.parse(id))
+          .requireSuccess();
       expect(body, 'Ipsum');
     });
     endpointTest('mark as read', (endpoint) async {
@@ -193,7 +194,9 @@ void main() {
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
 
-      await endpoint.mailboxMessageDelete(messageId: id).requireSuccess();
+      await endpoint
+          .mailboxMessageDelete(messageId: ApiUuid.parse(id))
+          .requireSuccess();
 
       final l2 = await endpoint.mailboxListGet().requireSuccess();
       expect(l2.data, isEmpty);

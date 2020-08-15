@@ -255,6 +255,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
     get:
       operationId: MailboxMessageGet
       summary: 'Fetch raw email message.'

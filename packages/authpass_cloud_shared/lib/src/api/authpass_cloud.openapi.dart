@@ -1362,12 +1362,12 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
@@ -1464,13 +1464,13 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// get: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
@@ -1715,14 +1715,15 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required String messageId}) async {
+      {@_i2.required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageGetResponse200.response200(
@@ -1735,14 +1736,15 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required String messageId}) async {
+      {@_i2.required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageDeleteResponse200.response200()
@@ -1960,28 +1962,30 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   ///
-  OpenApiClientRequest mailboxMessageGet({@_i2.required String messageId}) {
+  OpenApiClientRequest mailboxMessageGet({@_i2.required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return request;
   }
 
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   ///
-  OpenApiClientRequest mailboxMessageDelete({@_i2.required String messageId}) {
+  OpenApiClientRequest mailboxMessageDelete({@_i2.required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return request;
   }
 
@@ -2162,7 +2166,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   isRequired: true,
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
-                  decode: (value) => paramToString(value))));
+                  decode: (value) => ApiUuid.parse(paramToString(value)))));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2177,7 +2181,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   isRequired: true,
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
-                  decode: (value) => paramToString(value))));
+                  decode: (value) => ApiUuid.parse(paramToString(value)))));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])

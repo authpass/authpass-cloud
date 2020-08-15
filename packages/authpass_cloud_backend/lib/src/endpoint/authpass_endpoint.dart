@@ -185,10 +185,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {String messageId}) async {
+      {ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     final body = await emailRepository.findEmailMessageBody(token.user,
-        messageId: messageId);
+        messageId: messageId.encodeToString());
     return MailboxMessageGetResponse.response200(body);
   }
 
@@ -235,10 +235,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {String messageId}) async {
+      {ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.deleteMessage(token.user,
-        messageId: messageId)) {
+        messageId: messageId.encodeToString())) {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageDeleteResponse.response200();
