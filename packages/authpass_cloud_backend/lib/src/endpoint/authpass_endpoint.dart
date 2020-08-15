@@ -202,10 +202,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {String messageId}) async {
+      {ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.markAsRead(token.user,
-        messageId: messageId, isRead: true)) {
+        messageId: messageId.encodeToString(), isRead: true)) {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageMarkReadResponse.response200();
@@ -224,10 +224,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {String messageId}) async {
+      {ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.markAsRead(token.user,
-        messageId: messageId, isRead: false)) {
+        messageId: messageId.encodeToString(), isRead: false)) {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageMarkUnReadResponse.response200();

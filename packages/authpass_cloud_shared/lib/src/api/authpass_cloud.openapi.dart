@@ -1372,12 +1372,12 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Mark message as unread (again)
   /// delete: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
@@ -1476,13 +1476,13 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// put: /mailbox/message/{messageId}/read
   ///
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Mark message as unread (again)
   /// delete: /mailbox/message/{messageId}/read
   ///
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required String messageId});
+      {@_i2.required ApiUuid messageId});
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
@@ -1756,14 +1756,15 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required String messageId}) async {
+      {@_i2.required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageMarkReadResponse200.response200()
@@ -1775,14 +1776,15 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required String messageId}) async {
+      {@_i2.required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _MailboxMessageMarkUnReadResponse200.response200()
@@ -1993,14 +1995,15 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// put: /mailbox/message/{messageId}/read
   ///
   OpenApiClientRequest mailboxMessageMarkRead(
-      {@_i2.required String messageId}) {
+      {@_i2.required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return request;
   }
 
@@ -2008,14 +2011,15 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// delete: /mailbox/message/{messageId}/read
   ///
   OpenApiClientRequest mailboxMessageMarkUnRead(
-      {@_i2.required String messageId}) {
+      {@_i2.required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
     ]);
-    request.addPathParameter('messageId', encodeString(messageId));
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
     return request;
   }
 
@@ -2196,7 +2200,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   isRequired: true,
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
-                  decode: (value) => paramToString(value))));
+                  decode: (value) => ApiUuid.parse(paramToString(value)))));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2211,7 +2215,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   isRequired: true,
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
-                  decode: (value) => paramToString(value))));
+                  decode: (value) => ApiUuid.parse(paramToString(value)))));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
