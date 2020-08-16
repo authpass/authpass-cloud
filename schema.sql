@@ -42,7 +42,8 @@ CREATE TABLE public.auth_token (
     user_id uuid NOT NULL,
     token character varying NOT NULL,
     status public.authtokenstatus NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_agent character varying NOT NULL
 );
 
 
