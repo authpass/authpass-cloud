@@ -361,7 +361,8 @@ components:
           $ref: '#/components/schemas/SystemStatusUser'
         website:
           $ref: '#/components/schemas/SystemStatusWebsite'
-      required: [user, website]
+        mailbox: { $ref: '#/components/schemas/SystemStatusMailbox' }
+      required: [user, website, mailbox]
     SystemStatusUser:
       properties:
         emailConfirmed:
@@ -378,6 +379,11 @@ components:
         urlCanonicalCount:
           type: integer
       required: [websiteCount, urlCanonicalCount]
+    SystemStatusMailbox:
+      properties:
+        mailboxCount: { type: integer }
+        messageCount: { type: integer }
+      required: [mailboxCount, messageCount]
     RegisterRequest:
       properties:
         email:

@@ -9,6 +9,7 @@ class SystemDao {
     return SystemStatus(
       user: await db.tables.user.countUsers(db),
       website: await db.tables.website.countStats(db),
+      mailbox: await db.tables.email.countMailbox(db),
     );
   }
 }

@@ -375,6 +375,17 @@ class EmailTable extends TableBase with TableConstants {
       ...update.setValues,
     });
   }
+
+  Future<SystemStatusMailbox> countMailbox(DatabaseTransactionBase db) async {
+    final mailbox =
+        await db.query('SELECT COUNT(*) FROM $_TABLE_EMAIL_MAILBOX').single;
+    final message =
+        await db.query('SELECT COUNT(*) FROM $_TABLE_EMAIL_MESSAGE').single;
+    return SystemStatusMailbox(
+      mailboxCount: mailbox[0] as int,
+      messageCount: message[0] as int,
+    );
+  }
 }
 
 class UserEmailStatusEntity {

@@ -35,6 +35,20 @@ Map<String, dynamic> _$SystemStatusWebsiteToJson(
       'urlCanonicalCount': instance.urlCanonicalCount,
     };
 
+SystemStatusMailbox _$SystemStatusMailboxFromJson(Map<String, dynamic> json) {
+  return SystemStatusMailbox(
+    mailboxCount: json['mailboxCount'] as int,
+    messageCount: json['messageCount'] as int,
+  );
+}
+
+Map<String, dynamic> _$SystemStatusMailboxToJson(
+        SystemStatusMailbox instance) =>
+    <String, dynamic>{
+      'mailboxCount': instance.mailboxCount,
+      'messageCount': instance.messageCount,
+    };
+
 SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
   return SystemStatus(
     user: json['user'] == null
@@ -43,6 +57,9 @@ SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
     website: json['website'] == null
         ? null
         : SystemStatusWebsite.fromJson(json['website'] as Map<String, dynamic>),
+    mailbox: json['mailbox'] == null
+        ? null
+        : SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
   );
 }
 
@@ -50,6 +67,7 @@ Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
     <String, dynamic>{
       'user': instance.user,
       'website': instance.website,
+      'mailbox': instance.mailbox,
     };
 
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
