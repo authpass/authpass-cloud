@@ -98,11 +98,29 @@ Future<String> _createMessage(
   );
 }
 
+extension on AuthPassCloudImpl {
+  Future<void> expectSystemStatus({
+    int userConfirmed,
+    int emailUnconfirmed,
+  }) async {
+    final status = await checkStatusPost(
+            xSecret: serviceProvider.env.config.secrets.systemStatusSecret)
+        .requireSuccess();
+    if (userConfirmed != null) {
+      expect(status.user.userConfirmed, userConfirmed);
+    }
+    if (emailUnconfirmed != null) {
+      expect(status.user.emailUnconfirmed, emailUnconfirmed);
+    }
+  }
+}
+
 void main() {
   PrintAppender.setupLogging();
   _logger.fine('starting tests...');
 
   endpointTest('creating user', (endpoint) async {
+    await endpoint.expectSystemStatus(userConfirmed: 0, emailUnconfirmed: 0);
     final emailService = endpoint.serviceProvider.emailService;
     final registerResponse =
         await endpoint.userRegisterPost(RegisterRequest(email: 'a@b.com'));
@@ -122,6 +140,8 @@ void main() {
       expect(status.status, EmailStatusGetResponseBody200Status.created);
     }
 
+    await endpoint.expectSystemStatus(userConfirmed: 0, emailUnconfirmed: 1);
+
     when(endpoint.serviceProvider.recaptchaService.verify(any, any))
         .thenAnswer((realInvocation) async => true);
 
@@ -132,6 +152,7 @@ void main() {
       final status = (await endpoint.emailStatusGet()).requireSuccess();
       expect(status.status, EmailStatusGetResponseBody200Status.confirmed);
     }
+    await endpoint.expectSystemStatus(userConfirmed: 1, emailUnconfirmed: 0);
   });
 
   group('Email', () {
@@ -177,12 +198,16 @@ void main() {
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
 
-      await endpoint.mailboxMessageMarkRead(messageId: id).requireSuccess();
+      await endpoint
+          .mailboxMessageMarkRead(messageId: ApiUuid.parse(id))
+          .requireSuccess();
 
       final l2 = await endpoint.mailboxListGet().requireSuccess();
       expect(l2.data.single.isRead, true);
 
-      await endpoint.mailboxMessageMarkUnRead(messageId: id).requireSuccess();
+      await endpoint
+          .mailboxMessageMarkUnRead(messageId: ApiUuid.parse(id))
+          .requireSuccess();
 
       final l3 = await endpoint.mailboxListGet().requireSuccess();
       expect(l3.data.single.isRead, false);

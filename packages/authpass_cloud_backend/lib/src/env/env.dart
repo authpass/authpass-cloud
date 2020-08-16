@@ -22,6 +22,9 @@ class EmptySecrets implements SecretsConfig {
   String get emailReceiveToken => '';
 
   @override
+  String get systemStatusSecret => 'secret';
+
+  @override
   Map<String, dynamic> toJson() => throw UnimplementedError();
 }
 

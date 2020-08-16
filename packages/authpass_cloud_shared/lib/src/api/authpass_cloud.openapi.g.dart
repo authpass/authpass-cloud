@@ -6,6 +6,52 @@ part of 'authpass_cloud.openapi.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SystemStatusUser _$SystemStatusUserFromJson(Map<String, dynamic> json) {
+  return SystemStatusUser(
+    emailConfirmed: json['emailConfirmed'] as int,
+    userConfirmed: json['userConfirmed'] as int,
+    emailUnconfirmed: json['emailUnconfirmed'] as int,
+  );
+}
+
+Map<String, dynamic> _$SystemStatusUserToJson(SystemStatusUser instance) =>
+    <String, dynamic>{
+      'emailConfirmed': instance.emailConfirmed,
+      'userConfirmed': instance.userConfirmed,
+      'emailUnconfirmed': instance.emailUnconfirmed,
+    };
+
+SystemStatusWebsite _$SystemStatusWebsiteFromJson(Map<String, dynamic> json) {
+  return SystemStatusWebsite(
+    websiteCount: json['websiteCount'] as int,
+    urlCanonicalCount: json['urlCanonicalCount'] as int,
+  );
+}
+
+Map<String, dynamic> _$SystemStatusWebsiteToJson(
+        SystemStatusWebsite instance) =>
+    <String, dynamic>{
+      'websiteCount': instance.websiteCount,
+      'urlCanonicalCount': instance.urlCanonicalCount,
+    };
+
+SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
+  return SystemStatus(
+    user: json['user'] == null
+        ? null
+        : SystemStatusUser.fromJson(json['user'] as Map<String, dynamic>),
+    website: json['website'] == null
+        ? null
+        : SystemStatusWebsite.fromJson(json['website'] as Map<String, dynamic>),
+  );
+}
+
+Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
+    <String, dynamic>{
+      'user': instance.user,
+      'website': instance.website,
+    };
+
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
   return RegisterRequest(
     email: json['email'] as String,

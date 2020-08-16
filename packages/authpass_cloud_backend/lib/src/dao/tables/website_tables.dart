@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/companyimage/besticon.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
@@ -111,6 +112,17 @@ class WebsiteTable extends TableBase with TableConstants {
       mimeType: row[4] as String,
       brightness: row[5] as double,
       imageLinkType: ImageLinkTypeExt.fromString(row[6] as String),
+    );
+  }
+
+  Future<SystemStatusWebsite> countStats(DatabaseTransactionBase db) async {
+    final c = await db
+        .query('SELECT count(id), count(distinct $_COL_URL_CANONICAL) from '
+            '$_TABLE_WEBSITE')
+        .single;
+    return SystemStatusWebsite(
+      websiteCount: c[0] as int,
+      urlCanonicalCount: c[1] as int,
     );
   }
 }

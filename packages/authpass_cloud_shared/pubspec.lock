@@ -315,7 +315,7 @@ packages:
       path: "../../deps/openapi_dart/packages/openapi_base"
       relative: true
     source: path
-    version: "0.1.4"
+    version: "0.1.5+1"
   openapi_code_builder:
     dependency: "direct dev"
     description:

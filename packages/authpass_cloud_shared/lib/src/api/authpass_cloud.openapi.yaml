@@ -19,6 +19,21 @@ paths:
         '200':
           description: Everything OK
       description: Health check of endpoint data
+  /check/status:
+    post:
+      summary: Status Check.
+      parameters:
+        - name: x-secret
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
   /user/register:
     post:
       summary: 'Create new user, or login the user using confirmation email.'
@@ -340,6 +355,29 @@ paths:
                 format: binary
 components:
   schemas:
+    SystemStatus:
+      properties:
+        user:
+          $ref: '#/components/schemas/SystemStatusUser'
+        website:
+          $ref: '#/components/schemas/SystemStatusWebsite'
+      required: [user, website]
+    SystemStatusUser:
+      properties:
+        emailConfirmed:
+          type: integer
+        userConfirmed:
+          type: integer
+        emailUnconfirmed:
+          type: integer
+      required: [emailConfirmed, userConfirmed, emailUnconfirmed]
+    SystemStatusWebsite:
+      properties:
+        websiteCount:
+          type: integer
+        urlCanonicalCount:
+          type: integer
+      required: [websiteCount, urlCanonicalCount]
     RegisterRequest:
       properties:
         email:

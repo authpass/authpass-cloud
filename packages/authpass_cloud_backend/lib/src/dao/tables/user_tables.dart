@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:postgres_utils/postgres_utils.dart';
@@ -95,7 +96,7 @@ class UserTable extends TableBase with TableConstants {
       DatabaseTransactionBase db, String email) async {
     email = _normalizeEmail(email);
     final query = await db.query('''
-      SELECT u.$columnId, e.$columnId FROM $TABLE_USER u 
+      SELECT u.$columnId, e.$columnId, e.$_COLUMN_CONFIRMED_AT FROM $TABLE_USER u 
         INNER JOIN $_TABLE_EMAIL e ON u.$columnId = e.$COLUMN_USER_ID
       WHERE e.$_COLUMN_EMAIL_ADDRESS = @email
     ''', values: <String, dynamic>{'email': email});
@@ -106,6 +107,7 @@ class UserTable extends TableBase with TableConstants {
     return EmailEntity(
       id: row[1] as String,
       emailAddress: email,
+      confirmedAt: row[2] as DateTime,
       user: UserEntity(id: row[0] as String),
     );
   }
@@ -218,6 +220,7 @@ class UserTable extends TableBase with TableConstants {
         id: emailId,
         emailAddress: row[1] as String,
         user: UserEntity(id: row[0] as String),
+        confirmedAt: row[2] as DateTime,
       );
     });
   }
@@ -251,6 +254,7 @@ class UserTable extends TableBase with TableConstants {
         id: emailUuid,
         emailAddress: email,
         user: user,
+        confirmedAt: null,
       ),
       authToken,
     );
@@ -265,12 +269,38 @@ class UserTable extends TableBase with TableConstants {
     );
   }
 
-  Future<void> updateEmailConfirmToken(DatabaseTransactionBase db, String token,
-      {DateTime confirmedAt}) async {
+  Future<void> updateEmailConfirmToken(
+    DatabaseTransactionBase db,
+    EmailConfirmEntity emailConfirm, {
+    DateTime confirmedAt,
+  }) async {
     await db.execute(
       '''UPDATE $_TABLE_EMAIL_CONFIRM SET $_COLUMN_CONFIRMED_AT = @confirmedAt WHERE token = @token''',
-      values: {'confirmedAt': confirmedAt, 'token': token},
+      values: {'confirmedAt': confirmedAt, 'token': emailConfirm.token},
       expectedResultCount: 1,
+    );
+    if (emailConfirm.email.confirmedAt == null && confirmedAt != null) {
+      await db.executeUpdate(_TABLE_EMAIL, set: {
+        _COLUMN_CONFIRMED_AT: confirmedAt
+      }, where: {
+        columnId: emailConfirm.email.id,
+      });
+    }
+  }
+
+  Future<SystemStatusUser> countUsers(DatabaseTransactionBase db) async {
+    final confirmed = await db
+        .query('SELECT COUNT(id), COUNT(distinct user_id) '
+            ' FROM $_TABLE_EMAIL WHERE $_COLUMN_CONFIRMED_AT IS NOT NULL')
+        .single;
+    final unconfirmed = await db
+        .query('SELECT COUNT(id) FROM $_TABLE_EMAIL'
+            ' WHERE $_COLUMN_CONFIRMED_AT IS NULL')
+        .single;
+    return SystemStatusUser(
+      emailConfirmed: confirmed[0] as int,
+      userConfirmed: confirmed[1] as int,
+      emailUnconfirmed: unconfirmed[0] as int,
     );
   }
 }
@@ -304,15 +334,19 @@ class UserEntity {
 }
 
 class EmailEntity {
-  EmailEntity(
-      {@required this.id, @required this.emailAddress, @required this.user})
-      : assert(id != null),
+  EmailEntity({
+    @required this.id,
+    @required this.emailAddress,
+    @required this.user,
+    @required this.confirmedAt,
+  })  : assert(id != null),
         assert(emailAddress != null),
         assert(user != null);
 
   final String id;
   final String emailAddress;
   final UserEntity user;
+  final DateTime confirmedAt;
 }
 
 class EmailConfirmEntity {

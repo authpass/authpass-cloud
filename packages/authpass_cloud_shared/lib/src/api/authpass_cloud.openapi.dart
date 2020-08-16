@@ -10,6 +10,74 @@ import 'package:openapi_base/openapi_base.dart';
 part 'authpass_cloud.openapi.g.dart';
 
 @_i1.JsonSerializable()
+class SystemStatusUser implements OpenApiContent {
+  SystemStatusUser(
+      {@_i2.required this.emailConfirmed,
+      @_i2.required this.userConfirmed,
+      @_i2.required this.emailUnconfirmed})
+      : assert(emailConfirmed != null),
+        assert(userConfirmed != null),
+        assert(emailUnconfirmed != null);
+
+  factory SystemStatusUser.fromJson(Map<String, dynamic> jsonMap) =>
+      _$SystemStatusUserFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'emailConfirmed')
+  final int emailConfirmed;
+
+  @_i1.JsonKey(name: 'userConfirmed')
+  final int userConfirmed;
+
+  @_i1.JsonKey(name: 'emailUnconfirmed')
+  final int emailUnconfirmed;
+
+  Map<String, dynamic> toJson() => _$SystemStatusUserToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class SystemStatusWebsite implements OpenApiContent {
+  SystemStatusWebsite(
+      {@_i2.required this.websiteCount, @_i2.required this.urlCanonicalCount})
+      : assert(websiteCount != null),
+        assert(urlCanonicalCount != null);
+
+  factory SystemStatusWebsite.fromJson(Map<String, dynamic> jsonMap) =>
+      _$SystemStatusWebsiteFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'websiteCount')
+  final int websiteCount;
+
+  @_i1.JsonKey(name: 'urlCanonicalCount')
+  final int urlCanonicalCount;
+
+  Map<String, dynamic> toJson() => _$SystemStatusWebsiteToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class SystemStatus implements OpenApiContent {
+  SystemStatus({@_i2.required this.user, @_i2.required this.website})
+      : assert(user != null),
+        assert(website != null);
+
+  factory SystemStatus.fromJson(Map<String, dynamic> jsonMap) =>
+      _$SystemStatusFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'user')
+  final SystemStatusUser user;
+
+  @_i1.JsonKey(name: 'website')
+  final SystemStatusWebsite website;
+
+  Map<String, dynamic> toJson() => _$SystemStatusToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
 class RegisterRequest implements OpenApiContent {
   RegisterRequest({@_i2.required this.email}) : assert(email != null);
 
@@ -216,6 +284,61 @@ abstract class CheckGetResponse extends OpenApiResponse
   void requireSuccess() {
     if (this is _CheckGetResponse200) {
       return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _CheckStatusPostResponse200 extends CheckStatusPostResponse
+    implements OpenApiResponseBodyJson {
+  /// Status
+  _CheckStatusPostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final SystemStatus body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class CheckStatusPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<SystemStatus> {
+  CheckStatusPostResponse();
+
+  /// Status
+  factory CheckStatusPostResponse.response200(SystemStatus body) =>
+      _CheckStatusPostResponse200.response200(body);
+
+  void map({@_i2.required ResponseMap<_CheckStatusPostResponse200> on200}) {
+    if (this is _CheckStatusPostResponse200) {
+      on200((this as _CheckStatusPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Status
+  @override
+  SystemStatus requireSuccess() {
+    if (this is _CheckStatusPostResponse200) {
+      return (this as _CheckStatusPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1313,6 +1436,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// get: /check
   Future<CheckGetResponse> checkGet();
 
+  /// Status Check.
+  /// post: /check/status
+  Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
@@ -1400,6 +1527,11 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// get: /check
   ///
   Future<CheckGetResponse> checkGet();
+
+  /// Status Check.
+  /// post: /check/status
+  ///
+  Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
 
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
@@ -1518,6 +1650,24 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
     return await sendRequest(request, {
       '200': (OpenApiClientResponse response) async =>
           _CheckGetResponse200.response200()
+    });
+  }
+
+  /// Status Check.
+  /// post: /check/status
+  ///
+  @override
+  Future<CheckStatusPostResponse> checkStatusPost({String xSecret}) async {
+    final request = OpenApiClientRequest('post', '/check/status', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addHeaderParameter('x-secret', encodeString(xSecret));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _CheckStatusPostResponse200.response200(
+              SystemStatus.fromJson(await response.responseBodyJson()))
     });
   }
 
@@ -1844,6 +1994,19 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Status Check.
+  /// post: /check/status
+  ///
+  OpenApiClientRequest checkStatusPost({String xSecret}) {
+    final request = OpenApiClientRequest('post', '/check/status', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addHeaderParameter('x-secret', encodeString(xSecret));
+    return request;
+  }
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
@@ -2059,6 +2222,20 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request, (AuthPassCloud impl) async => impl.checkGet());
     }, security: []);
+    addRoute('/check/status', 'post', (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.checkStatusPost(
+              xSecret: param(
+                  isRequired: false,
+                  name: 'x-secret',
+                  value: request.headerParameter('x-secret'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/user/register', 'post', (OpenApiRequest request) async {
       return await impl.invoke(
           request,

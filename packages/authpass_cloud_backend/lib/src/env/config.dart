@@ -110,6 +110,7 @@ class SecretsConfig {
     @required this.recaptchaSecretKey,
     @required this.recaptchaSiteKey,
     @required this.emailReceiveToken,
+    @required this.systemStatusSecret,
   });
   factory SecretsConfig.fromJson(Map json) => _$SecretsConfigFromJson(json);
   Map<String, dynamic> toJson() => _$SecretsConfigToJson(this);
@@ -119,4 +120,6 @@ class SecretsConfig {
   final String recaptchaSiteKey;
 
   final String emailReceiveToken;
+
+  final String systemStatusSecret;
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/system_dao.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
@@ -286,6 +287,15 @@ class AuthPassCloudImpl extends AuthPassCloud {
         'x-original-url': [image.uri],
         'cache-control': ['public, max-age=${maxAge.inSeconds}']
       });
+  }
+
+  @override
+  Future<CheckStatusPostResponse> checkStatusPost({String xSecret}) async {
+    if (xSecret != _env.config.secrets.systemStatusSecret) {
+      _logger.severe('Invalid secret. $xSecret');
+      throw NotFoundException('Invalid.');
+    }
+    return CheckStatusPostResponse.response200(await SystemDao(db).getStats());
   }
 }
 

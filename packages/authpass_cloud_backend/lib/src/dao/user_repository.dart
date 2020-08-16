@@ -31,17 +31,22 @@ class UserRepository {
   Future<bool> isValidEmailConfirmToken(String token) =>
       db.tables.user.isValidEmailToken(db, token);
 
-  Future<void> confirmEmailAddress(String token) async {
+  Future<bool> confirmEmailAddress(String token) async {
     final emailConfirmToken =
         await db.tables.user.findEmailConfirmToken(db, token);
-    if (emailConfirmToken.confirmedAt == null) {
-      await db.tables.user.updateEmailConfirmToken(db, emailConfirmToken.token,
-          confirmedAt: clock.now().toUtc());
-      if (emailConfirmToken.authToken.status == AuthTokenStatus.created) {
-        await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken.id,
-            status: AuthTokenStatus.active);
-      }
+    if (emailConfirmToken.confirmedAt != null) {
+      _logger.warning('Email was already confirmed. '
+          '$token (${emailConfirmToken.email.emailAddress})');
+      return false;
     }
+    final now = clock.now().toUtc();
+    await db.tables.user
+        .updateEmailConfirmToken(db, emailConfirmToken, confirmedAt: now);
+    if (emailConfirmToken.authToken.status == AuthTokenStatus.created) {
+      await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken.id,
+          status: AuthTokenStatus.active);
+    }
+    return true;
   }
 
   Future<AuthTokenEntity> findValidAuthToken(String authToken,
