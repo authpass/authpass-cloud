@@ -71,6 +71,7 @@ class AuthPassMigrationsProvider
       Migrations(id: 5, up: (db) async => await db.tables.email.migrate5(db)),
       Migrations(
           id: 6, up: (db) async => await db.tables.website.createTables(db)),
+      Migrations(id: 7, up: (db) async => await db.tables.website.migrate7(db)),
     ];
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/companyimage/besticon.dart';
+import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,6 +17,8 @@ class WebsiteTable extends TableBase with TableConstants {
   static const _TABLE_WEBSITE_IMAGE = 'website_image';
 
   static const _COL_URL = 'url';
+  static const _COL_FILENAME = 'filename';
+  static const _COL_ORIGINAL_BYTE_LENGTH = 'original_byte_length';
   static const _COL_URL_CANONICAL = 'url_canonical';
   static const _COL_BEST_IMAGE = 'best_image_id';
   static const _COL_WEBSITE_ID = 'website_id';
@@ -59,6 +62,15 @@ class WebsiteTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate7(DatabaseTransaction db) async {
+    await db.execute('''
+      ALTER TABLE $_TABLE_WEBSITE_IMAGE
+        ADD $_COL_ORIGINAL_BYTE_LENGTH INT NULL,
+        ADD $_COL_FILENAME VARCHAR NOT NULL DEFAULT '';
+      ALTER TABLE $_TABLE_WEBSITE_IMAGE ALTER $_COL_FILENAME DROP DEFAULT;
+    ''');
+  }
+
   Future<void> insertWebsite(
       DatabaseTransactionBase db, WebsiteEntity entity) async {
     await db.executeInsert(_TABLE_WEBSITE, {
@@ -82,9 +94,11 @@ class WebsiteTable extends TableBase with TableConstants {
       columnId: uuid,
       _COL_WEBSITE_ID: website.id,
       _COL_URL: image.uri,
+      _COL_FILENAME: image.fileName,
       _COL_MIME_TYPE: image.mimeType,
       _COL_BYTES: CustomBind(
           "decode(@$_COL_BYTES, 'base64')", base64.encode(image.bytes)),
+      _COL_ORIGINAL_BYTE_LENGTH: image.originalByteLength,
       _COL_WIDTH: image.width,
       _COL_HEIGHT: image.height,
       _COL_BRIGHTNESS: image.brightness,
@@ -95,7 +109,8 @@ class WebsiteTable extends TableBase with TableConstants {
 
   Future<ImageInfo> findBestImage(DatabaseTransactionBase db, Uri uri) async {
     final result = await db.query('''
-    SELECT i.$_COL_BYTES, i.$_COL_WIDTH, i.$_COL_HEIGHT, i.$_COL_URL, i.$_COL_MIME_TYPE, i.$_COL_BRIGHTNESS, i.$_COL_IMAGE_TYPE
+    SELECT i.$_COL_BYTES, i.$_COL_WIDTH, i.$_COL_HEIGHT, i.$_COL_URL, i.$_COL_MIME_TYPE, i.$_COL_BRIGHTNESS, i.$_COL_IMAGE_TYPE,
+      i.$_COL_ORIGINAL_BYTE_LENGTH, i.$_COL_FILENAME
     FROM $_TABLE_WEBSITE_IMAGE i
       INNER JOIN $_TABLE_WEBSITE w ON i.$columnId = $_COL_BEST_IMAGE
     WHERE w.$_COL_URL = @url LIMIT 1
@@ -112,6 +127,8 @@ class WebsiteTable extends TableBase with TableConstants {
       mimeType: row[4] as String,
       brightness: row[5] as double,
       imageLinkType: ImageLinkTypeExt.fromString(row[6] as String),
+      originalByteLength: row[7] as int,
+      fileName: row[8] as String,
     );
   }
 

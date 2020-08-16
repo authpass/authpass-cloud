@@ -34,8 +34,9 @@ class WebsiteRepository {
     await db.tables.website.insertWebsite(db, website);
     String bestImageId;
     for (final image in images.images) {
-      bestImageId ??=
+      final imageId =
           await db.tables.website.insertWebsiteImage(db, website, image);
+      bestImageId ??= imageId;
     }
     await db.tables.website
         .updateWebsite(db, websiteId: website.id, bestImageId: bestImageId);

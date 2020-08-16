@@ -312,9 +312,11 @@ packages:
   image:
     dependency: "direct main"
     description:
-      name: image
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "04bed8d246ef90e3d4f49b12f9df2066f5df7a22"
+      resolved-ref: "04bed8d246ef90e3d4f49b12f9df2066f5df7a22"
+      url: "https://github.com/authpass/image.git"
+    source: git
     version: "2.1.14"
   intl:
     dependency: transitive

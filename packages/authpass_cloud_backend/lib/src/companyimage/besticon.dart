@@ -14,16 +14,28 @@ final _logger = Logger('besticon');
 class ImageInfo {
   ImageInfo({
     @required this.uri,
+    @required this.fileName,
     @required this.mimeType,
     @required this.bytes,
+    @required this.originalByteLength,
     @required this.width,
     @required this.height,
     @required this.brightness,
     @required this.imageLinkType,
   });
+
+  /// the original uri from which the image was downloaded.
   final String uri;
+
+  /// the file name of the image. if the image was reencoded this might
+  /// be different from [uri].
+  final String fileName;
   final String mimeType;
   final Uint8List bytes;
+
+  /// when the image was re encoded, this contains
+  /// the size of the original image.
+  final int originalByteLength;
   final int width;
   final int height;
   final double brightness;
@@ -158,6 +170,31 @@ final _cssPaths =
             _CSS_PATH_META, 'content', ImageLinkType.logoGuessed))
         .toList();
 
+class DecodedImage {
+  DecodedImage(
+    this.image,
+    this.decoder, {
+    this.encodedBytes,
+    this.encodedMimetype,
+    this.encodedFileExtension,
+  })  : assert((encodedBytes == null &&
+                encodedMimetype == null &&
+                encodedFileExtension == null) ||
+            (encodedBytes != null &&
+                encodedMimetype != null &&
+                encodedFileExtension != null)),
+        assert(encodedFileExtension == null ||
+            encodedFileExtension.startsWith('.'));
+
+  final Image image;
+  final Decoder decoder;
+  final Uint8List encodedBytes;
+  final String encodedMimetype;
+
+  /// file extension including `.`, e.g. `.webp`
+  final String encodedFileExtension;
+}
+
 class BestIcon {
   Client __client;
   Client get _client => __client ??= Client();
@@ -177,6 +214,35 @@ class BestIcon {
     return response;
   }
 
+  /// Decodes the given image. If it is of a format which the
+  /// client might not understand, we re-encode it to png.
+  DecodedImage _decodeImageAndReEncode(Uint8List bytes) {
+    final decoder = findDecoderForData(bytes);
+    if (decoder == null) {
+      return null;
+    }
+    if (decoder is IcoDecoder) {
+      // extract the largest image and encode it to webp.
+      final image = decoder.decodeImageLargest(bytes);
+      final pngBytes = PngEncoder().encodeImage(image);
+      if (pngBytes == null || pngBytes.isEmpty) {
+        _logger.severe('Unable to encode image to webp.');
+      }
+
+      return DecodedImage(
+        image,
+        decoder,
+        encodedBytes: pngBytes as Uint8List,
+        encodedMimetype: 'image/png',
+        encodedFileExtension: '.png',
+      );
+    }
+    return DecodedImage(
+      decoder.decodeImage(bytes),
+      decoder,
+    );
+  }
+
   Future<FetchImageResult> fetchImages(Uri uri) async {
     final imageLinkResult = await _findImageLinks(uri);
     final imageLinks = imageLinkResult.value;
@@ -187,18 +253,23 @@ class BestIcon {
         final contentType = response.headers[HttpHeaders.contentTypeHeader];
         final ct = ContentType.parse(contentType);
         final imageBytes = response.bodyBytes;
-        final image = decodeImage(imageBytes);
-        if (image == null) {
+        final decoded = _decodeImageAndReEncode(imageBytes);
+        if (decoded == null || decoded.image == null) {
           _logger.fine('Unable to decode ${imageBytes.length} bytes for '
               '${imageLink.uri} - ${ct.mimeType}');
           return null;
         }
+        final image = decoded.image;
+        final fileName = imageLink.uri.pathSegments.last;
 
         final brightness = _analyseImageBrightnessRatio(image);
         return ImageInfo(
           uri: imageLink.uri.toString(),
-          mimeType: ct.mimeType,
-          bytes: imageBytes,
+          fileName: fileName + (decoded.encodedFileExtension ?? ''),
+          mimeType: decoded.encodedMimetype ?? ct.mimeType,
+          bytes: decoded.encodedBytes ?? imageBytes,
+          originalByteLength:
+              decoded.encodedBytes == null ? null : imageBytes.length,
           width: image.width,
           height: image.height,
           brightness: brightness,
