@@ -40,6 +40,9 @@ void endpointTest(String description,
       await db.run((db) async {
         final env = DevEnv();
         final cryptoService = CryptoService();
+        final request = MockOpenApiRequest();
+        when(request.headerParameter(argThat(equalsIgnoringCase('user-agent'))))
+            .thenReturn(['unit test']);
         final endpoint = AuthPassCloudImpl(
           ServiceProvider(
             env: env,
@@ -47,7 +50,7 @@ void endpointTest(String description,
             emailService: MockEmailService(),
             recaptchaService: MockRecaptchaService(),
           ),
-          MockOpenApiRequest(),
+          request,
           db,
           UserRepository(db),
           EmailRepository(
