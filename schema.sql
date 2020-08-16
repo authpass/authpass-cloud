@@ -193,7 +193,9 @@ CREATE TABLE public.website_image (
     width integer NOT NULL,
     height integer NOT NULL,
     brightness double precision NOT NULL,
-    image_type character varying NOT NULL
+    image_type character varying NOT NULL,
+    original_byte_length integer,
+    filename character varying NOT NULL
 );
 
 
