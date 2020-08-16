@@ -91,7 +91,7 @@ class UserTable extends TableBase with TableConstants {
 
   Future<void> migrate8(DatabaseTransactionBase db) async {
     await db.execute('''
-    ALTER TABLE $_TABLE_AUTH_TOKEN ADD $_COLUMN_USER_AGENT NOT NULL DEFAULT 'unknown';
+    ALTER TABLE $_TABLE_AUTH_TOKEN ADD $_COLUMN_USER_AGENT VARCHAR NOT NULL DEFAULT 'unknown';
     ALTER TABLE $_TABLE_AUTH_TOKEN ALTER $_COLUMN_USER_AGENT DROP DEFAULT;
     ''');
   }
