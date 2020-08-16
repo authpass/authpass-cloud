@@ -38,6 +38,7 @@ class UserTable extends TableBase with TableConstants {
   static const _COLUMN_EMAIL_ADDRESS = 'email_address';
   static const _COLUMN_CONFIRMED_AT = 'confirmed_at';
   static const _TYPE_STATUS = 'AuthTokenStatus';
+  static const _COLUMN_USER_AGENT = 'user_agent';
 
   final CryptoService cryptoService;
 
@@ -88,6 +89,13 @@ class UserTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate8(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $_TABLE_AUTH_TOKEN ADD $_COLUMN_USER_AGENT NOT NULL DEFAULT 'unknown';
+    ALTER TABLE $_TABLE_AUTH_TOKEN ALTER $_COLUMN_USER_AGENT DROP DEFAULT;
+    ''');
+  }
+
   String _normalizeEmail(String email) {
     return email.toLowerCase();
   }
@@ -115,18 +123,17 @@ class UserTable extends TableBase with TableConstants {
   Future<AuthTokenEntity> insertAuthToken(
     DatabaseTransactionBase db,
     UserEntity user,
+    String userAgent,
   ) async {
     final tokenUuid = cryptoService.createSecureUuid();
     final authToken =
         cryptoService.createSecureToken(type: TokenType.emailConfirm);
-    await db.execute('''INSERT INTO $_TABLE_AUTH_TOKEN 
-     ($columnId, $COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS)
-     VALUES (@tokenUuid, @userUuid, @token, @status)
-    ''', values: {
-      'tokenUuid': tokenUuid,
-      'userUuid': user.id,
-      'token': authToken,
-      'status': AuthTokenStatus.created.name,
+    await db.executeInsert(_TABLE_AUTH_TOKEN, {
+      columnId: tokenUuid,
+      COLUMN_USER_ID: user.id,
+      _COLUMN_TOKEN: authToken,
+      _COLUMN_STATUS: AuthTokenStatus.created.name,
+      _COLUMN_USER_AGENT: userAgent,
     });
     return AuthTokenEntity(
       id: tokenUuid,
@@ -226,7 +233,7 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailConfirmEntity> insertUser(
-      DatabaseTransactionBase db, String email) async {
+      DatabaseTransactionBase db, String email, String userAgent) async {
     email = _normalizeEmail(email);
     final userUuid = cryptoService.createSecureUuid();
     final emailUuid = cryptoService.createSecureUuid();
@@ -245,7 +252,7 @@ class UserTable extends TableBase with TableConstants {
       },
     );
     final user = UserEntity(id: userUuid);
-    final authToken = await insertAuthToken(db, user);
+    final authToken = await insertAuthToken(db, user, userAgent);
     _logger.fine('Inserted new user, result: $result');
     assert(result == 1);
     return insertEmailConfirmToken(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
@@ -50,8 +51,10 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
-    final emailConfirm =
-        await userRepository.createUserOrConfirmEmail(body.email);
+    final emailConfirm = await userRepository.createUserOrConfirmEmail(
+      body.email,
+      request.headerParameter(HttpHeaders.userAgentHeader).single,
+    );
     final urlResolve = AuthPassCloudUrlResolve();
     final url = urlResolve
         .emailConfirmGet(token: emailConfirm.token)

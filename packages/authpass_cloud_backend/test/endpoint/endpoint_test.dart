@@ -67,7 +67,8 @@ void endpointTest(String description,
 
 Future<AuthTokenEntity> _createUserConfirmed(AuthPassCloudImpl endpoint) async {
   final db = endpoint.db;
-  final confirm = await db.tables.user.insertUser(endpoint.db, 'a@b.com');
+  final confirm =
+      await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
   await endpoint.userRepository.confirmEmailAddress(confirm.token);
   when(endpoint.request.headerParameter('Authorization'))
       .thenReturn(['Bearer ${confirm.authToken.token}']);

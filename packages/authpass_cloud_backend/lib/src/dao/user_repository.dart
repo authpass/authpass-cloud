@@ -14,13 +14,15 @@ class UserRepository {
   /// Creates a new user with the given email address.
   /// If the email address is already known, just creates a new
   /// email confirmation token.
-  Future<EmailConfirmEntity> createUserOrConfirmEmail(String email) async {
+  Future<EmailConfirmEntity> createUserOrConfirmEmail(
+      String email, String userAgent) async {
     assert(email != null);
     final userEmail = await db.tables.user.findUserByEmail(db, email);
     if (userEmail == null) {
-      return await db.tables.user.insertUser(db, email);
+      return await db.tables.user.insertUser(db, email, userAgent);
     }
-    final authToken = await db.tables.user.insertAuthToken(db, userEmail.user);
+    final authToken =
+        await db.tables.user.insertAuthToken(db, userEmail.user, userAgent);
     return await db.tables.user.insertEmailConfirmToken(
       db,
       userEmail,

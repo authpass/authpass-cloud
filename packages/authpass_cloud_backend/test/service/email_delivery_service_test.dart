@@ -32,7 +32,8 @@ void main() {
   PrintAppender.setupLogging();
   databaseTest('Deliver email', (db) async {
     final userRepository = UserRepository(db);
-    final user = await userRepository.createUserOrConfirmEmail('a@b.com');
+    final user =
+        await userRepository.createUserOrConfirmEmail('a@b.com', 'unit test');
 
     await userRepository.confirmEmailAddress(user.token);
     final emailRepository =

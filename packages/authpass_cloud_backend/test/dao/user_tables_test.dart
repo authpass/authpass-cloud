@@ -17,7 +17,8 @@ void main() {
     await db.run((db) async {
       final user = await db.tables.user.findUserByEmail(db, 'a@b.com');
       expect(user, isNull);
-      final created = await db.tables.user.insertUser(db, 'a@b.com');
+      final created =
+          await db.tables.user.insertUser(db, 'a@b.com', 'unit test');
       expect(created, isNotNull);
     });
   });
