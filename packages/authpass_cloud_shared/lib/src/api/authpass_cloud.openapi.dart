@@ -60,9 +60,12 @@ class SystemStatusWebsite implements OpenApiContent {
 @_i1.JsonSerializable()
 class SystemStatusMailbox implements OpenApiContent {
   SystemStatusMailbox(
-      {@_i2.required this.mailboxCount, @_i2.required this.messageCount})
+      {@_i2.required this.mailboxCount,
+      @_i2.required this.messageCount,
+      @_i2.required this.messageReadCount})
       : assert(mailboxCount != null),
-        assert(messageCount != null);
+        assert(messageCount != null),
+        assert(messageReadCount != null);
 
   factory SystemStatusMailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusMailboxFromJson(jsonMap);
@@ -72,6 +75,9 @@ class SystemStatusMailbox implements OpenApiContent {
 
   @_i1.JsonKey(name: 'messageCount')
   final int messageCount;
+
+  @_i1.JsonKey(name: 'messageReadCount')
+  final int messageReadCount;
 
   Map<String, dynamic> toJson() => _$SystemStatusMailboxToJson(this);
   @override
@@ -83,10 +89,12 @@ class SystemStatus implements OpenApiContent {
   SystemStatus(
       {@_i2.required this.user,
       @_i2.required this.website,
-      @_i2.required this.mailbox})
+      @_i2.required this.mailbox,
+      @_i2.required this.queryTime})
       : assert(user != null),
         assert(website != null),
-        assert(mailbox != null);
+        assert(mailbox != null),
+        assert(queryTime != null);
 
   factory SystemStatus.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFromJson(jsonMap);
@@ -99,6 +107,9 @@ class SystemStatus implements OpenApiContent {
 
   @_i1.JsonKey(name: 'mailbox')
   final SystemStatusMailbox mailbox;
+
+  @_i1.JsonKey(name: 'queryTime')
+  final int queryTime;
 
   Map<String, dynamic> toJson() => _$SystemStatusToJson(this);
   @override

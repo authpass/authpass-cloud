@@ -357,12 +357,11 @@ components:
   schemas:
     SystemStatus:
       properties:
-        user:
-          $ref: '#/components/schemas/SystemStatusUser'
-        website:
-          $ref: '#/components/schemas/SystemStatusWebsite'
+        user: { $ref: '#/components/schemas/SystemStatusUser' }
+        website: { $ref: '#/components/schemas/SystemStatusWebsite' }
         mailbox: { $ref: '#/components/schemas/SystemStatusMailbox' }
-      required: [user, website, mailbox]
+        queryTime: { type: integer }
+      required: [user, website, mailbox, queryTime]
     SystemStatusUser:
       properties:
         emailConfirmed:
@@ -383,7 +382,8 @@ components:
       properties:
         mailboxCount: { type: integer }
         messageCount: { type: integer }
-      required: [mailboxCount, messageCount]
+        messageReadCount: { type: integer }
+      required: [mailboxCount, messageCount, messageReadCount]
     RegisterRequest:
       properties:
         email:

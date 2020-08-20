@@ -175,7 +175,7 @@ class EmailTable extends TableBase with TableConstants {
         .toList();
   }
 
-  Future<String> insertMessage(
+  Future<ApiUuid> insertMessage(
     DatabaseTransactionBase db, {
     @required MailboxEntity mailbox,
     @required String sender,
@@ -192,7 +192,7 @@ class EmailTable extends TableBase with TableConstants {
       _COLUMN_SIZE: message.length,
       _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
-    return id;
+    return ApiUuid.parse(id);
   }
 
   Future<EmailMessageEntity> findEmailForUser(
@@ -379,11 +379,14 @@ class EmailTable extends TableBase with TableConstants {
   Future<SystemStatusMailbox> countMailbox(DatabaseTransactionBase db) async {
     final mailbox =
         await db.query('SELECT COUNT(*) FROM $_TABLE_EMAIL_MAILBOX').single;
-    final message =
-        await db.query('SELECT COUNT(*) FROM $_TABLE_EMAIL_MESSAGE').single;
+    final message = await db
+        .query('SELECT COUNT(*), COUNT($_COLUMN_READ_AT) '
+            'FROM $_TABLE_EMAIL_MESSAGE')
+        .single;
     return SystemStatusMailbox(
       mailboxCount: mailbox[0] as int,
       messageCount: message[0] as int,
+      messageReadCount: message[1] as int,
     );
   }
 }

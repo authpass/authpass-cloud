@@ -39,6 +39,7 @@ SystemStatusMailbox _$SystemStatusMailboxFromJson(Map<String, dynamic> json) {
   return SystemStatusMailbox(
     mailboxCount: json['mailboxCount'] as int,
     messageCount: json['messageCount'] as int,
+    messageReadCount: json['messageReadCount'] as int,
   );
 }
 
@@ -47,6 +48,7 @@ Map<String, dynamic> _$SystemStatusMailboxToJson(
     <String, dynamic>{
       'mailboxCount': instance.mailboxCount,
       'messageCount': instance.messageCount,
+      'messageReadCount': instance.messageReadCount,
     };
 
 SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
@@ -60,6 +62,7 @@ SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
     mailbox: json['mailbox'] == null
         ? null
         : SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
+    queryTime: json['queryTime'] as int,
   );
 }
 
@@ -68,6 +71,7 @@ Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
       'user': instance.user,
       'website': instance.website,
       'mailbox': instance.mailbox,
+      'queryTime': instance.queryTime,
     };
 
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {

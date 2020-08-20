@@ -91,7 +91,7 @@ Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
   return endpoint.db.tables.email.findMailbox(endpoint.db, address: address);
 }
 
-Future<String> _createMessage(
+Future<ApiUuid> _createMessage(
     AuthPassCloudImpl endpoint, MailboxEntity mailbox) async {
   return await endpoint.db.tables.email.insertMessage(
     endpoint.db,
@@ -183,9 +183,8 @@ void main() {
         message: 'Ipsum',
       );
 
-      final body = await endpoint
-          .mailboxMessageGet(messageId: ApiUuid.parse(id))
-          .requireSuccess();
+      final body =
+          await endpoint.mailboxMessageGet(messageId: id).requireSuccess();
       expect(body, 'Ipsum');
     });
     endpointTest('mark as read', (endpoint) async {
@@ -202,16 +201,12 @@ void main() {
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
 
-      await endpoint
-          .mailboxMessageMarkRead(messageId: ApiUuid.parse(id))
-          .requireSuccess();
+      await endpoint.mailboxMessageMarkRead(messageId: id).requireSuccess();
 
       final l2 = await endpoint.mailboxListGet().requireSuccess();
       expect(l2.data.single.isRead, true);
 
-      await endpoint
-          .mailboxMessageMarkUnRead(messageId: ApiUuid.parse(id))
-          .requireSuccess();
+      await endpoint.mailboxMessageMarkUnRead(messageId: id).requireSuccess();
 
       final l3 = await endpoint.mailboxListGet().requireSuccess();
       expect(l3.data.single.isRead, false);
@@ -223,9 +218,7 @@ void main() {
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
 
-      await endpoint
-          .mailboxMessageDelete(messageId: ApiUuid.parse(id))
-          .requireSuccess();
+      await endpoint.mailboxMessageDelete(messageId: id).requireSuccess();
 
       final l2 = await endpoint.mailboxListGet().requireSuccess();
       expect(l2.data, isEmpty);
@@ -244,6 +237,23 @@ void main() {
           .requireSuccess();
       final statusAfter = await endpoint.statusGet().requireSuccess();
       expect(statusAfter.mail.messagesUnread, 0);
+    });
+  });
+
+  group('stats endpoint', () {
+    endpointTest('request stats', (endpoint) async {
+      final mailbox = await _createUserWithMailbox(endpoint);
+      await _createMessage(endpoint, mailbox);
+      final id = await _createMessage(endpoint, mailbox);
+      await endpoint.mailboxMessageMarkRead(messageId: id);
+      final status = await endpoint
+          .checkStatusPost(
+              xSecret: endpoint
+                  .serviceProvider.env.config.secrets.systemStatusSecret)
+          .requireSuccess();
+      expect(status.mailbox.messageCount, 2);
+      expect(status.mailbox.messageReadCount, 1);
+      expect(status.queryTime, inInclusiveRange(1, 1000));
     });
   });
 }
