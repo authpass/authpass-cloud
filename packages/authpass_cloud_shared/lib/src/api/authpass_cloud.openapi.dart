@@ -7,6 +7,7 @@ import 'dart:typed_data' as _i3;
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:meta/meta.dart' as _i2;
 import 'package:openapi_base/openapi_base.dart';
+
 part 'authpass_cloud.openapi.g.dart';
 
 @_i1.JsonSerializable()
@@ -230,7 +231,8 @@ class EmailMessage implements OpenApiContent {
   final String sender;
 
   @_i1.JsonKey(name: 'mailboxEntryUuid')
-  final String mailboxEntryUuid;
+  @ApiUuidJsonConverter()
+  final ApiUuid mailboxEntryUuid;
 
   @_i1.JsonKey(name: 'createdAt')
   final DateTime createdAt;

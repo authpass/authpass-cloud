@@ -487,7 +487,7 @@ class EmailMessageEntity {
         id: ApiUuid.parse(id),
         subject: subject,
         sender: sender,
-        mailboxEntryUuid: mailboxEntryUuid,
+        mailboxEntryUuid: ApiUuid.parse(mailboxEntryUuid),
         createdAt: createdAt,
         size: size,
         isRead: readAt != null,

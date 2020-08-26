@@ -432,6 +432,7 @@ components:
           type: string
         mailboxEntryUuid:
           type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time

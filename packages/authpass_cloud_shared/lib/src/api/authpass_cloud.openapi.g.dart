@@ -155,7 +155,8 @@ EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) {
     id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
     subject: json['subject'] as String,
     sender: json['sender'] as String,
-    mailboxEntryUuid: json['mailboxEntryUuid'] as String,
+    mailboxEntryUuid: const ApiUuidJsonConverter()
+        .fromJson(json['mailboxEntryUuid'] as String),
     createdAt: json['createdAt'] == null
         ? null
         : DateTime.parse(json['createdAt'] as String),
@@ -169,7 +170,8 @@ Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
       'id': const ApiUuidJsonConverter().toJson(instance.id),
       'subject': instance.subject,
       'sender': instance.sender,
-      'mailboxEntryUuid': instance.mailboxEntryUuid,
+      'mailboxEntryUuid':
+          const ApiUuidJsonConverter().toJson(instance.mailboxEntryUuid),
       'createdAt': instance.createdAt?.toIso8601String(),
       'size': instance.size,
       'isRead': instance.isRead,
