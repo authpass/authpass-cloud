@@ -16,6 +16,17 @@ if ($_POST['token'] !== $TOKEN) {
     fatalError('Permission denied. Invalid token ' . $_POST['token']);
 }
 
+if (isset($_POST['metrics'])) {
+    $newMetrics = json_decode($_POST['metrics'], true);
+    $oldMetrics = json_decode(file_get_contents('metrics.json'), true);
+    print_r($newMetrics);
+    $metrics = array_replace_recursive($oldMetrics, $newMetrics);
+    print_r($metrics);
+    file_put_contents('metrics.json', json_encode($metrics));
+    echo 'Done';
+    exit(0);
+}
+
 $filename = $_POST['filename'];
 if (!$filename) {
     fatalError('Missing filename.');
@@ -38,11 +49,14 @@ function isAllowedArtifact($filename) {
     $versionPattern = '[\d._\+]+';
     $allowedArtifacts = array(
         "(authpass-linux-)($versionPattern)(.tar.gz)",
-        "(authpass-sideload-)(\d+)(.apk)",
         "(testartifact-)($versionPattern)(.tar.gz)",
         "(AuthPassSetup-)($versionPattern)(.exe)",
         "(AuthPass-setup-)($versionPattern)(.exe)",
         "(authpass_)($versionPattern)(_amd64.snap)",
+        "(authpass-sideload-)($versionPattern)(.apk)",
+        "(authpass-samsungapps-)($versionPattern)(.apk)",
+        "(authpass-huawei-)($versionPattern)(.apk)",
+        "(authpass-amazon-)($versionPattern)(.apk)",
     );
 
 
@@ -72,9 +86,11 @@ $target = $dir . '/' . $filename;
 $symlink = $dir . '/' . $artifact->prefix . 'latest' . $artifact->extension;
 $versionFile = $dir . '/' . $artifact->prefix . 'latest' . $artifact->extension . '.txt';
 
-if (file_exists($target)) {
-    fatalError('file already exists at ' . $target);
-}
+# TODO for now we simply overwrite the file. this sounds a bit strange,
+# but allows CI to build in multiple branches the same build.
+#if (file_exists($target)) {
+#    fatalError('file already exists at ' . $target);
+#}
 
 // Check $_FILES['upload']['error'] value.
 
