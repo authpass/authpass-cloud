@@ -7,7 +7,6 @@ import 'dart:typed_data' as _i3;
 import 'package:json_annotation/json_annotation.dart' as _i1;
 import 'package:meta/meta.dart' as _i2;
 import 'package:openapi_base/openapi_base.dart';
-
 part 'authpass_cloud.openapi.g.dart';
 
 @_i1.JsonSerializable()
@@ -253,12 +252,14 @@ class EmailMessage implements OpenApiContent {
 @_i1.JsonSerializable()
 class Mailbox implements OpenApiContent {
   Mailbox(
-      {@_i2.required this.address,
+      {@_i2.required this.id,
+      @_i2.required this.address,
       @_i2.required this.label,
       @_i2.required this.entryUuid,
       @_i2.required this.createdAt,
       @_i2.required this.isDisabled})
-      : assert(address != null),
+      : assert(id != null),
+        assert(address != null),
         assert(label != null),
         assert(entryUuid != null),
         assert(createdAt != null),
@@ -266,6 +267,10 @@ class Mailbox implements OpenApiContent {
 
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'id')
+  @ApiUuidJsonConverter()
+  final ApiUuid id;
 
   /// Unique email address (a@example.com)
   @_i1.JsonKey(name: 'address')

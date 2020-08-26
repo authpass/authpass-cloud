@@ -453,6 +453,9 @@ components:
     Mailbox:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         address:
           type: string
           description: Unique email address (a@example.com)
@@ -468,6 +471,7 @@ components:
         isDisabled:
           type: boolean
       required:
+        - id
         - address
         - label
         - entryUuid

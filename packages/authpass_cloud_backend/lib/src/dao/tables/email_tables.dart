@@ -165,6 +165,7 @@ class EmailTable extends TableBase with TableConstants {
     return result
         .map(
           (row) => Mailbox(
+            id: ApiUuid.parse(row[0] as String),
             address: row[1] as String,
             createdAt: row[2] as DateTime,
             label: row[3] as String,

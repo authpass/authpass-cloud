@@ -179,6 +179,7 @@ Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
 
 Mailbox _$MailboxFromJson(Map<String, dynamic> json) {
   return Mailbox(
+    id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
     address: json['address'] as String,
     label: json['label'] as String,
     entryUuid: json['entryUuid'] as String,
@@ -190,6 +191,7 @@ Mailbox _$MailboxFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$MailboxToJson(Mailbox instance) => <String, dynamic>{
+      'id': const ApiUuidJsonConverter().toJson(instance.id),
       'address': instance.address,
       'label': instance.label,
       'entryUuid': instance.entryUuid,
