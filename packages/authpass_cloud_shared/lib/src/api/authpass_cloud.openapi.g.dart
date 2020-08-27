@@ -395,3 +395,16 @@ Map<String, dynamic> _$MailboxUpdateSchemaToJson(
       'isDisabled': instance.isDisabled,
       'isHidden': instance.isHidden,
     };
+
+MailboxMessageForwardSchema _$MailboxMessageForwardSchemaFromJson(
+    Map<String, dynamic> json) {
+  return MailboxMessageForwardSchema(
+    email: json['email'] as String,
+  );
+}
+
+Map<String, dynamic> _$MailboxMessageForwardSchemaToJson(
+        MailboxMessageForwardSchema instance) =>
+    <String, dynamic>{
+      'email': instance.email,
+    };

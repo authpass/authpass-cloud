@@ -1361,6 +1361,64 @@ abstract class MailboxMessageDeleteResponse extends OpenApiResponse
   }
 }
 
+class _MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
+  /// Successfully forwarded message.
+  _MailboxMessageForwardResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType contentType = null;
+
+  @override
+  Map<String, Object> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class MailboxMessageForwardResponse extends OpenApiResponse
+    implements HasSuccessResponse<void> {
+  MailboxMessageForwardResponse();
+
+  /// Successfully forwarded message.
+  factory MailboxMessageForwardResponse.response200() =>
+      _MailboxMessageForwardResponse200.response200();
+
+  void map(
+      {@_i2.required ResponseMap<_MailboxMessageForwardResponse200> on200}) {
+    if (this is _MailboxMessageForwardResponse200) {
+      on200((this as _MailboxMessageForwardResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully forwarded message.
+  @override
+  void requireSuccess() {
+    if (this is _MailboxMessageForwardResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+@_i1.JsonSerializable()
+class MailboxMessageForwardSchema implements OpenApiContent {
+  MailboxMessageForwardSchema({this.email});
+
+  factory MailboxMessageForwardSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$MailboxMessageForwardSchemaFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'email')
+  final String email;
+
+  Map<String, dynamic> toJson() => _$MailboxMessageForwardSchemaToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
 class _MailboxMessageMarkReadResponse200
     extends MailboxMessageMarkReadResponse {
   /// Successfully marked as read.
@@ -1636,6 +1694,12 @@ abstract class AuthPassCloud implements ApiEndpoint {
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
       {@_i2.required ApiUuid messageId});
 
+  /// Forward email to users actual email address
+  /// post: /mailbox/message/{messageId}/forward
+  Future<MailboxMessageForwardResponse> mailboxMessageForward(
+      MailboxMessageForwardSchema body,
+      {@_i2.required ApiUuid messageId});
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
@@ -1747,6 +1811,13 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// delete: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
+      {@_i2.required ApiUuid messageId});
+
+  /// Forward email to users actual email address
+  /// post: /mailbox/message/{messageId}/forward
+  ///
+  Future<MailboxMessageForwardResponse> mailboxMessageForward(
+      MailboxMessageForwardSchema body,
       {@_i2.required ApiUuid messageId});
 
   /// Mark message as read
@@ -2063,6 +2134,29 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
     });
   }
 
+  /// Forward email to users actual email address
+  /// post: /mailbox/message/{messageId}/forward
+  ///
+  @override
+  Future<MailboxMessageForwardResponse> mailboxMessageForward(
+      MailboxMessageForwardSchema body,
+      {@_i2.required ApiUuid messageId}) async {
+    final request =
+        OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _MailboxMessageForwardResponse200.response200()
+    });
+  }
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
@@ -2328,6 +2422,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Forward email to users actual email address
+  /// post: /mailbox/message/{messageId}/forward
+  ///
+  OpenApiClientRequest mailboxMessageForward(
+      {@_i2.required ApiUuid messageId}) {
+    final request =
+        OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addPathParameter(
+        'messageId', encodeString(messageId.encodeToString()));
+    return request;
+  }
+
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
@@ -2540,6 +2650,23 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageDelete(
+              messageId: param(
+                  isRequired: true,
+                  name: 'messageId',
+                  value: request.pathParameter('messageId'),
+                  decode: (value) => ApiUuid.parse(paramToString(value)))));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/mailbox/message/{messageId}/forward', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxMessageForward(
+              MailboxMessageForwardSchema.fromJson(
+                  await request.readJsonBody()),
               messageId: param(
                   isRequired: true,
                   name: 'messageId',

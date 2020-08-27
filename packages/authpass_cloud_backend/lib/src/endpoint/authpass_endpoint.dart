@@ -245,6 +245,20 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
+  Future<MailboxMessageForwardResponse> mailboxMessageForward(
+      MailboxMessageForwardSchema body,
+      {ApiUuid messageId}) async {
+    final token = await _requireAuthToken();
+    final body = await emailRepository.findEmailMessageBody(token.user,
+        messageId: messageId.encodeToString());
+    final userInfo = await userRepository.findUserInfo(authToken: token);
+
+    await serviceProvider.emailService
+        .forwardMimeMessage(body, userInfo.emails.first.address);
+    return MailboxMessageForwardResponse.response200();
+  }
+
+  @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
       {ApiUuid messageId}) async {
     final token = await _requireAuthToken();
