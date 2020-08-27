@@ -12,6 +12,16 @@ enum TokenType {
   authToken,
 }
 
+int _tokenTypeByteLength(TokenType type) {
+  switch (type) {
+    case TokenType.emailConfirm:
+      return 32;
+    case TokenType.authToken:
+      return 512;
+  }
+  throw StateError('Invalid token type $type.');
+}
+
 class CryptoService {
   final Random _random = Random.secure();
   final Uuid _uuid =
@@ -25,15 +35,15 @@ class CryptoService {
 
   String createSecureUuid() => _uuid.v4();
 
-  String createSecureToken({int length = 32, @required TokenType type}) {
-    assert(length != null);
-    final byteLength = length ~/ 4 * 3;
+  String createSecureToken({int length, @required TokenType type}) {
+    final byteLength =
+        length == null ? _tokenTypeByteLength(type) : length ~/ 4 * 3;
     final list = Uint8List(byteLength);
     for (var i = 0; i < byteLength; i++) {
       list[i] = _random.nextInt(256);
     }
     final token = base64.encode(list);
-    assert(token.length == length);
+    assert(length == null || token.length == length);
     return token;
   }
 

@@ -297,11 +297,11 @@ class UserTable extends TableBase with TableConstants {
 
   Future<SystemStatusUser> countUsers(DatabaseTransactionBase db) async {
     final confirmed = await db
-        .query('SELECT COUNT(id), COUNT(distinct user_id) '
+        .query('SELECT COUNT(*), COUNT(distinct user_id) '
             ' FROM $_TABLE_EMAIL WHERE $_COLUMN_CONFIRMED_AT IS NOT NULL')
         .single;
     final unconfirmed = await db
-        .query('SELECT COUNT(id) FROM $_TABLE_EMAIL'
+        .query('SELECT COUNT(*) FROM $_TABLE_EMAIL'
             ' WHERE $_COLUMN_CONFIRMED_AT IS NULL')
         .single;
     return SystemStatusUser(
@@ -309,6 +309,19 @@ class UserTable extends TableBase with TableConstants {
       userConfirmed: confirmed[1] as int,
       emailUnconfirmed: unconfirmed[0] as int,
     );
+  }
+
+  Future<List<UserEmail>> findEmailsByUser(
+      DatabaseTransactionBase db, UserEntity user) async {
+    final result = await db.query(
+        'SELECT $_COLUMN_EMAIL_ADDRESS, $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL WHERE $COLUMN_USER_ID = @userId',
+        values: {'userId': user.id});
+    return result
+        .map((e) => UserEmail(
+              address: e[0] as String,
+              confirmedAt: e[1] as DateTime,
+            ))
+        .toList(growable: false);
   }
 }
 

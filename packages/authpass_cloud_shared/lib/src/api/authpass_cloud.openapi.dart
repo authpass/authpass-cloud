@@ -117,6 +117,41 @@ class SystemStatus implements OpenApiContent {
 }
 
 @_i1.JsonSerializable()
+class UserEmail implements OpenApiContent {
+  UserEmail({@_i2.required this.address, @_i2.required this.confirmedAt})
+      : assert(address != null),
+        assert(confirmedAt != null);
+
+  factory UserEmail.fromJson(Map<String, dynamic> jsonMap) =>
+      _$UserEmailFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'address')
+  final String address;
+
+  @_i1.JsonKey(name: 'confirmedAt')
+  final DateTime confirmedAt;
+
+  Map<String, dynamic> toJson() => _$UserEmailToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class UserInfo implements OpenApiContent {
+  UserInfo({this.emails});
+
+  factory UserInfo.fromJson(Map<String, dynamic> jsonMap) =>
+      _$UserInfoFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'emails')
+  final List<UserEmail> emails;
+
+  Map<String, dynamic> toJson() => _$UserInfoToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
 class RegisterRequest implements OpenApiContent {
   RegisterRequest({@_i2.required this.email}) : assert(email != null);
 
@@ -385,6 +420,61 @@ abstract class CheckStatusPostResponse extends OpenApiResponse
   SystemStatus requireSuccess() {
     if (this is _CheckStatusPostResponse200) {
       return (this as _CheckStatusPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _UserGetResponse200 extends UserGetResponse
+    implements OpenApiResponseBodyJson {
+  /// OK
+  _UserGetResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final UserInfo body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class UserGetResponse extends OpenApiResponse
+    implements HasSuccessResponse<UserInfo> {
+  UserGetResponse();
+
+  /// OK
+  factory UserGetResponse.response200(UserInfo body) =>
+      _UserGetResponse200.response200(body);
+
+  void map({@_i2.required ResponseMap<_UserGetResponse200> on200}) {
+    if (this is _UserGetResponse200) {
+      on200((this as _UserGetResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  OK
+  @override
+  UserInfo requireSuccess() {
+    if (this is _UserGetResponse200) {
+      return (this as _UserGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1486,6 +1576,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// post: /check/status
   Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
 
+  /// Retrieve info about the currently logged in user and about the token.
+  /// get: /user
+  Future<UserGetResponse> userGet();
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   Future<UserRegisterPostResponse> userRegisterPost(RegisterRequest body);
@@ -1578,6 +1672,11 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// post: /check/status
   ///
   Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
+
+  /// Retrieve info about the currently logged in user and about the token.
+  /// get: /user
+  ///
+  Future<UserGetResponse> userGet();
 
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
@@ -1714,6 +1813,23 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       '200': (OpenApiClientResponse response) async =>
           _CheckStatusPostResponse200.response200(
               SystemStatus.fromJson(await response.responseBodyJson()))
+    });
+  }
+
+  /// Retrieve info about the currently logged in user and about the token.
+  /// get: /user
+  ///
+  @override
+  Future<UserGetResponse> userGet() async {
+    final request = OpenApiClientRequest('get', '/user', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _UserGetResponse200.response200(
+              UserInfo.fromJson(await response.responseBodyJson()))
     });
   }
 
@@ -2053,6 +2169,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Retrieve info about the currently logged in user and about the token.
+  /// get: /user
+  ///
+  OpenApiClientRequest userGet() {
+    final request = OpenApiClientRequest('get', '/user', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// Create new user, or login the user using confirmation email.
   /// post: /user/register
   ///
@@ -2277,6 +2405,14 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   name: 'x-secret',
                   value: request.headerParameter('x-secret'),
                   decode: (value) => paramToString(value))));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/user', 'get', (OpenApiRequest request) async {
+      return await impl.invoke(
+          request, (AuthPassCloud impl) async => impl.userGet());
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])

@@ -1,5 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 
 import 'package:logging/logging.dart';
@@ -68,5 +69,10 @@ class UserRepository {
     _logger.warning(
         'Trying to find valid auth token, but status was ${token.status}');
     return null;
+  }
+
+  Future<UserInfo> findUserInfo({AuthTokenEntity authToken}) async {
+    return UserInfo(
+        emails: await db.tables.user.findEmailsByUser(db, authToken.user));
   }
 }

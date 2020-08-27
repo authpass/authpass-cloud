@@ -34,6 +34,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SystemStatus'
+  /user:
+    get:
+      summary: 'Retrieve info about the currently logged in user and about the token.'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UserInfo' }
   /user/register:
     post:
       summary: 'Create new user, or login the user using confirmation email.'
@@ -384,6 +393,17 @@ components:
         messageCount: { type: integer }
         messageReadCount: { type: integer }
       required: [mailboxCount, messageCount, messageReadCount]
+    UserInfo:
+      properties:
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserEmail'
+    UserEmail:
+      properties:
+        address: { type: string }
+        confirmedAt: { type: string, format: date-time }
+      required: [address, confirmedAt]
     RegisterRequest:
       properties:
         email:

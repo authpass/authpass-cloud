@@ -74,6 +74,33 @@ Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
       'queryTime': instance.queryTime,
     };
 
+UserEmail _$UserEmailFromJson(Map<String, dynamic> json) {
+  return UserEmail(
+    address: json['address'] as String,
+    confirmedAt: json['confirmedAt'] == null
+        ? null
+        : DateTime.parse(json['confirmedAt'] as String),
+  );
+}
+
+Map<String, dynamic> _$UserEmailToJson(UserEmail instance) => <String, dynamic>{
+      'address': instance.address,
+      'confirmedAt': instance.confirmedAt?.toIso8601String(),
+    };
+
+UserInfo _$UserInfoFromJson(Map<String, dynamic> json) {
+  return UserInfo(
+    emails: (json['emails'] as List)
+        ?.map((e) =>
+            e == null ? null : UserEmail.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
+      'emails': instance.emails,
+    };
+
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
   return RegisterRequest(
     email: json['email'] as String,

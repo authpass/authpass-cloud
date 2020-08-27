@@ -49,6 +49,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
+  Future<UserGetResponse> userGet() async {
+    final authToken = await _requireAuthToken();
+    return UserGetResponse.response200(
+        await userRepository.findUserInfo(authToken: authToken));
+  }
+
+  @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
     final emailConfirm = await userRepository.createUserOrConfirmEmail(

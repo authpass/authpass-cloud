@@ -159,6 +159,15 @@ void main() {
     await endpoint.expectSystemStatus(userConfirmed: 1, emailUnconfirmed: 0);
   });
 
+  group('user info', () {
+    endpointTest('fetch user info', (endpoint) async {
+      await _createUserConfirmed(endpoint);
+      final user = await endpoint.userGet().requireSuccess();
+      expect(user.emails, hasLength(1));
+      expect(user.emails.first.confirmedAt, isNotNull);
+    });
+  });
+
   group('Email', () {
     endpointTest('list emails', (endpoint) async {
       final mailbox = await _createUserWithMailbox(endpoint);
