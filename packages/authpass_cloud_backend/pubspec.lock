@@ -235,9 +235,11 @@ packages:
   enough_mail:
     dependency: "direct main"
     description:
-      name: enough_mail
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "51239305f89cec75843ad873f73f7a7758823ef0"
+      resolved-ref: "51239305f89cec75843ad873f73f7a7758823ef0"
+      url: "https://github.com/authpass/enough_mail.git"
+    source: git
     version: "0.0.32"
   event_bus:
     dependency: transitive
