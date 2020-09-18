@@ -296,6 +296,27 @@ paths:
       responses:
         '200':
           description: Message was deleted successfully.
+  /mailbox/message/{messageId}/forward:
+    parameters:
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: MailboxMessageForward
+      summary: 'Forward email to users actual email address'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: 'Successfully forwarded message.'
   /mailbox/message/{messageId}/read:
     parameters:
       - name: messageId

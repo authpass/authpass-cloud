@@ -48,4 +48,8 @@ dev_dependencies:
 dependency_overrides:
   openapi_base:
     path: ../../deps/openapi_dart/packages/openapi_base
+  enough_mail:
+    git:
+      url: https://github.com/authpass/enough_mail.git
+      ref: 51239305f89cec75843ad873f73f7a7758823ef0
 
