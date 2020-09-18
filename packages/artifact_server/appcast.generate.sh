@@ -10,7 +10,9 @@ dir=artifacts
 
 prefix='AuthPass-setup-'
 
-latest=`cat ${dir}/${prefix}latest.exe.txt`
+filename=$(cat "${dir}"/.stable.map.txt  | grep AuthPass-setup-stable.exe | cut -d' ' -f2)
+latest=$(echo "$filename" | sed 's/AuthPass-setup-\(.*\).exe/\1/')
+
 FILENAME="${prefix}${latest}.exe"
 PUB_DATE=`date`
 split=($(echo $latest | tr '_' '\n'))
@@ -22,6 +24,7 @@ if ! test -f "${dir}/${FILENAME}" ; then
     echo "Unable to find file ${FILENAME}"
     exit 1
 fi
+
 
 cat <<EOF > $dir/appcast.xml
 <?xml version="1.0" encoding="UTF-8"?>

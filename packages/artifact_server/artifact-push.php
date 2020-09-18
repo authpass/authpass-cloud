@@ -57,6 +57,7 @@ function isAllowedArtifact($filename) {
         "(authpass-samsungapps-)($versionPattern)(.apk)",
         "(authpass-huawei-)($versionPattern)(.apk)",
         "(authpass-amazon-)($versionPattern)(.apk)",
+        "(AuthPass.app-)($versionPattern)(.zip)",
     );
 
 
