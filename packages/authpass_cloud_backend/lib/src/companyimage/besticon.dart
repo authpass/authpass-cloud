@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dartx/dartx.dart';
@@ -41,10 +43,35 @@ class ImageInfo {
   final double brightness;
   final ImageLinkType imageLinkType;
 
+  double score({int optimalSize = 512, int optimalRatio = 1}) {
+    final image = this;
+    // const optimalSize = 512;
+    // const optimalRatio = 1;
+    // right now, this scoring only works for square images ;-)
+    assert(optimalRatio == 1);
+
+    final sizeScoreDistance =
+        (optimalSize - max(image.width, image.height)).abs();
+    final sizeScore = sizeScoreDistance == 0
+        ? 1
+        : 1 - (max(0.01, sizeScoreDistance) / optimalSize);
+    final ratio = image.width > image.height
+        ? image.height / image.width
+        : image.width / image.height;
+    assert(ratio <= 1, 'something went wrong $width vs $height = $ratio');
+    assert(ratio > 0);
+    final ratioScore = ratio;
+    return (sizeScore + ratioScore) / 2;
+  }
+
   @override
   String toString() {
-    return 'ImageInfo{uri: $uri, mimeType: $mimeType, size: $width x $height, brightness: $brightness}';
+    return 'ImageInfo{uri: $uri, mimeType: $mimeType, size: $width x $height, brightness: $brightness, type: $imageLinkType}';
   }
+}
+
+extension IterableImageInfo<T extends Iterable<ImageInfo>> on T {
+  String toDebugString() => map((e) => 'score: ${e.score()}: $e').join('\n');
 }
 
 class ImageLink {
@@ -301,6 +328,7 @@ class BestIcon {
     final baseUri = response.request.url;
     _requireSuccess(response);
     final dom = parse(response.body, sourceUrl: baseUri.toString());
+
     return MapEntry(
         baseUri,
         _cssPaths
@@ -321,6 +349,23 @@ class BestIcon {
             })
             .followedBy(_ICON_PATHS.map((e) => ImageLink(
                 type: ImageLinkType.favicoGuessed, uri: baseUri.resolve(e))))
+            .followedBy(dom
+                .querySelectorAll('script[type="application/ld+json"]')
+                .map((e) {
+              final jsonText = e.text;
+              try {
+                final ldJson = json.decode(jsonText) as Map<String, Object>;
+                final logo = ldJson['logo'];
+                if (logo is String) {
+                  return ImageLink(
+                      type: ImageLinkType.logo, uri: Uri.parse(logo));
+                }
+              } catch (e, stackTrace) {
+                _logger.severe(
+                    'Error while parsing linked data.', e, stackTrace);
+              }
+              return null;
+            }))
             .whereNotNull()
             .distinctBy((e) => e.uri)
             .toList());
@@ -369,4 +414,9 @@ class FetchImageResult {
   FetchImageResult({this.urlCanonical, this.images});
   final Uri urlCanonical;
   final List<ImageInfo> images;
+
+  @override
+  String toString() {
+    return 'FetchImageResult{urlCanonical: $urlCanonical, images: $images}';
+  }
 }
