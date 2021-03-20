@@ -6,8 +6,8 @@ environment:
 dependencies:
   meta: ^1.2.2
   uuid: ^2.2.0
-  logging: ^0.11.4
-  logging_appenders: ^0.4.2+3
+  logging: ^1.0.0
+  logging_appenders: ^1.0.0
   freezed_annotation: ^0.11.0
   json_annotation: ^3.0.1
   pedantic: ^1.9.2

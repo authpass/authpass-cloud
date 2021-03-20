@@ -2,22 +2,18 @@
 
 // ignore_for_file: prefer_initializing_formals
 
-import 'dart:typed_data' as _i3;
+import 'dart:typed_data' as _i2;
 
 import 'package:json_annotation/json_annotation.dart' as _i1;
-import 'package:meta/meta.dart' as _i2;
 import 'package:openapi_base/openapi_base.dart';
 part 'authpass_cloud.openapi.g.dart';
 
 @_i1.JsonSerializable()
 class SystemStatusUser implements OpenApiContent {
   SystemStatusUser(
-      {@_i2.required this.emailConfirmed,
-      @_i2.required this.userConfirmed,
-      @_i2.required this.emailUnconfirmed})
-      : assert(emailConfirmed != null),
-        assert(userConfirmed != null),
-        assert(emailUnconfirmed != null);
+      {required this.emailConfirmed,
+      required this.userConfirmed,
+      required this.emailUnconfirmed});
 
   factory SystemStatusUser.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusUserFromJson(jsonMap);
@@ -39,9 +35,7 @@ class SystemStatusUser implements OpenApiContent {
 @_i1.JsonSerializable()
 class SystemStatusWebsite implements OpenApiContent {
   SystemStatusWebsite(
-      {@_i2.required this.websiteCount, @_i2.required this.urlCanonicalCount})
-      : assert(websiteCount != null),
-        assert(urlCanonicalCount != null);
+      {required this.websiteCount, required this.urlCanonicalCount});
 
   factory SystemStatusWebsite.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusWebsiteFromJson(jsonMap);
@@ -60,12 +54,9 @@ class SystemStatusWebsite implements OpenApiContent {
 @_i1.JsonSerializable()
 class SystemStatusMailbox implements OpenApiContent {
   SystemStatusMailbox(
-      {@_i2.required this.mailboxCount,
-      @_i2.required this.messageCount,
-      @_i2.required this.messageReadCount})
-      : assert(mailboxCount != null),
-        assert(messageCount != null),
-        assert(messageReadCount != null);
+      {required this.mailboxCount,
+      required this.messageCount,
+      required this.messageReadCount});
 
   factory SystemStatusMailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusMailboxFromJson(jsonMap);
@@ -87,14 +78,10 @@ class SystemStatusMailbox implements OpenApiContent {
 @_i1.JsonSerializable()
 class SystemStatus implements OpenApiContent {
   SystemStatus(
-      {@_i2.required this.user,
-      @_i2.required this.website,
-      @_i2.required this.mailbox,
-      @_i2.required this.queryTime})
-      : assert(user != null),
-        assert(website != null),
-        assert(mailbox != null),
-        assert(queryTime != null);
+      {required this.user,
+      required this.website,
+      required this.mailbox,
+      required this.queryTime});
 
   factory SystemStatus.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFromJson(jsonMap);
@@ -118,9 +105,7 @@ class SystemStatus implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class UserEmail implements OpenApiContent {
-  UserEmail({@_i2.required this.address, @_i2.required this.confirmedAt})
-      : assert(address != null),
-        assert(confirmedAt != null);
+  UserEmail({required this.address, required this.confirmedAt});
 
   factory UserEmail.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserEmailFromJson(jsonMap);
@@ -144,7 +129,7 @@ class UserInfo implements OpenApiContent {
       _$UserInfoFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'emails')
-  final List<UserEmail> emails;
+  final List<UserEmail>? emails;
 
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);
   @override
@@ -153,7 +138,7 @@ class UserInfo implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class RegisterRequest implements OpenApiContent {
-  RegisterRequest({@_i2.required this.email}) : assert(email != null);
+  RegisterRequest({required this.email});
 
   factory RegisterRequest.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterRequestFromJson(jsonMap);
@@ -179,19 +164,16 @@ extension RegisterResponseStatusExt on RegisterResponseStatus {
     'created': RegisterResponseStatus.created,
     'confirmed': RegisterResponseStatus.confirmed
   };
-  static RegisterResponseStatus fromName(String name) => _names[name];
+  static RegisterResponseStatus fromName(String name) =>
+      _names[name] ??
+      _throwStateError('Invalid enum name: $name for RegisterResponseStatus');
   String get name => toString().substring(23);
 }
 
 @_i1.JsonSerializable()
 class RegisterResponse implements OpenApiContent {
   RegisterResponse(
-      {@_i2.required this.userUuid,
-      @_i2.required this.authToken,
-      @_i2.required this.status})
-      : assert(userUuid != null),
-        assert(authToken != null),
-        assert(status != null);
+      {required this.userUuid, required this.authToken, required this.status});
 
   factory RegisterResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterResponseFromJson(jsonMap);
@@ -222,11 +204,11 @@ class Page implements OpenApiContent {
 
   /// Token for the next page, might be null if there are no more pages.
   @_i1.JsonKey(name: 'nextPageToken')
-  final String nextPageToken;
+  final String? nextPageToken;
 
   /// Once everything is synced, this token can be used for subsequent syncs.
   @_i1.JsonKey(name: 'sinceToken')
-  final String sinceToken;
+  final String? sinceToken;
 
   Map<String, dynamic> toJson() => _$PageToJson(this);
   @override
@@ -236,20 +218,13 @@ class Page implements OpenApiContent {
 @_i1.JsonSerializable()
 class EmailMessage implements OpenApiContent {
   EmailMessage(
-      {@_i2.required this.id,
-      @_i2.required this.subject,
-      @_i2.required this.sender,
-      @_i2.required this.mailboxEntryUuid,
-      @_i2.required this.createdAt,
-      @_i2.required this.size,
-      @_i2.required this.isRead})
-      : assert(id != null),
-        assert(subject != null),
-        assert(sender != null),
-        assert(mailboxEntryUuid != null),
-        assert(createdAt != null),
-        assert(size != null),
-        assert(isRead != null);
+      {required this.id,
+      required this.subject,
+      required this.sender,
+      required this.mailboxEntryUuid,
+      required this.createdAt,
+      required this.size,
+      required this.isRead});
 
   factory EmailMessage.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailMessageFromJson(jsonMap);
@@ -287,18 +262,12 @@ class EmailMessage implements OpenApiContent {
 @_i1.JsonSerializable()
 class Mailbox implements OpenApiContent {
   Mailbox(
-      {@_i2.required this.id,
-      @_i2.required this.address,
-      @_i2.required this.label,
-      @_i2.required this.entryUuid,
-      @_i2.required this.createdAt,
-      @_i2.required this.isDisabled})
-      : assert(id != null),
-        assert(address != null),
-        assert(label != null),
-        assert(entryUuid != null),
-        assert(createdAt != null),
-        assert(isDisabled != null);
+      {required this.id,
+      required this.address,
+      required this.label,
+      required this.entryUuid,
+      required this.createdAt,
+      required this.isDisabled});
 
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
@@ -338,10 +307,10 @@ class _CheckGetResponse200 extends CheckGetResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -352,7 +321,7 @@ abstract class CheckGetResponse extends OpenApiResponse
   /// Everything OK
   factory CheckGetResponse.response200() => _CheckGetResponse200.response200();
 
-  void map({@_i2.required ResponseMap<_CheckGetResponse200> on200}) {
+  void map({required ResponseMap<_CheckGetResponse200> on200}) {
     if (this is _CheckGetResponse200) {
       on200((this as _CheckGetResponse200));
     } else {
@@ -391,7 +360,7 @@ class _CheckStatusPostResponse200 extends CheckStatusPostResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -407,7 +376,7 @@ abstract class CheckStatusPostResponse extends OpenApiResponse
   factory CheckStatusPostResponse.response200(SystemStatus body) =>
       _CheckStatusPostResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_CheckStatusPostResponse200> on200}) {
+  void map({required ResponseMap<_CheckStatusPostResponse200> on200}) {
     if (this is _CheckStatusPostResponse200) {
       on200((this as _CheckStatusPostResponse200));
     } else {
@@ -446,7 +415,7 @@ class _UserGetResponse200 extends UserGetResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -462,7 +431,7 @@ abstract class UserGetResponse extends OpenApiResponse
   factory UserGetResponse.response200(UserInfo body) =>
       _UserGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_UserGetResponse200> on200}) {
+  void map({required ResponseMap<_UserGetResponse200> on200}) {
     if (this is _UserGetResponse200) {
       on200((this as _UserGetResponse200));
     } else {
@@ -501,7 +470,7 @@ class _UserRegisterPostResponse200 extends UserRegisterPostResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -517,7 +486,7 @@ abstract class UserRegisterPostResponse extends OpenApiResponse
   factory UserRegisterPostResponse.response200(RegisterResponse body) =>
       _UserRegisterPostResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_UserRegisterPostResponse200> on200}) {
+  void map({required ResponseMap<_UserRegisterPostResponse200> on200}) {
     if (this is _UserRegisterPostResponse200) {
       on200((this as _UserRegisterPostResponse200));
     } else {
@@ -550,7 +519,9 @@ extension EmailStatusGetResponseBody200StatusExt
     'confirmed': EmailStatusGetResponseBody200Status.confirmed
   };
   static EmailStatusGetResponseBody200Status fromName(String name) =>
-      _names[name];
+      _names[name] ??
+      _throwStateError(
+          'Invalid enum name: $name for EmailStatusGetResponseBody200Status');
   String get name => toString().substring(36);
 }
 
@@ -563,7 +534,7 @@ class EmailStatusGetResponseBody200 implements OpenApiContent {
       _$EmailStatusGetResponseBody200FromJson(jsonMap);
 
   @_i1.JsonKey(name: 'status')
-  final EmailStatusGetResponseBody200Status status;
+  final EmailStatusGetResponseBody200Status? status;
 
   Map<String, dynamic> toJson() => _$EmailStatusGetResponseBody200ToJson(this);
   @override
@@ -590,7 +561,7 @@ class _EmailStatusGetResponse200 extends EmailStatusGetResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -607,7 +578,7 @@ abstract class EmailStatusGetResponse extends OpenApiResponse
           EmailStatusGetResponseBody200 body) =>
       _EmailStatusGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_EmailStatusGetResponse200> on200}) {
+  void map({required ResponseMap<_EmailStatusGetResponse200> on200}) {
     if (this is _EmailStatusGetResponse200) {
       on200((this as _EmailStatusGetResponse200));
     } else {
@@ -641,7 +612,7 @@ class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
@@ -653,10 +624,10 @@ class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -673,8 +644,8 @@ abstract class EmailConfirmGetResponse extends OpenApiResponse
       _EmailConfirmGetResponse400.response400();
 
   void map(
-      {@_i2.required ResponseMap<_EmailConfirmGetResponse200> on200,
-      @_i2.required ResponseMap<_EmailConfirmGetResponse400> on400}) {
+      {required ResponseMap<_EmailConfirmGetResponse200> on200,
+      required ResponseMap<_EmailConfirmGetResponse400> on400}) {
     if (this is _EmailConfirmGetResponse200) {
       on200((this as _EmailConfirmGetResponse200));
     } else if (this is _EmailConfirmGetResponse400) {
@@ -710,7 +681,7 @@ class _EmailConfirmPostResponse200 extends EmailConfirmPostResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
@@ -722,10 +693,10 @@ class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -742,8 +713,8 @@ abstract class EmailConfirmPostResponse extends OpenApiResponse
       _EmailConfirmPostResponse400.response400();
 
   void map(
-      {@_i2.required ResponseMap<_EmailConfirmPostResponse200> on200,
-      @_i2.required ResponseMap<_EmailConfirmPostResponse400> on400}) {
+      {required ResponseMap<_EmailConfirmPostResponse200> on200,
+      required ResponseMap<_EmailConfirmPostResponse400> on400}) {
     if (this is _EmailConfirmPostResponse200) {
       on200((this as _EmailConfirmPostResponse200));
     } else if (this is _EmailConfirmPostResponse400) {
@@ -767,9 +738,7 @@ abstract class EmailConfirmPostResponse extends OpenApiResponse
 @_i1.JsonSerializable()
 class EmailConfirmPostSchema implements OpenApiContent {
   EmailConfirmPostSchema(
-      {@_i2.required this.token, @_i2.required this.gRecaptchaResponse})
-      : assert(token != null),
-        assert(gRecaptchaResponse != null);
+      {required this.token, required this.gRecaptchaResponse});
 
   factory EmailConfirmPostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailConfirmPostSchemaFromJson(jsonMap);
@@ -787,8 +756,7 @@ class EmailConfirmPostSchema implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class StatusGetResponseBody200Mail implements OpenApiContent {
-  StatusGetResponseBody200Mail({@_i2.required this.messagesUnread})
-      : assert(messagesUnread != null);
+  StatusGetResponseBody200Mail({required this.messagesUnread});
 
   factory StatusGetResponseBody200Mail.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200MailFromJson(jsonMap);
@@ -803,7 +771,7 @@ class StatusGetResponseBody200Mail implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class StatusGetResponseBody200 implements OpenApiContent {
-  StatusGetResponseBody200({@_i2.required this.mail}) : assert(mail != null);
+  StatusGetResponseBody200({required this.mail});
 
   factory StatusGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200FromJson(jsonMap);
@@ -836,7 +804,7 @@ class _StatusGetResponse200 extends StatusGetResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -852,7 +820,7 @@ abstract class StatusGetResponse extends OpenApiResponse
   factory StatusGetResponse.response200(StatusGetResponseBody200 body) =>
       _StatusGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_StatusGetResponse200> on200}) {
+  void map({required ResponseMap<_StatusGetResponse200> on200}) {
     if (this is _StatusGetResponse200) {
       on200((this as _StatusGetResponse200));
     } else {
@@ -879,7 +847,7 @@ class MailboxGetResponseBody200 implements OpenApiContent {
       _$MailboxGetResponseBody200FromJson(jsonMap);
 
   @_i1.JsonKey(name: 'data')
-  final List<Mailbox> data;
+  final List<Mailbox>? data;
 
   Map<String, dynamic> toJson() => _$MailboxGetResponseBody200ToJson(this);
   @override
@@ -906,7 +874,7 @@ class _MailboxGetResponse200 extends MailboxGetResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -922,7 +890,7 @@ abstract class MailboxGetResponse extends OpenApiResponse
   factory MailboxGetResponse.response200(MailboxGetResponseBody200 body) =>
       _MailboxGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_MailboxGetResponse200> on200}) {
+  void map({required ResponseMap<_MailboxGetResponse200> on200}) {
     if (this is _MailboxGetResponse200) {
       on200((this as _MailboxGetResponse200));
     } else {
@@ -951,7 +919,7 @@ class MailboxCreatePostResponseBody200 implements OpenApiContent {
 
   /// The address of the new mailbox.
   @_i1.JsonKey(name: 'address')
-  final String address;
+  final String? address;
 
   Map<String, dynamic> toJson() =>
       _$MailboxCreatePostResponseBody200ToJson(this);
@@ -979,7 +947,7 @@ class _MailboxCreatePostResponse200 extends MailboxCreatePostResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -996,7 +964,7 @@ abstract class MailboxCreatePostResponse extends OpenApiResponse
           MailboxCreatePostResponseBody200 body) =>
       _MailboxCreatePostResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_MailboxCreatePostResponse200> on200}) {
+  void map({required ResponseMap<_MailboxCreatePostResponse200> on200}) {
     if (this is _MailboxCreatePostResponse200) {
       on200((this as _MailboxCreatePostResponse200));
     } else {
@@ -1017,10 +985,7 @@ abstract class MailboxCreatePostResponse extends OpenApiResponse
 
 @_i1.JsonSerializable()
 class MailboxCreatePostSchema implements OpenApiContent {
-  MailboxCreatePostSchema(
-      {@_i2.required this.label, @_i2.required this.entryUuid})
-      : assert(label != null),
-        assert(entryUuid != null);
+  MailboxCreatePostSchema({required this.label, required this.entryUuid});
 
   factory MailboxCreatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxCreatePostSchemaFromJson(jsonMap);
@@ -1040,10 +1005,7 @@ class MailboxCreatePostSchema implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class MailboxListGetResponseBody200 implements OpenApiContent {
-  MailboxListGetResponseBody200(
-      {@_i2.required this.page, @_i2.required this.data})
-      : assert(page != null),
-        assert(data != null);
+  MailboxListGetResponseBody200({required this.page, required this.data});
 
   factory MailboxListGetResponseBody200.fromJson(
           Map<String, dynamic> jsonMap) =>
@@ -1080,7 +1042,7 @@ class _MailboxListGetResponse200 extends MailboxListGetResponse
       OpenApiContentType.parse('application/json');
 
   @override
-  Map<String, Object> propertiesToString() => {
+  Map<String, Object?> propertiesToString() => {
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
@@ -1097,7 +1059,7 @@ abstract class MailboxListGetResponse extends OpenApiResponse
           MailboxListGetResponseBody200 body) =>
       _MailboxListGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_MailboxListGetResponse200> on200}) {
+  void map({required ResponseMap<_MailboxListGetResponse200> on200}) {
     if (this is _MailboxListGetResponse200) {
       on200((this as _MailboxListGetResponse200));
     } else {
@@ -1124,10 +1086,10 @@ class _MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1139,7 +1101,7 @@ abstract class MailMassupdatePostResponse extends OpenApiResponse
   factory MailMassupdatePostResponse.response200() =>
       _MailMassupdatePostResponse200.response200();
 
-  void map({@_i2.required ResponseMap<_MailMassupdatePostResponse200> on200}) {
+  void map({required ResponseMap<_MailMassupdatePostResponse200> on200}) {
     if (this is _MailMassupdatePostResponse200) {
       on200((this as _MailMassupdatePostResponse200));
     } else {
@@ -1170,15 +1132,17 @@ extension MailMassupdatePostSchemaFilterExt on MailMassupdatePostSchemaFilter {
     'messageIds': MailMassupdatePostSchemaFilter.messageIds,
     'all': MailMassupdatePostSchemaFilter.all
   };
-  static MailMassupdatePostSchemaFilter fromName(String name) => _names[name];
+  static MailMassupdatePostSchemaFilter fromName(String name) =>
+      _names[name] ??
+      _throwStateError(
+          'Invalid enum name: $name for MailMassupdatePostSchemaFilter');
   String get name => toString().substring(31);
 }
 
 @_i1.JsonSerializable()
 class MailMassupdatePostSchema implements OpenApiContent {
   MailMassupdatePostSchema(
-      {@_i2.required this.filter, this.messageIds, this.isRead})
-      : assert(filter != null);
+      {required this.filter, this.messageIds, this.isRead});
 
   factory MailMassupdatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailMassupdatePostSchemaFromJson(jsonMap);
@@ -1188,10 +1152,10 @@ class MailMassupdatePostSchema implements OpenApiContent {
 
   /// Only used if filter=messageIds
   @_i1.JsonKey(name: 'messageIds')
-  final List<String> messageIds;
+  final List<String>? messageIds;
 
   @_i1.JsonKey(name: 'isRead')
-  final bool isRead;
+  final bool? isRead;
 
   Map<String, dynamic> toJson() => _$MailMassupdatePostSchemaToJson(this);
   @override
@@ -1206,10 +1170,10 @@ class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1221,7 +1185,7 @@ abstract class MailboxUpdateResponse extends OpenApiResponse
   factory MailboxUpdateResponse.response200() =>
       _MailboxUpdateResponse200.response200();
 
-  void map({@_i2.required ResponseMap<_MailboxUpdateResponse200> on200}) {
+  void map({required ResponseMap<_MailboxUpdateResponse200> on200}) {
     if (this is _MailboxUpdateResponse200) {
       on200((this as _MailboxUpdateResponse200));
     } else {
@@ -1253,19 +1217,19 @@ class MailboxUpdateSchema implements OpenApiContent {
       _$MailboxUpdateSchemaFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'label')
-  final String label;
+  final String? label;
 
   @_i1.JsonKey(name: 'entryUuid')
-  final String entryUuid;
+  final String? entryUuid;
 
   @_i1.JsonKey(name: 'isDeleted')
-  final bool isDeleted;
+  final bool? isDeleted;
 
   @_i1.JsonKey(name: 'isDisabled')
-  final bool isDisabled;
+  final bool? isDisabled;
 
   @_i1.JsonKey(name: 'isHidden')
-  final bool isHidden;
+  final bool? isHidden;
 
   Map<String, dynamic> toJson() => _$MailboxUpdateSchemaToJson(this);
   @override
@@ -1287,7 +1251,7 @@ class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/plain');
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
@@ -1299,7 +1263,7 @@ abstract class MailboxMessageGetResponse extends OpenApiResponse
   factory MailboxMessageGetResponse.response200(String body) =>
       _MailboxMessageGetResponse200.response200(body);
 
-  void map({@_i2.required ResponseMap<_MailboxMessageGetResponse200> on200}) {
+  void map({required ResponseMap<_MailboxMessageGetResponse200> on200}) {
     if (this is _MailboxMessageGetResponse200) {
       on200((this as _MailboxMessageGetResponse200));
     } else {
@@ -1326,10 +1290,10 @@ class _MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1341,8 +1305,7 @@ abstract class MailboxMessageDeleteResponse extends OpenApiResponse
   factory MailboxMessageDeleteResponse.response200() =>
       _MailboxMessageDeleteResponse200.response200();
 
-  void map(
-      {@_i2.required ResponseMap<_MailboxMessageDeleteResponse200> on200}) {
+  void map({required ResponseMap<_MailboxMessageDeleteResponse200> on200}) {
     if (this is _MailboxMessageDeleteResponse200) {
       on200((this as _MailboxMessageDeleteResponse200));
     } else {
@@ -1369,10 +1332,10 @@ class _MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1384,8 +1347,7 @@ abstract class MailboxMessageForwardResponse extends OpenApiResponse
   factory MailboxMessageForwardResponse.response200() =>
       _MailboxMessageForwardResponse200.response200();
 
-  void map(
-      {@_i2.required ResponseMap<_MailboxMessageForwardResponse200> on200}) {
+  void map({required ResponseMap<_MailboxMessageForwardResponse200> on200}) {
     if (this is _MailboxMessageForwardResponse200) {
       on200((this as _MailboxMessageForwardResponse200));
     } else {
@@ -1412,7 +1374,7 @@ class MailboxMessageForwardSchema implements OpenApiContent {
       _$MailboxMessageForwardSchemaFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'email')
-  final String email;
+  final String? email;
 
   Map<String, dynamic> toJson() => _$MailboxMessageForwardSchemaToJson(this);
   @override
@@ -1428,10 +1390,10 @@ class _MailboxMessageMarkReadResponse200
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1443,8 +1405,7 @@ abstract class MailboxMessageMarkReadResponse extends OpenApiResponse
   factory MailboxMessageMarkReadResponse.response200() =>
       _MailboxMessageMarkReadResponse200.response200();
 
-  void map(
-      {@_i2.required ResponseMap<_MailboxMessageMarkReadResponse200> on200}) {
+  void map({required ResponseMap<_MailboxMessageMarkReadResponse200> on200}) {
     if (this is _MailboxMessageMarkReadResponse200) {
       on200((this as _MailboxMessageMarkReadResponse200));
     } else {
@@ -1472,10 +1433,10 @@ class _MailboxMessageMarkUnReadResponse200
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1487,8 +1448,7 @@ abstract class MailboxMessageMarkUnReadResponse extends OpenApiResponse
   factory MailboxMessageMarkUnReadResponse.response200() =>
       _MailboxMessageMarkUnReadResponse200.response200();
 
-  void map(
-      {@_i2.required ResponseMap<_MailboxMessageMarkUnReadResponse200> on200}) {
+  void map({required ResponseMap<_MailboxMessageMarkUnReadResponse200> on200}) {
     if (this is _MailboxMessageMarkUnReadResponse200) {
       on200((this as _MailboxMessageMarkUnReadResponse200));
     } else {
@@ -1515,10 +1475,10 @@ class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
   final int status;
 
   @override
-  final OpenApiContentType contentType = null;
+  final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'contentType': contentType};
 }
 
@@ -1537,7 +1497,7 @@ class _EmailReceivePostResponse403 extends EmailReceivePostResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/plain');
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
@@ -1554,8 +1514,8 @@ abstract class EmailReceivePostResponse extends OpenApiResponse
       _EmailReceivePostResponse403.response403(body);
 
   void map(
-      {@_i2.required ResponseMap<_EmailReceivePostResponse200> on200,
-      @_i2.required ResponseMap<_EmailReceivePostResponse403> on403}) {
+      {required ResponseMap<_EmailReceivePostResponse200> on200,
+      required ResponseMap<_EmailReceivePostResponse403> on403}) {
     if (this is _EmailReceivePostResponse200) {
       on200((this as _EmailReceivePostResponse200));
     } else if (this is _EmailReceivePostResponse403) {
@@ -1586,26 +1546,26 @@ class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
   final int status;
 
   @override
-  final _i3.Uint8List body;
+  final _i2.Uint8List body;
 
   @override
   final OpenApiContentType contentType;
 
   @override
-  Map<String, Object> propertiesToString() =>
+  Map<String, Object?> propertiesToString() =>
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
 abstract class WebsiteImageGetResponse extends OpenApiResponse
-    implements HasSuccessResponse<_i3.Uint8List> {
+    implements HasSuccessResponse<_i2.Uint8List> {
   WebsiteImageGetResponse();
 
   /// Image
   factory WebsiteImageGetResponse.response200(
-          OpenApiContentType contentType, _i3.Uint8List body) =>
+          OpenApiContentType contentType, _i2.Uint8List body) =>
       _WebsiteImageGetResponse200.response200(contentType, body);
 
-  void map({@_i2.required ResponseMap<_WebsiteImageGetResponse200> on200}) {
+  void map({required ResponseMap<_WebsiteImageGetResponse200> on200}) {
     if (this is _WebsiteImageGetResponse200) {
       on200((this as _WebsiteImageGetResponse200));
     } else {
@@ -1615,7 +1575,7 @@ abstract class WebsiteImageGetResponse extends OpenApiResponse
 
   /// status 200:  Image
   @override
-  _i3.Uint8List requireSuccess() {
+  _i2.Uint8List requireSuccess() {
     if (this is _WebsiteImageGetResponse200) {
       return (this as _WebsiteImageGetResponse200).body;
     } else {
@@ -1632,7 +1592,7 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
   /// Status Check.
   /// post: /check/status
-  Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
+  Future<CheckStatusPostResponse> checkStatusPost({String? xSecret});
 
   /// Retrieve info about the currently logged in user and about the token.
   /// get: /user
@@ -1648,7 +1608,7 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
   /// Confirm email address
   /// get: /email/confirm
-  Future<EmailConfirmGetResponse> emailConfirmGet({@_i2.required String token});
+  Future<EmailConfirmGetResponse> emailConfirmGet({required String token});
 
   /// Confirm with recaptcha
   /// post: /email/confirm
@@ -1672,7 +1632,7 @@ abstract class AuthPassCloud implements ApiEndpoint {
   ///
   /// get: /mailbox/list
   Future<MailboxListGetResponse> mailboxListGet(
-      {String pageToken, String sinceToken});
+      {String? pageToken, String? sinceToken});
 
   /// Apply the given update to all matching mails.
   /// post: /mail/massupdate
@@ -1682,43 +1642,43 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i2.required String mailboxAddress});
+      {required String mailboxAddress});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Forward email to users actual email address
   /// post: /mailbox/message/{messageId}/forward
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
       MailboxMessageForwardSchema body,
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Mark message as unread (again)
   /// delete: /mailbox/message/{messageId}/read
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   /// [body]: Email content (header and body)
   Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {@_i2.required String xAuthpassToken});
+      {required String xAuthpassToken});
 
   /// Load the best image for the given website.
   /// get: /website/image
-  Future<WebsiteImageGetResponse> websiteImageGet({@_i2.required String url});
+  Future<WebsiteImageGetResponse> websiteImageGet({required String url});
 }
 
 abstract class AuthPassCloudClient implements OpenApiClient {
@@ -1735,7 +1695,7 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// Status Check.
   /// post: /check/status
   ///
-  Future<CheckStatusPostResponse> checkStatusPost({String xSecret});
+  Future<CheckStatusPostResponse> checkStatusPost({String? xSecret});
 
   /// Retrieve info about the currently logged in user and about the token.
   /// get: /user
@@ -1756,7 +1716,7 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// get: /email/confirm
   ///
   /// * [token]: Unique token which was sent to email address.
-  Future<EmailConfirmGetResponse> emailConfirmGet({@_i2.required String token});
+  Future<EmailConfirmGetResponse> emailConfirmGet({required String token});
 
   /// Confirm with recaptcha
   /// post: /email/confirm
@@ -1787,7 +1747,7 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// * [pageToken]: Page token as returned by Page
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
   Future<MailboxListGetResponse> mailboxListGet(
-      {String pageToken, String sinceToken});
+      {String? pageToken, String? sinceToken});
 
   /// Apply the given update to all matching mails.
   /// post: /mail/massupdate
@@ -1799,38 +1759,38 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// put: /mailbox/update/{mailboxAddress}
   ///
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i2.required String mailboxAddress});
+      {required String mailboxAddress});
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   ///
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Forward email to users actual email address
   /// post: /mailbox/message/{messageId}/forward
   ///
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
       MailboxMessageForwardSchema body,
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Mark message as unread (again)
   /// delete: /mailbox/message/{messageId}/read
   ///
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required ApiUuid messageId});
+      {required ApiUuid messageId});
 
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
@@ -1838,12 +1798,12 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
   /// [body]: Email content (header and body)
   Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {@_i2.required String xAuthpassToken});
+      {required String xAuthpassToken});
 
   /// Load the best image for the given website.
   /// get: /website/image
   ///
-  Future<WebsiteImageGetResponse> websiteImageGet({@_i2.required String url});
+  Future<WebsiteImageGetResponse> websiteImageGet({required String url});
 }
 
 class _AuthPassCloudClientImpl extends OpenApiClientBase
@@ -1873,7 +1833,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// post: /check/status
   ///
   @override
-  Future<CheckStatusPostResponse> checkStatusPost({String xSecret}) async {
+  Future<CheckStatusPostResponse> checkStatusPost({String? xSecret}) async {
     final request = OpenApiClientRequest('post', '/check/status', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -1944,7 +1904,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// * [token]: Unique token which was sent to email address.
   @override
   Future<EmailConfirmGetResponse> emailConfirmGet(
-      {@_i2.required String token}) async {
+      {required String token}) async {
     final request = OpenApiClientRequest('get', '/email/confirm', []);
     request.addQueryParameter('token', encodeString(token));
     return await sendRequest(request, {
@@ -2037,7 +1997,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
   @override
   Future<MailboxListGetResponse> mailboxListGet(
-      {String pageToken, String sinceToken}) async {
+      {String? pageToken, String? sinceToken}) async {
     final request = OpenApiClientRequest('get', '/mailbox/list', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2077,7 +2037,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {@_i2.required String mailboxAddress}) async {
+      {required String mailboxAddress}) async {
     final request =
         OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
       SecurityRequirement(schemes: [
@@ -2098,7 +2058,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {@_i2.required ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
@@ -2119,7 +2079,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {@_i2.required ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
@@ -2140,7 +2100,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
       MailboxMessageForwardSchema body,
-      {@_i2.required ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
       SecurityRequirement(schemes: [
@@ -2162,7 +2122,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {@_i2.required ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
@@ -2182,7 +2142,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {@_i2.required ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
@@ -2204,7 +2164,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// [body]: Email content (header and body)
   @override
   Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {@_i2.required String xAuthpassToken}) async {
+      {required String xAuthpassToken}) async {
     final request = OpenApiClientRequest('post', '/email/receive', []);
     request.addHeaderParameter(
         'x-authpass-token', encodeString(xAuthpassToken));
@@ -2223,8 +2183,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// get: /website/image
   ///
   @override
-  Future<WebsiteImageGetResponse> websiteImageGet(
-      {@_i2.required String url}) async {
+  Future<WebsiteImageGetResponse> websiteImageGet({required String url}) async {
     final request = OpenApiClientRequest('get', '/website/image', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2253,7 +2212,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Status Check.
   /// post: /check/status
   ///
-  OpenApiClientRequest checkStatusPost({String xSecret}) {
+  OpenApiClientRequest checkStatusPost({String? xSecret}) {
     final request = OpenApiClientRequest('post', '/check/status', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2299,7 +2258,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /email/confirm
   ///
   /// * [token]: Unique token which was sent to email address.
-  OpenApiClientRequest emailConfirmGet({@_i2.required String token}) {
+  OpenApiClientRequest emailConfirmGet({required String token}) {
     final request = OpenApiClientRequest('get', '/email/confirm', []);
     request.addQueryParameter('token', encodeString(token));
     return request;
@@ -2355,7 +2314,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   ///
   /// * [pageToken]: Page token as returned by Page
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
-  OpenApiClientRequest mailboxListGet({String pageToken, String sinceToken}) {
+  OpenApiClientRequest mailboxListGet({String? pageToken, String? sinceToken}) {
     final request = OpenApiClientRequest('get', '/mailbox/list', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2381,7 +2340,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
   ///
-  OpenApiClientRequest mailboxUpdate({@_i2.required String mailboxAddress}) {
+  OpenApiClientRequest mailboxUpdate({required String mailboxAddress}) {
     final request =
         OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
       SecurityRequirement(schemes: [
@@ -2395,7 +2354,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
   ///
-  OpenApiClientRequest mailboxMessageGet({@_i2.required ApiUuid messageId}) {
+  OpenApiClientRequest mailboxMessageGet({required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
@@ -2410,7 +2369,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Delete the given message.
   /// delete: /mailbox/message/{messageId}
   ///
-  OpenApiClientRequest mailboxMessageDelete({@_i2.required ApiUuid messageId}) {
+  OpenApiClientRequest mailboxMessageDelete({required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
       SecurityRequirement(schemes: [
@@ -2425,8 +2384,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Forward email to users actual email address
   /// post: /mailbox/message/{messageId}/forward
   ///
-  OpenApiClientRequest mailboxMessageForward(
-      {@_i2.required ApiUuid messageId}) {
+  OpenApiClientRequest mailboxMessageForward({required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
       SecurityRequirement(schemes: [
@@ -2441,8 +2399,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
   ///
-  OpenApiClientRequest mailboxMessageMarkRead(
-      {@_i2.required ApiUuid messageId}) {
+  OpenApiClientRequest mailboxMessageMarkRead({required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
@@ -2457,8 +2414,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Mark message as unread (again)
   /// delete: /mailbox/message/{messageId}/read
   ///
-  OpenApiClientRequest mailboxMessageMarkUnRead(
-      {@_i2.required ApiUuid messageId}) {
+  OpenApiClientRequest mailboxMessageMarkUnRead({required ApiUuid messageId}) {
     final request =
         OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
       SecurityRequirement(schemes: [
@@ -2474,7 +2430,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /email/receive
   ///
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
-  OpenApiClientRequest emailReceivePost({@_i2.required String xAuthpassToken}) {
+  OpenApiClientRequest emailReceivePost({required String xAuthpassToken}) {
     final request = OpenApiClientRequest('post', '/email/receive', []);
     request.addHeaderParameter(
         'x-authpass-token', encodeString(xAuthpassToken));
@@ -2484,7 +2440,7 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// Load the best image for the given website.
   /// get: /website/image
   ///
-  OpenApiClientRequest websiteImageGet({@_i2.required String url}) {
+  OpenApiClientRequest websiteImageGet({required String url}) {
     final request = OpenApiClientRequest('get', '/website/image', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2510,8 +2466,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.checkStatusPost(
-              xSecret: param(
-                  isRequired: false,
+              xSecret: paramOpt(
                   name: 'x-secret',
                   value: request.headerParameter('x-secret'),
                   decode: (value) => paramToString(value))));
@@ -2546,8 +2501,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmGet(
-              token: param(
-                  isRequired: true,
+              token: paramRequired(
                   name: 'token',
                   value: request.queryParameter('token'),
                   decode: (value) => paramToString(value))));
@@ -2589,13 +2543,11 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxListGet(
-              pageToken: param(
-                  isRequired: false,
+              pageToken: paramOpt(
                   name: 'page_token',
                   value: request.queryParameter('page_token'),
                   decode: (value) => paramToString(value)),
-              sinceToken: param(
-                  isRequired: false,
+              sinceToken: paramOpt(
                   name: 'since_token',
                   value: request.queryParameter('since_token'),
                   decode: (value) => paramToString(value))));
@@ -2620,8 +2572,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
           request,
           (AuthPassCloud impl) async => impl.mailboxUpdate(
               MailboxUpdateSchema.fromJson(await request.readJsonBody()),
-              mailboxAddress: param(
-                  isRequired: true,
+              mailboxAddress: paramRequired(
                   name: 'mailboxAddress',
                   value: request.pathParameter('mailboxAddress'),
                   decode: (value) => paramToString(value))));
@@ -2635,8 +2586,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageGet(
-              messageId: param(
-                  isRequired: true,
+              messageId: paramRequired(
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
                   decode: (value) => ApiUuid.parse(paramToString(value)))));
@@ -2650,8 +2600,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageDelete(
-              messageId: param(
-                  isRequired: true,
+              messageId: paramRequired(
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
                   decode: (value) => ApiUuid.parse(paramToString(value)))));
@@ -2667,8 +2616,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
           (AuthPassCloud impl) async => impl.mailboxMessageForward(
               MailboxMessageForwardSchema.fromJson(
                   await request.readJsonBody()),
-              messageId: param(
-                  isRequired: true,
+              messageId: paramRequired(
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
                   decode: (value) => ApiUuid.parse(paramToString(value)))));
@@ -2682,8 +2630,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageMarkRead(
-              messageId: param(
-                  isRequired: true,
+              messageId: paramRequired(
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
                   decode: (value) => ApiUuid.parse(paramToString(value)))));
@@ -2697,8 +2644,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageMarkUnRead(
-              messageId: param(
-                  isRequired: true,
+              messageId: paramRequired(
                   name: 'messageId',
                   value: request.pathParameter('messageId'),
                   decode: (value) => ApiUuid.parse(paramToString(value)))));
@@ -2712,8 +2658,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
           request,
           (AuthPassCloud impl) async => impl.emailReceivePost(
               await request.readBodyString(),
-              xAuthpassToken: param(
-                  isRequired: true,
+              xAuthpassToken: paramRequired(
                   name: 'x-authpass-token',
                   value: request.headerParameter('x-authpass-token'),
                   decode: (value) => paramToString(value))));
@@ -2722,8 +2667,7 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.websiteImageGet(
-              url: param(
-                  isRequired: true,
+              url: paramRequired(
                   name: 'url',
                   value: request.queryParameter('url'),
                   decode: (value) => paramToString(value))));
@@ -2739,3 +2683,5 @@ class SecuritySchemes {
   static final authToken =
       SecuritySchemeHttp(scheme: SecuritySchemeHttpScheme.bearer);
 }
+
+T _throwStateError<T>(String message) => throw StateError(message);
