@@ -12,7 +12,7 @@ import 'package:quiver/core.dart';
 final _logger = Logger('email_tables');
 
 class EmailTable extends TableBase with TableConstants {
-  EmailTable({@required this.cryptoService}) : assert(cryptoService != null);
+  EmailTable({required this.cryptoService}) : assert(cryptoService != null);
 
   static const _TABLE_EMAIL_MAILBOX = 'email_mailbox';
   static const _TABLE_EMAIL_MESSAGE = 'email_message';
@@ -87,10 +87,10 @@ class EmailTable extends TableBase with TableConstants {
 
   Future<void> insertMailbox(
     DatabaseTransactionBase db, {
-    @required UserEntity userEntity,
-    @required String label,
-    @required String address,
-    @required String clientEntryUuid,
+    required UserEntity userEntity,
+    required String label,
+    required String address,
+    required String clientEntryUuid,
   }) async {
     checkArgument(address.contains('@'),
         message: () => 'Address must be a full email address. {$address}');
@@ -109,11 +109,11 @@ class EmailTable extends TableBase with TableConstants {
   Future<void> updateMailbox(
     DatabaseTransactionBase db,
     String mailboxId, {
-    Optional<String> label,
-    Optional<String> clientEntryUuid,
-    Optional<DateTime> deletedAt,
-    Optional<DateTime> disabledAt,
-    Optional<DateTime> hiddenAt,
+    Optional<String>? label,
+    Optional<String?>? clientEntryUuid,
+    Optional<DateTime>? deletedAt,
+    Optional<DateTime>? disabledAt,
+    Optional<DateTime>? hiddenAt,
   }) async {
     await db.executeUpdate(
       _TABLE_EMAIL_MAILBOX,
@@ -129,8 +129,8 @@ class EmailTable extends TableBase with TableConstants {
     );
   }
 
-  Future<MailboxEntity> findMailbox(DatabaseTransactionBase db,
-      {String address, String mailboxId}) async {
+  Future<MailboxEntity?> findMailbox(DatabaseTransactionBase db,
+      {String? address, String? mailboxId}) async {
     assert(address != null || mailboxId != null);
     assert(db != null);
     final where = SimpleWhere({
@@ -141,12 +141,12 @@ class EmailTable extends TableBase with TableConstants {
         '''SELECT $columnId, $_COLUMN_ADDRESS, $COLUMN_USER_ID, $_COLUMN_DISABLED_AT 
             FROM $_TABLE_EMAIL_MAILBOX
             WHERE $_COLUMN_DELETED_AT IS NULL AND ${where.sql()}''',
-        values: where.conditions).singleOrNull((row) => MailboxEntity(
+        values: where.conditions as Map<String, Object>?).singleOrNull((row) => MailboxEntity(
           id: row[0] as String,
           address: row[1] as String,
           user: UserEntity(id: row[2] as String),
           deletedAt: null,
-          disabledAt: row[3] as DateTime,
+          disabledAt: row[3] as DateTime?,
         ));
   }
 
@@ -178,10 +178,10 @@ class EmailTable extends TableBase with TableConstants {
 
   Future<ApiUuid> insertMessage(
     DatabaseTransactionBase db, {
-    @required MailboxEntity mailbox,
-    @required String sender,
-    @required String subject,
-    @required String message,
+    required MailboxEntity mailbox,
+    required String? sender,
+    required String subject,
+    required String message,
   }) async {
     final id = cryptoService.createSecureUuid();
     await db.executeInsert(_TABLE_EMAIL_MESSAGE, {
@@ -189,17 +189,17 @@ class EmailTable extends TableBase with TableConstants {
       columnCreatedAt: clock.now().toUtc(),
       _COLUMN_MAILBOX_ID: mailbox.id,
       _COLUMN_MESSAGE: message,
-      _COLUMN_SENDER: sender,
+      _COLUMN_SENDER: sender!,
       _COLUMN_SIZE: message.length,
       _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
     return ApiUuid.parse(id);
   }
 
-  Future<EmailMessageEntity> findEmailForUser(
+  Future<EmailMessageEntity?> findEmailForUser(
     DatabaseTransactionBase db,
     UserEntity user, {
-    @required String messageId,
+    required String messageId,
   }) async {
     assert(user != null);
     assert(messageId != null);
@@ -220,10 +220,10 @@ class EmailTable extends TableBase with TableConstants {
   Future<List<EmailMessageEntity>> findEmailsForUser(
     DatabaseTransactionBase db,
     UserEntity user, {
-    @required int offset,
-    @required int limit,
-    @required DateTime until,
-    DateTime since,
+    required int offset,
+    required int limit,
+    required DateTime until,
+    DateTime? since,
   }) async {
     assert(until != null);
     return await _findEmailsForUser(db, user,
@@ -233,11 +233,11 @@ class EmailTable extends TableBase with TableConstants {
   Future<List<EmailMessageEntity>> _findEmailsForUser(
     DatabaseTransactionBase db,
     UserEntity user, {
-    @required int offset,
-    @required int limit,
-    @required DateTime until,
-    DateTime since,
-    String messageId,
+    required int offset,
+    required int limit,
+    required DateTime? until,
+    DateTime? since,
+    String? messageId,
   }) async {
     final sinceFilter = since == null ? '' : ' AND m.$columnCreatedAt > @since';
     final messageIdFilter = messageId == null ? '' : ' AND m.id = @messageId';
@@ -267,21 +267,21 @@ class EmailTable extends TableBase with TableConstants {
     });
     return result
         .map((row) => EmailMessageEntity(
-              id: row[0] as String,
-              subject: row[1] as String,
-              sender: row[2] as String,
-              createdAt: row[3] as DateTime,
-              mailboxEntryUuid: row[4] as String,
-              size: row[5] as int,
-              readAt: row[6] as DateTime,
-              deletedAt: row[7] as DateTime,
+              id: row[0] as String?,
+              subject: row[1] as String?,
+              sender: row[2] as String?,
+              createdAt: row[3] as DateTime?,
+              mailboxEntryUuid: row[4] as String?,
+              size: row[5] as int?,
+              readAt: row[6] as DateTime?,
+              deletedAt: row[7] as DateTime?,
             ))
         .toList();
   }
 
-  Future<String> findEmailMessageBody(
+  Future<String?> findEmailMessageBody(
       DatabaseTransactionBase db, UserEntity user,
-      {@required String messageId}) async {
+      {required String messageId}) async {
     assert(user != null);
     assert(messageId != null);
     final message =
@@ -297,8 +297,8 @@ class EmailTable extends TableBase with TableConstants {
     }
     final row = message.first;
 
-    final body = row[0] as String;
-    final userId = row[1] as String;
+    final body = row[0] as String?;
+    final userId = row[1] as String?;
 
     if (userId != user.id) {
       _logger.severe('User requested email which was not his own. '
@@ -313,9 +313,9 @@ class EmailTable extends TableBase with TableConstants {
   /// the it belongs to the correct user.
   Future<void> updateMailMessage(
     DatabaseTransactionBase db, {
-    @required String messageId,
-    @required DateTime readAt,
-    @required DateTime deletedAt,
+    required String messageId,
+    required DateTime? readAt,
+    required DateTime? deletedAt,
   }) async {
     assert(messageId != null);
     await db.executeUpdate(_TABLE_EMAIL_MESSAGE, set: {
@@ -346,11 +346,11 @@ class EmailTable extends TableBase with TableConstants {
     DatabaseTransactionBase db,
     UserEntity user,
     MailMassupdatePostSchemaFilter filter, {
-    List<String> messageIds,
-    Optional<DateTime> readAt,
+    List<String>? messageIds,
+    Optional<DateTime>? readAt,
   }) async {
-    String where;
-    final whereValues = <String, Object>{
+    String? where;
+    final whereValues = <String, Object?>{
       'userId': user.id,
     };
     switch (filter) {
@@ -393,13 +393,13 @@ class EmailTable extends TableBase with TableConstants {
 }
 
 class UserEmailStatusEntity {
-  UserEmailStatusEntity({@required this.messagesUnread})
+  UserEmailStatusEntity({required this.messagesUnread})
       : assert(messagesUnread != null);
   final int messagesUnread;
 }
 
 class UpdateQueryHelper {
-  final Map<String, Object> setValues = {};
+  final Map<String, Object?> setValues = {};
   final List<String> _setQueryList = [];
   int varCount = 0;
 
@@ -409,7 +409,7 @@ class UpdateQueryHelper {
   /// because the value was null.
   final List<String> ignoredAttributes = [];
 
-  void addSetOptional(String attribute, Optional value) {
+  void addSetOptional(String attribute, Optional? value) {
     if (value == null) {
       ignoredAttributes.add(attribute);
       return;
@@ -438,11 +438,11 @@ extension on String {
 
 class MailboxEntity {
   MailboxEntity({
-    @required this.id,
-    @required this.address,
-    @required this.user,
-    @required this.disabledAt,
-    @required this.deletedAt,
+    required this.id,
+    required this.address,
+    required this.user,
+    required this.disabledAt,
+    required this.deletedAt,
   })  : assert(id != null),
         assert(address != null),
         assert(user != null);
@@ -450,47 +450,47 @@ class MailboxEntity {
   final String id;
   final String address;
   final UserEntity user;
-  final DateTime disabledAt;
-  final DateTime deletedAt;
+  final DateTime? disabledAt;
+  final DateTime? deletedAt;
 }
 
 class EmailMessageEntity {
   EmailMessageEntity({
-    @required this.id,
-    @required this.subject,
-    @required this.sender,
-    @required this.mailboxEntryUuid,
-    @required this.createdAt,
-    @required this.size,
-    @required this.readAt,
-    @required this.deletedAt,
+    required this.id,
+    required this.subject,
+    required this.sender,
+    required this.mailboxEntryUuid,
+    required this.createdAt,
+    required this.size,
+    required this.readAt,
+    required this.deletedAt,
   });
 
-  final String id;
+  final String? id;
 
-  final String subject;
+  final String? subject;
 
-  final String sender;
+  final String? sender;
 
-  final String mailboxEntryUuid;
+  final String? mailboxEntryUuid;
 
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
-  final int size;
+  final int? size;
 
-  final DateTime readAt;
+  final DateTime? readAt;
 
   bool get isRead => readAt != null;
 
-  final DateTime deletedAt;
+  final DateTime? deletedAt;
 
   EmailMessage toEmailMessage() => EmailMessage(
-        id: ApiUuid.parse(id),
-        subject: subject,
-        sender: sender,
-        mailboxEntryUuid: ApiUuid.parse(mailboxEntryUuid),
-        createdAt: createdAt,
-        size: size,
+        id: ApiUuid.parse(id!),
+        subject: subject!,
+        sender: sender!,
+        mailboxEntryUuid: ApiUuid.parse(mailboxEntryUuid!),
+        createdAt: createdAt!,
+        size: size!,
         isRead: readAt != null,
       );
 }

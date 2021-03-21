@@ -1,6 +1,6 @@
 import 'package:authpass_cloud_backend/src/env/env.dart';
 
-String emailConfirmationPage(Env env, String token) {
+String emailConfirmationPage(Env env, String? token) {
   // language=html
   return '''<!DOCTYPE html>
 <head>

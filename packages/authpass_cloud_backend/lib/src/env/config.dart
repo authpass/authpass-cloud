@@ -7,11 +7,11 @@ part 'config.g.dart';
 @JsonSerializable(anyMap: true, checked: true)
 class ConfigFileRoot {
   ConfigFileRoot({
-    HttpConfig http,
-    @required this.email,
-    @required this.secrets,
-    @required this.database,
-    @required this.mailbox,
+    HttpConfig? http,
+    required this.email,
+    required this.secrets,
+    required this.database,
+    required this.mailbox,
   })  : http = http ?? HttpConfig.defaults(),
         assert(email != null),
         assert(secrets != null),
@@ -37,14 +37,14 @@ class MailboxConfig {
       _$MailboxConfigFromJson(json);
   Map<String, dynamic> toJson() => _$MailboxConfigToJson(this);
 
-  final String defaultHost;
+  final String? defaultHost;
 }
 
 @JsonSerializable(anyMap: true, checked: true)
 class HttpConfig {
   const HttpConfig({
-    @required this.host,
-    @required this.port,
+    required this.host,
+    required this.port,
   })  : assert(host != null),
         assert(port != null);
   factory HttpConfig.fromJson(Map<String, dynamic> json) =>
@@ -61,23 +61,23 @@ class HttpConfig {
 @JsonSerializable(anyMap: true, checked: true)
 class EmailConfig {
   EmailConfig({
-    @required this.fromAddress,
+    required this.fromAddress,
     this.fromName,
     this.smtp,
   }) : assert(fromAddress != null);
   factory EmailConfig.fromJson(Map json) => _$EmailConfigFromJson(json);
   Map<String, dynamic> toJson() => _$EmailConfigToJson(this);
 
-  final EmailSmtpConfig smtp;
+  final EmailSmtpConfig? smtp;
   @JsonKey(required: true)
   final String fromAddress;
-  final String fromName;
+  final String? fromName;
 }
 
 @JsonSerializable(anyMap: true, checked: true)
 class EmailSmtpConfig {
   EmailSmtpConfig({
-    @required this.host,
+    required this.host,
     this.port,
     this.ssl,
     this.username,
@@ -92,11 +92,11 @@ class EmailSmtpConfig {
   @JsonKey(required: true)
   final String host;
   @JsonKey(defaultValue: 25)
-  final int port;
+  final int? port;
   @JsonKey(defaultValue: false)
-  final bool ssl;
-  final String username;
-  final String password;
+  final bool? ssl;
+  final String? username;
+  final String? password;
 
   @JsonKey(defaultValue: false)
   final bool allowInsecure;
@@ -107,19 +107,19 @@ class EmailSmtpConfig {
 @JsonSerializable(nullable: false, anyMap: true, checked: true)
 class SecretsConfig {
   SecretsConfig({
-    @required this.recaptchaSecretKey,
-    @required this.recaptchaSiteKey,
-    @required this.emailReceiveToken,
-    @required this.systemStatusSecret,
+    required this.recaptchaSecretKey,
+    required this.recaptchaSiteKey,
+    required this.emailReceiveToken,
+    required this.systemStatusSecret,
   });
   factory SecretsConfig.fromJson(Map json) => _$SecretsConfigFromJson(json);
   Map<String, dynamic> toJson() => _$SecretsConfigToJson(this);
 
-  final String recaptchaSecretKey;
+  final String? recaptchaSecretKey;
 
-  final String recaptchaSiteKey;
+  final String? recaptchaSiteKey;
 
-  final String emailReceiveToken;
+  final String? emailReceiveToken;
 
-  final String systemStatusSecret;
+  final String? systemStatusSecret;
 }

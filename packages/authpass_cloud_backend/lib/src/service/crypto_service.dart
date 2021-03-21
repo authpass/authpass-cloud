@@ -35,7 +35,7 @@ class CryptoService {
 
   String createSecureUuid() => _uuid.v4();
 
-  String createSecureToken({int length, @required TokenType type}) {
+  String createSecureToken({int? length, required TokenType type}) {
     final byteLength =
         length == null ? _tokenTypeByteLength(type) : length ~/ 4 * 3;
     final list = Uint8List(byteLength);

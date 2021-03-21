@@ -15,7 +15,7 @@ final _logger = Logger('email_repository');
 
 class EmailRepository {
   EmailRepository(
-      {@required this.db, @required this.cryptoService, @required this.env})
+      {required this.db, required this.cryptoService, required this.env})
       : assert(db != null),
         assert(cryptoService != null),
         assert(env != null);
@@ -25,8 +25,8 @@ class EmailRepository {
 
   Future<String> createAddress(
     UserEntity userEntity, {
-    @required String label,
-    @required String clientEntryUuid,
+    required String label,
+    required String clientEntryUuid,
   }) async {
     assert(userEntity != null);
     assert(label != null);
@@ -74,12 +74,12 @@ class EmailRepository {
   /// return false if mailbox can't be found (or the given user is not owner)
   Future<bool> updateMailbox(
     UserEntity user, {
-    @required String mailboxAddress,
-    String label,
-    String entryUuid,
-    bool isDeleted,
-    bool isDisabled,
-    bool isHidden,
+    required String mailboxAddress,
+    String? label,
+    String? entryUuid,
+    bool? isDeleted,
+    bool? isDisabled,
+    bool? isHidden,
   }) async {
     assert(user != null);
     assert(mailboxAddress != null);
@@ -101,7 +101,7 @@ class EmailRepository {
     return true;
   }
 
-  Optional<DateTime> _nowIfTrue(bool value) {
+  Optional<DateTime>? _nowIfTrue(bool? value) {
     if (value == null) {
       return null;
     }
@@ -110,17 +110,17 @@ class EmailRepository {
 
   Future<List<EmailMessageEntity>> findEmailsForUser(
     UserEntity user, {
-    @required int offset,
-    @required int limit,
-    @required DateTime until,
-    DateTime since,
+    required int offset,
+    required int limit,
+    required DateTime until,
+    DateTime? since,
   }) async {
     return await db.tables.email.findEmailsForUser(db, user,
         offset: offset, limit: limit, until: until, since: since);
   }
 
-  Future<String> findEmailMessageBody(UserEntity user,
-      {String messageId}) async {
+  Future<String?> findEmailMessageBody(UserEntity user,
+      {required String messageId}) async {
     return await db.tables.email
         .findEmailMessageBody(db, user, messageId: messageId);
   }
@@ -131,7 +131,7 @@ class EmailRepository {
 
   /// true if mail was found, false otherwise.
   Future<bool> markAsRead(UserEntity user,
-      {@required String messageId, @required bool isRead}) async {
+      {required String messageId, required bool isRead}) async {
     assert(messageId != null);
     assert(isRead != null);
     final mail =
@@ -153,15 +153,15 @@ class EmailRepository {
   Future<int> messageMassUpdate(
     UserEntity entity,
     MailMassupdatePostSchemaFilter filter, {
-    List<String> messageIds,
-    bool isRead,
+    List<String>? messageIds,
+    bool? isRead,
   }) async {
     return await db.tables.email.messageMassUpdate(db, entity, filter,
         messageIds: messageIds, readAt: _nowIfTrue(isRead));
   }
 
   Future<bool> deleteMessage(UserEntity user,
-      {@required String messageId}) async {
+      {required String messageId}) async {
     final mail =
         await db.tables.email.findEmailForUser(db, user, messageId: messageId);
     if (mail != null) {

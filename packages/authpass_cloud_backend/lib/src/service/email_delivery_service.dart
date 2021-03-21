@@ -28,9 +28,9 @@ class EmailDeliveryService {
 
   Future<MailSystemStatusCodes> deliverEmailTo(
     DatabaseTransaction db, {
-    @required String sender,
-    @required String recipient,
-    @required String content,
+    required String? sender,
+    required String recipient,
+    required String content,
   }) async {
     final message = MimeMessage.parseFromText(content);
     return await _deliverEmailTo(db, sender, recipient, message);
@@ -43,7 +43,7 @@ class EmailDeliveryService {
   }
 
   Future<MailSystemStatusCodes> _deliverEmailTo(DatabaseTransaction db,
-      String sender, String recipient, MimeMessage message) async {
+      String? sender, String? recipient, MimeMessage message) async {
     final mailbox = await db.tables.email.findMailbox(db, address: recipient);
     if (mailbox == null) {
       _logger.warning('Invalid destination address {$recipient}');
@@ -59,12 +59,12 @@ class EmailDeliveryService {
       mailbox: mailbox,
       sender: sender,
       subject: subject ?? '',
-      message: message.body.bodyRaw,
+      message: message.body!.bodyRaw!,
     );
 
     _logger.info('Received email for {$recipient}.'
         ' (from {$sender})'
-        ' With the following body:\n\n${message.body.bodyRaw}');
+        ' With the following body:\n\n${message.body!.bodyRaw}');
     return MailSystemStatusCodes.success;
   }
 }

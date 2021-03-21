@@ -18,7 +18,7 @@ final healthCheckPattern = RegExp([
   r'-([a-z0-9\-\.]+)@',
   RegExp.escape(healthCheckHost)
 ].join(''));
-String healthcheckAddress([String prefix = '']) =>
+String healthcheckAddress([String? prefix = '']) =>
     '$healthCheckLocal-$prefix${DateTime.now().millisecondsSinceEpoch}'
     '@$healthCheckHost';
 
@@ -45,8 +45,8 @@ class SmtpdCommand extends BaseBackendCommand {
 
   @override
   Future<void> run() async {
-    final port = int.parse(argResults['port'] as String);
-    final hostname = argResults['hostname'] as String;
+    final port = int.parse(argResults!['port'] as String);
+    final hostname = argResults!['hostname'] as String;
 
     final env = await loadEnv();
 
@@ -61,7 +61,7 @@ class SmtpdCommand extends BaseBackendCommand {
 }
 
 class SmtpBackendServer extends BackendServer {
-  SmtpBackendServer({@required Env env, @required this.config})
+  SmtpBackendServer({required Env env, required this.config})
       : super(env: env);
 
   final SmtpConfig config;
@@ -99,7 +99,7 @@ class AuthPassMailHandler extends MailHandler {
           db,
           sender: mailObject.envelope.sender,
           recipient: recipient,
-          content: mailObject.content,
+          content: mailObject.content!,
         );
       }
       return SmtpStatusMessage.successCompleted;

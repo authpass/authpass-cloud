@@ -8,10 +8,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 class ServiceProvider {
   ServiceProvider({
-    @required this.env,
-    @required this.cryptoService,
-    @required this.emailService,
-    RecaptchaService recaptchaService,
+    required this.env,
+    required this.cryptoService,
+    required this.emailService,
+    RecaptchaService? recaptchaService,
   })  : assert(env != null),
         assert(cryptoService != null),
         assert(emailService != null),

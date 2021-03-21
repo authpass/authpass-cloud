@@ -1,7 +1,7 @@
 name: authpass_cloud_backend
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   meta: ^1.3.0

@@ -11,7 +11,7 @@ import 'package:postgres_utils/postgres_utils.dart';
 part 'website_tables.freezed.dart';
 
 class WebsiteTable extends TableBase with TableConstants {
-  WebsiteTable({@required this.cryptoService}) : assert(cryptoService != null);
+  WebsiteTable({required this.cryptoService}) : assert(cryptoService != null);
 
   static const _TABLE_WEBSITE = 'website';
   static const _TABLE_WEBSITE_IMAGE = 'website_image';
@@ -82,7 +82,7 @@ class WebsiteTable extends TableBase with TableConstants {
   }
 
   Future<void> updateWebsite(DatabaseTransactionBase db,
-      {@required String websiteId, @required String bestImageId}) async {
+      {required String websiteId, required String? bestImageId}) async {
     await db.executeUpdate(_TABLE_WEBSITE,
         set: {_COL_BEST_IMAGE: bestImageId}, where: {columnId: websiteId});
   }
@@ -98,7 +98,7 @@ class WebsiteTable extends TableBase with TableConstants {
       _COL_MIME_TYPE: image.mimeType,
       _COL_BYTES: CustomBind(
           "decode(@$_COL_BYTES, 'base64')", base64.encode(image.bytes)),
-      _COL_ORIGINAL_BYTE_LENGTH: image.originalByteLength,
+      _COL_ORIGINAL_BYTE_LENGTH: image.originalByteLength!,
       _COL_WIDTH: image.width,
       _COL_HEIGHT: image.height,
       _COL_BRIGHTNESS: image.brightness,
@@ -107,7 +107,7 @@ class WebsiteTable extends TableBase with TableConstants {
     return uuid;
   }
 
-  Future<ImageInfo> findBestImage(DatabaseTransactionBase db, Uri uri) async {
+  Future<ImageInfo?> findBestImage(DatabaseTransactionBase db, Uri uri) async {
     final result = await db.query('''
     SELECT i.$_COL_BYTES, i.$_COL_WIDTH, i.$_COL_HEIGHT, i.$_COL_URL, i.$_COL_MIME_TYPE, i.$_COL_BRIGHTNESS, i.$_COL_IMAGE_TYPE,
       i.$_COL_ORIGINAL_BYTE_LENGTH, i.$_COL_FILENAME
@@ -126,8 +126,8 @@ class WebsiteTable extends TableBase with TableConstants {
       uri: row[3] as String,
       mimeType: row[4] as String,
       brightness: row[5] as double,
-      imageLinkType: ImageLinkTypeExt.fromString(row[6] as String),
-      originalByteLength: row[7] as int,
+      imageLinkType: ImageLinkTypeExt.fromString(row[6] as String)!,
+      originalByteLength: row[7] as int?,
       fileName: row[8] as String,
     );
   }
@@ -147,8 +147,8 @@ class WebsiteTable extends TableBase with TableConstants {
 @freezed
 abstract class WebsiteEntity with _$WebsiteEntity {
   const factory WebsiteEntity({
-    @required String id,
-    @required String url,
-    @required String urlCanonical,
+    required String id,
+    required String url,
+    required String urlCanonical,
   }) = _WebsiteEntity;
 }

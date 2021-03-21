@@ -14,9 +14,7 @@ class _$WebsiteEntityTearOff {
 
 // ignore: unused_element
   _WebsiteEntity call(
-      {@required String id,
-      @required String url,
-      @required String urlCanonical}) {
+      {required String id, required String url, required String urlCanonical}) {
     return _WebsiteEntity(
       id: id,
       url: url,
@@ -40,7 +38,7 @@ abstract class $WebsiteEntityCopyWith<$Res> {
   factory $WebsiteEntityCopyWith(
           WebsiteEntity value, $Res Function(WebsiteEntity) then) =
       _$WebsiteEntityCopyWithImpl<$Res>;
-  $Res call({String id, String url, String urlCanonical});
+  $Res call({String? id, String? url, String? urlCanonical});
 }
 
 class _$WebsiteEntityCopyWithImpl<$Res>
@@ -53,16 +51,16 @@ class _$WebsiteEntityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object url = freezed,
-    Object urlCanonical = freezed,
+    Object? id = freezed,
+    Object? url = freezed,
+    Object? urlCanonical = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
-      url: url == freezed ? _value.url : url as String,
+      id: id == freezed ? _value.id : id as String?,
+      url: url == freezed ? _value.url : url as String?,
       urlCanonical: urlCanonical == freezed
           ? _value.urlCanonical
-          : urlCanonical as String,
+          : urlCanonical as String?,
     ));
   }
 }
@@ -73,7 +71,7 @@ abstract class _$WebsiteEntityCopyWith<$Res>
           _WebsiteEntity value, $Res Function(_WebsiteEntity) then) =
       __$WebsiteEntityCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String url, String urlCanonical});
+  $Res call({String? id, String? url, String? urlCanonical});
 }
 
 class __$WebsiteEntityCopyWithImpl<$Res>
@@ -88,23 +86,23 @@ class __$WebsiteEntityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object url = freezed,
-    Object urlCanonical = freezed,
+    Object? id = freezed,
+    Object? url = freezed,
+    Object? urlCanonical = freezed,
   }) {
     return _then(_WebsiteEntity(
-      id: id == freezed ? _value.id : id as String,
-      url: url == freezed ? _value.url : url as String,
+      id: id == freezed ? _value.id : (id as String?)!,
+      url: url == freezed ? _value.url : (url as String?)!,
       urlCanonical: urlCanonical == freezed
           ? _value.urlCanonical
-          : urlCanonical as String,
+          : (urlCanonical as String?)!,
     ));
   }
 }
 
 class _$_WebsiteEntity implements _WebsiteEntity {
   const _$_WebsiteEntity(
-      {@required this.id, @required this.url, @required this.urlCanonical})
+      {required this.id, required this.url, required this.urlCanonical})
       : assert(id != null),
         assert(url != null),
         assert(urlCanonical != null);
@@ -148,9 +146,9 @@ class _$_WebsiteEntity implements _WebsiteEntity {
 
 abstract class _WebsiteEntity implements WebsiteEntity {
   const factory _WebsiteEntity(
-      {@required String id,
-      @required String url,
-      @required String urlCanonical}) = _$_WebsiteEntity;
+      {required String id,
+      required String url,
+      required String urlCanonical}) = _$_WebsiteEntity;
 
   @override
   String get id;

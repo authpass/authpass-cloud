@@ -6,7 +6,7 @@ import '../test_utils.dart';
 
 void main() {
   PrintAppender.setupLogging();
-  DatabaseAccess db;
+  late DatabaseAccess db;
   setUp(() async {
     db = await TestUtils.setUpDatabase();
   });

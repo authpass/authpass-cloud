@@ -17,7 +17,6 @@ class UserRepository {
   /// email confirmation token.
   Future<EmailConfirmEntity> createUserOrConfirmEmail(
       String email, String userAgent) async {
-    assert(email != null);
     final userEmail = await db.tables.user.findUserByEmail(db, email);
     if (userEmail == null) {
       return await db.tables.user.insertUser(db, email, userAgent);
@@ -31,12 +30,15 @@ class UserRepository {
     );
   }
 
-  Future<bool> isValidEmailConfirmToken(String token) =>
+  Future<bool> isValidEmailConfirmToken(String? token) =>
       db.tables.user.isValidEmailToken(db, token);
 
   Future<bool> confirmEmailAddress(String token) async {
     final emailConfirmToken =
         await db.tables.user.findEmailConfirmToken(db, token);
+    if (emailConfirmToken == null) {
+      throw StateError('Unable to find confirm token. $token');
+    }
     if (emailConfirmToken.confirmedAt != null) {
       _logger.warning('Email was already confirmed. '
           '$token (${emailConfirmToken.email.emailAddress})');
@@ -45,14 +47,14 @@ class UserRepository {
     final now = clock.now().toUtc();
     await db.tables.user
         .updateEmailConfirmToken(db, emailConfirmToken, confirmedAt: now);
-    if (emailConfirmToken.authToken.status == AuthTokenStatus.created) {
-      await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken.id,
+    if (emailConfirmToken.authToken!.status == AuthTokenStatus.created) {
+      await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken!.id,
           status: AuthTokenStatus.active);
     }
     return true;
   }
 
-  Future<AuthTokenEntity> findValidAuthToken(String authToken,
+  Future<AuthTokenEntity?> findValidAuthToken(String? authToken,
       {bool acceptUnconfirmed = false}) async {
     final token = await db.tables.user.findAuthToken(db, authToken: authToken);
     if (token == null) {
@@ -71,7 +73,7 @@ class UserRepository {
     return null;
   }
 
-  Future<UserInfo> findUserInfo({AuthTokenEntity authToken}) async {
+  Future<UserInfo> findUserInfo({required AuthTokenEntity authToken}) async {
     return UserInfo(
         emails: await db.tables.user.findEmailsByUser(db, authToken.user));
   }

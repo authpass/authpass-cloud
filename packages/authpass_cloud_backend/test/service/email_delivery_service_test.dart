@@ -38,7 +38,7 @@ void main() {
     await userRepository.confirmEmailAddress(user.token);
     final emailRepository =
         EmailRepository(db: db, cryptoService: CryptoService(), env: DevEnv());
-    final address = await emailRepository.createAddress(user.authToken.user,
+    final address = await emailRepository.createAddress(user.authToken!.user,
         label: '', clientEntryUuid: '');
 
     final email = EmailDeliveryService();

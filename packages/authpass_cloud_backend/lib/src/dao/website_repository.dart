@@ -11,7 +11,7 @@ class WebsiteRepository {
   final DatabaseTransaction db;
   final CryptoService cryptoService;
 
-  Future<ImageInfo> findBestImage(Uri uri) async {
+  Future<ImageInfo?> findBestImage(Uri uri) async {
     if (!uri.hasScheme) {
       uri = uri.replace(scheme: 'https');
     }
@@ -22,24 +22,28 @@ class WebsiteRepository {
       return image;
     }
     final bi = BestIcon();
-    final images = await bi.fetchImages(uri);
-    images.images.sort((a, b) => -(a.score().compareTo(b.score())));
-    _logger.finer('found images for ${images.urlCanonical}: \n'
-        '${images.images.toDebugString()}');
+    final imagesResult = await bi.fetchImages(uri);
+    final images = imagesResult.images;
+    if (images == null || images.isEmpty) {
+      return null;
+    }
+    images.sort((a, b) => -(a.score().compareTo(b.score())));
+    _logger.finer('found images for ${imagesResult.urlCanonical}: \n'
+        '${images.toDebugString()}');
     final website = WebsiteEntity(
       id: cryptoService.createSecureUuid(),
       url: uri.toString(),
-      urlCanonical: images.urlCanonical.toString(),
+      urlCanonical: imagesResult.urlCanonical.toString(),
     );
     await db.tables.website.insertWebsite(db, website);
-    String bestImageId;
-    for (final image in images.images) {
+    String? bestImageId;
+    for (final image in imagesResult.images!) {
       final imageId =
           await db.tables.website.insertWebsiteImage(db, website, image);
       bestImageId ??= imageId;
     }
     await db.tables.website
         .updateWebsite(db, websiteId: website.id, bestImageId: bestImageId);
-    return images.images.first;
+    return images.first;
   }
 }

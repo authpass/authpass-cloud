@@ -16,7 +16,7 @@ import 'package:openapi_base/openapi_base.dart';
 final _logger = Logger('server');
 
 class BackendServer {
-  BackendServer({@required this.env}) : assert(env != null);
+  BackendServer({required this.env}) : assert(env != null);
 
   final Env env;
 
@@ -46,7 +46,7 @@ class BackendServer {
 }
 
 class Server extends BackendServer {
-  Server({@required Env env}) : super(env: env);
+  Server({required Env env}) : super(env: env);
 
   Future<void> run() async {
     PrintAppender.setupLogging();

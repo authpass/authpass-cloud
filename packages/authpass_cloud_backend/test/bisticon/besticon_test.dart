@@ -16,6 +16,6 @@ void main() {
   test('evernote.com', () async {
     final bi = BestIcon();
     final images = await bi.fetchImages(Uri.parse('https://evernote.com'));
-    _logger.info('images: \n${images.images.toDebugString()}');
+    _logger.info('images: \n${images.images!.toDebugString()}');
   });
 }

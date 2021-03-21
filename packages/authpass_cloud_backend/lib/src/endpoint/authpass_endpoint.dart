@@ -71,13 +71,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
     _logger.fine('Creating new user. ${body.email}');
     return UserRegisterPostResponse.response200(RegisterResponse(
       userUuid: emailConfirm.email.user.id,
-      authToken: emailConfirm.authToken.token,
+      authToken: emailConfirm.authToken!.token,
       status: RegisterResponseStatus.created,
     ));
   }
 
   @override
-  Future<EmailConfirmGetResponse> emailConfirmGet({String token}) async {
+  Future<EmailConfirmGetResponse> emailConfirmGet({String? token}) async {
     if (!await userRepository.isValidEmailConfirmToken(token)) {
       return EmailConfirmGetResponse.response400();
     }
@@ -112,7 +112,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<AuthTokenEntity> _requireAuthToken(
       {bool acceptUnconfirmed = false}) async {
     final data = SecuritySchemes.authToken.fromRequest(request);
-    if (data == null || data.bearerToken == null || data.bearerToken.isEmpty) {
+    if (data == null || data.bearerToken == null || data.bearerToken!.isEmpty) {
       throw UnauthorizedException('Missing auth token.');
     }
     final validToken = await userRepository.findValidAuthToken(
@@ -129,7 +129,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {String xAuthpassToken}) async {
+      {String? xAuthpassToken}) async {
     if (xAuthpassToken != _env.config.secrets.emailReceiveToken) {
       return EmailReceivePostResponse.response403(MailSystemStatusCodes
           .errorNotAcceptingNetworkMessages
@@ -159,8 +159,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxListGetResponse> mailboxListGet({
-    String pageToken,
-    String sinceToken,
+    String? pageToken,
+    String? sinceToken,
   }) async {
     final token = await _requireAuthToken();
     final page = pageToken != null
@@ -196,10 +196,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageGetResponse> mailboxMessageGet(
-      {ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     final body = await emailRepository.findEmailMessageBody(token.user,
         messageId: messageId.encodeToString());
+    if (body == null) {
+      throw NotFoundException('Message not found.');
+    }
     return MailboxMessageGetResponse.response200(body);
   }
 
@@ -213,7 +216,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
-      {ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.markAsRead(token.user,
         messageId: messageId.encodeToString(), isRead: true)) {
@@ -235,7 +238,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
-      {ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.markAsRead(token.user,
         messageId: messageId.encodeToString(), isRead: false)) {
@@ -247,20 +250,20 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
       MailboxMessageForwardSchema body,
-      {ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     final body = await emailRepository.findEmailMessageBody(token.user,
         messageId: messageId.encodeToString());
     final userInfo = await userRepository.findUserInfo(authToken: token);
 
     await serviceProvider.emailService
-        .forwardMimeMessage(body, userInfo.emails.first.address);
+        .forwardMimeMessage(body, userInfo.emails!.first.address);
     return MailboxMessageForwardResponse.response200();
   }
 
   @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
-      {ApiUuid messageId}) async {
+      {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
     if (!await emailRepository.deleteMessage(token.user,
         messageId: messageId.encodeToString())) {
@@ -271,7 +274,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {String mailboxAddress}) async {
+      {required String mailboxAddress}) async {
     final token = await _requireAuthToken();
     if (await emailRepository.updateMailbox(
       token.user,
@@ -296,7 +299,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
-  Future<WebsiteImageGetResponse> websiteImageGet({String url}) async {
+  Future<WebsiteImageGetResponse> websiteImageGet({required String url}) async {
     final uri = Uri.parse(url);
     final image = await websiteRepository.findBestImage(uri);
     if (image == null) {
@@ -314,7 +317,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
-  Future<CheckStatusPostResponse> checkStatusPost({String xSecret}) async {
+  Future<CheckStatusPostResponse> checkStatusPost({String? xSecret}) async {
     if (xSecret != _env.config.secrets.systemStatusSecret) {
       _logger.severe('Invalid secret. $xSecret');
       throw NotFoundException('Invalid.');

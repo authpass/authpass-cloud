@@ -15,15 +15,15 @@ final _logger = Logger('besticon');
 
 class ImageInfo {
   ImageInfo({
-    @required this.uri,
-    @required this.fileName,
-    @required this.mimeType,
-    @required this.bytes,
-    @required this.originalByteLength,
-    @required this.width,
-    @required this.height,
-    @required this.brightness,
-    @required this.imageLinkType,
+    required this.uri,
+    required this.fileName,
+    required this.mimeType,
+    required this.bytes,
+    required this.originalByteLength,
+    required this.width,
+    required this.height,
+    required this.brightness,
+    required this.imageLinkType,
   });
 
   /// the original uri from which the image was downloaded.
@@ -37,14 +37,14 @@ class ImageInfo {
 
   /// when the image was re encoded, this contains
   /// the size of the original image.
-  final int originalByteLength;
+  final int? originalByteLength;
   final int width;
   final int height;
   final double brightness;
   final ImageLinkType imageLinkType;
 
   double score({int optimalSize = 512, int optimalRatio = 1}) {
-    final image = this;
+    final ImageInfo image = this;
     // const optimalSize = 512;
     // const optimalRatio = 1;
     // right now, this scoring only works for square images ;-)
@@ -75,7 +75,7 @@ extension IterableImageInfo<T extends Iterable<ImageInfo>> on T {
 }
 
 class ImageLink {
-  ImageLink({@required this.type, @required this.uri});
+  ImageLink({required this.type, required this.uri});
 
   final ImageLinkType type;
   final Uri uri;
@@ -100,7 +100,7 @@ extension ImageLinkTypeExt on ImageLinkType {
   static const _length = _LinkImageTypeName.length;
   static final _mapping = _createMapping();
 
-  static ImageLinkType fromString(String value) => _mapping[value];
+  static ImageLinkType? fromString(String value) => _mapping[value];
 
   static Map<String, ImageLinkType> _createMapping() {
     if (_LinkImageTypeName !=
@@ -115,7 +115,7 @@ extension ImageLinkTypeExt on ImageLinkType {
 }
 
 class ResponseException implements Exception {
-  ResponseException({@required this.response});
+  ResponseException({required this.response});
   final Response response;
 
   String debugString() {
@@ -125,7 +125,7 @@ class ResponseException implements Exception {
   @override
   String toString() {
     return 'Invalid response ${response.statusCode} for '
-        '${response.request.url}';
+        '${response.request!.url}';
   }
 }
 
@@ -163,9 +163,9 @@ const _ICON_PATHS = [
 
 class _CssPathLink {
   _CssPathLink({
-    @required this.cssPath,
-    @required this.linkAttribute,
-    @required this.linkType,
+    required this.cssPath,
+    required this.linkAttribute,
+    required this.linkType,
   });
   final String cssPath;
   final String linkAttribute;
@@ -213,17 +213,22 @@ class DecodedImage {
         assert(encodedFileExtension == null ||
             encodedFileExtension.startsWith('.'));
 
-  final Image image;
+  final Image? image;
   final Decoder decoder;
-  final Uint8List encodedBytes;
-  final String encodedMimetype;
+  final Uint8List? encodedBytes;
+  final String? encodedMimetype;
 
   /// file extension including `.`, e.g. `.webp`
-  final String encodedFileExtension;
+  final String? encodedFileExtension;
+}
+
+extension MyIterableWhereNotNull<E> on Iterable<E?> {
+  /// Returns a new lazy [Iterable] with all elements which are not null.
+  Iterable<E> myWhereNotNull() => where((element) => element != null).cast<E>();
 }
 
 class BestIcon {
-  Client __client;
+  Client? __client;
   Client get _client => __client ??= Client();
 
   Future<Response> _requestGet(Uri uri, {int count = 0}) async {
@@ -243,14 +248,14 @@ class BestIcon {
 
   /// Decodes the given image. If it is of a format which the
   /// client might not understand, we re-encode it to png.
-  DecodedImage _decodeImageAndReEncode(Uint8List bytes) {
+  DecodedImage? _decodeImageAndReEncode(Uint8List bytes) {
     final decoder = findDecoderForData(bytes);
     if (decoder == null) {
       return null;
     }
     if (decoder is IcoDecoder) {
       // extract the largest image and encode it to webp.
-      final image = decoder.decodeImageLargest(bytes);
+      final image = decoder.decodeImageLargest(bytes)!;
       final pngBytes = PngEncoder().encodeImage(image);
       if (pngBytes == null || pngBytes.isEmpty) {
         _logger.severe('Unable to encode image to webp.');
@@ -277,7 +282,7 @@ class BestIcon {
       try {
         final response = await _client.get(imageLink.uri);
         _requireSuccess(response);
-        final contentType = response.headers[HttpHeaders.contentTypeHeader];
+        final contentType = response.headers[HttpHeaders.contentTypeHeader]!;
         final ct = ContentType.parse(contentType);
         final imageBytes = response.bodyBytes;
         final decoded = _decodeImageAndReEncode(imageBytes);
@@ -286,7 +291,7 @@ class BestIcon {
               '${imageLink.uri} - ${ct.mimeType}');
           return null;
         }
-        final image = decoded.image;
+        final image = decoded.image!;
         final fileName = imageLink.uri.pathSegments.last;
 
         final brightness = _analyseImageBrightnessRatio(image);
@@ -316,7 +321,7 @@ class BestIcon {
       }
     })))
         .whereNotNull()
-        .toList();
+        .toList() as List<ImageInfo>;
     return FetchImageResult(
       urlCanonical: imageLinkResult.key,
       images: images,
@@ -325,7 +330,7 @@ class BestIcon {
 
   Future<MapEntry<Uri, List<ImageLink>>> _findImageLinks(Uri uri) async {
     final response = await _requestGet(uri);
-    final baseUri = response.request.url;
+    final baseUri = response.request!.url;
     _requireSuccess(response);
     final dom = parse(response.body, sourceUrl: baseUri.toString());
 
@@ -366,7 +371,7 @@ class BestIcon {
               }
               return null;
             }))
-            .whereNotNull()
+            .myWhereNotNull()
             .distinctBy((e) => e.uri)
             .toList());
   }
@@ -412,8 +417,8 @@ class BestIcon {
 
 class FetchImageResult {
   FetchImageResult({this.urlCanonical, this.images});
-  final Uri urlCanonical;
-  final List<ImageInfo> images;
+  final Uri? urlCanonical;
+  final List<ImageInfo>? images;
 
   @override
   String toString() {

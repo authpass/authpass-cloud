@@ -36,8 +36,8 @@ class EmailReceiveCommand extends Command<void> {
 
   @override
   Future<void> run() async {
-    final backend = argResults[ARG_BACKEND_URL] as String;
-    final token = argResults[ARG_SECRET_TOKEN] as String;
+    final backend = argResults![ARG_BACKEND_URL] as String?;
+    final token = argResults![ARG_SECRET_TOKEN] as String?;
     if (backend == null) {
       usageException('Required parameter $ARG_BACKEND_URL missing.');
     }

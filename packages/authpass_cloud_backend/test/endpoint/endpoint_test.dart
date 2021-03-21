@@ -41,7 +41,8 @@ void endpointTest(String description,
         final env = DevEnv();
         final cryptoService = CryptoService();
         final request = MockOpenApiRequest();
-        when(request.headerParameter(argThat(equalsIgnoringCase('user-agent'))))
+        when(request
+                .headerParameter(argThat(equalsIgnoringCase('user-agent'))!))
             .thenReturn(['unit test']);
         final endpoint = AuthPassCloudImpl(
           ServiceProvider(
@@ -68,18 +69,22 @@ void endpointTest(String description,
   });
 }
 
-Future<AuthTokenEntity> _createUserConfirmed(AuthPassCloudImpl endpoint) async {
+Future<AuthTokenEntity?> _createUserConfirmed(
+    AuthPassCloudImpl endpoint) async {
   final db = endpoint.db;
   final confirm =
       await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
   await endpoint.userRepository.confirmEmailAddress(confirm.token);
   when(endpoint.request.headerParameter('Authorization'))
-      .thenReturn(['Bearer ${confirm.authToken.token}']);
+      .thenReturn(['Bearer ${confirm.authToken!.token}']);
   return confirm.authToken;
 }
 
 Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
   final authToken = await _createUserConfirmed(endpoint);
+  if (authToken == null) {
+    throw StateError('Must not be null.');
+  }
   const address = 'x@mail.authpass.app';
   await endpoint.db.tables.email.insertMailbox(
     endpoint.db,
@@ -88,7 +93,8 @@ Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
     address: address,
     clientEntryUuid: '',
   );
-  return endpoint.db.tables.email.findMailbox(endpoint.db, address: address);
+  return (await endpoint.db.tables.email
+      .findMailbox(endpoint.db, address: address))!;
 }
 
 Future<ApiUuid> _createMessage(
@@ -104,8 +110,8 @@ Future<ApiUuid> _createMessage(
 
 extension on AuthPassCloudImpl {
   Future<void> expectSystemStatus({
-    int userConfirmed,
-    int emailUnconfirmed,
+    int? userConfirmed,
+    int? emailUnconfirmed,
   }) async {
     final status = await checkStatusPost(
             xSecret: serviceProvider.env.config.secrets.systemStatusSecret)
@@ -128,12 +134,12 @@ void main() {
     final emailService = endpoint.serviceProvider.emailService;
     final registerResponse =
         await endpoint.userRegisterPost(RegisterRequest(email: 'a@b.com'));
-    final captured =
-        verify(emailService.sendEmailConfirmationToken(captureAny, captureAny))
-            .captured;
+    final captured = verify(
+            emailService.sendEmailConfirmationToken(captureAny!, captureAny!))
+        .captured;
     expect(captured, ['a@b.com', matches('^http.+')]);
     final emailToken =
-        Uri.parse(captured[1] as String).queryParameters['token'];
+        Uri.parse(captured[1] as String).queryParameters['token']!;
     verifyNoMoreInteractions(emailService);
 
     when(endpoint.request.headerParameter('Authorization'))
@@ -146,7 +152,7 @@ void main() {
 
     await endpoint.expectSystemStatus(userConfirmed: 0, emailUnconfirmed: 1);
 
-    when(endpoint.serviceProvider.recaptchaService.verify(any, any))
+    when(endpoint.serviceProvider.recaptchaService.verify(any!, any))
         .thenAnswer((realInvocation) async => true);
 
     await endpoint.emailConfirmPost(
@@ -164,7 +170,7 @@ void main() {
       await _createUserConfirmed(endpoint);
       final user = await endpoint.userGet().requireSuccess();
       expect(user.emails, hasLength(1));
-      expect(user.emails.first.confirmedAt, isNotNull);
+      expect(user.emails!.first.confirmedAt, isNotNull);
     });
   });
 
