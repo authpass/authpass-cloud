@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'website_tables.dart';
 
@@ -9,10 +9,13 @@ part of 'website_tables.dart';
 
 T _$identity<T>(T value) => value;
 
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
+/// @nodoc
 class _$WebsiteEntityTearOff {
   const _$WebsiteEntityTearOff();
 
-// ignore: unused_element
   _WebsiteEntity call(
       {required String id, required String url, required String urlCanonical}) {
     return _WebsiteEntity(
@@ -23,24 +26,29 @@ class _$WebsiteEntityTearOff {
   }
 }
 
-// ignore: unused_element
+/// @nodoc
 const $WebsiteEntity = _$WebsiteEntityTearOff();
 
+/// @nodoc
 mixin _$WebsiteEntity {
-  String get id;
-  String get url;
-  String get urlCanonical;
+  String get id => throw _privateConstructorUsedError;
+  String get url => throw _privateConstructorUsedError;
+  String get urlCanonical => throw _privateConstructorUsedError;
 
-  $WebsiteEntityCopyWith<WebsiteEntity> get copyWith;
+  @JsonKey(ignore: true)
+  $WebsiteEntityCopyWith<WebsiteEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
+/// @nodoc
 abstract class $WebsiteEntityCopyWith<$Res> {
   factory $WebsiteEntityCopyWith(
           WebsiteEntity value, $Res Function(WebsiteEntity) then) =
       _$WebsiteEntityCopyWithImpl<$Res>;
-  $Res call({String? id, String? url, String? urlCanonical});
+  $Res call({String id, String url, String urlCanonical});
 }
 
+/// @nodoc
 class _$WebsiteEntityCopyWithImpl<$Res>
     implements $WebsiteEntityCopyWith<$Res> {
   _$WebsiteEntityCopyWithImpl(this._value, this._then);
@@ -56,24 +64,33 @@ class _$WebsiteEntityCopyWithImpl<$Res>
     Object? urlCanonical = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String?,
-      url: url == freezed ? _value.url : url as String?,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      url: url == freezed
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
       urlCanonical: urlCanonical == freezed
           ? _value.urlCanonical
-          : urlCanonical as String?,
+          : urlCanonical // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
+/// @nodoc
 abstract class _$WebsiteEntityCopyWith<$Res>
     implements $WebsiteEntityCopyWith<$Res> {
   factory _$WebsiteEntityCopyWith(
           _WebsiteEntity value, $Res Function(_WebsiteEntity) then) =
       __$WebsiteEntityCopyWithImpl<$Res>;
   @override
-  $Res call({String? id, String? url, String? urlCanonical});
+  $Res call({String id, String url, String urlCanonical});
 }
 
+/// @nodoc
 class __$WebsiteEntityCopyWithImpl<$Res>
     extends _$WebsiteEntityCopyWithImpl<$Res>
     implements _$WebsiteEntityCopyWith<$Res> {
@@ -91,21 +108,26 @@ class __$WebsiteEntityCopyWithImpl<$Res>
     Object? urlCanonical = freezed,
   }) {
     return _then(_WebsiteEntity(
-      id: id == freezed ? _value.id : (id as String?)!,
-      url: url == freezed ? _value.url : (url as String?)!,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      url: url == freezed
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
       urlCanonical: urlCanonical == freezed
           ? _value.urlCanonical
-          : (urlCanonical as String?)!,
+          : urlCanonical // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
+/// @nodoc
 class _$_WebsiteEntity implements _WebsiteEntity {
   const _$_WebsiteEntity(
-      {required this.id, required this.url, required this.urlCanonical})
-      : assert(id != null),
-        assert(url != null),
-        assert(urlCanonical != null);
+      {required this.id, required this.url, required this.urlCanonical});
 
   @override
   final String id;
@@ -139,6 +161,7 @@ class _$_WebsiteEntity implements _WebsiteEntity {
       const DeepCollectionEquality().hash(url) ^
       const DeepCollectionEquality().hash(urlCanonical);
 
+  @JsonKey(ignore: true)
   @override
   _$WebsiteEntityCopyWith<_WebsiteEntity> get copyWith =>
       __$WebsiteEntityCopyWithImpl<_WebsiteEntity>(this, _$identity);
@@ -151,11 +174,13 @@ abstract class _WebsiteEntity implements WebsiteEntity {
       required String urlCanonical}) = _$_WebsiteEntity;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get url;
+  String get url => throw _privateConstructorUsedError;
   @override
-  String get urlCanonical;
+  String get urlCanonical => throw _privateConstructorUsedError;
   @override
-  _$WebsiteEntityCopyWith<_WebsiteEntity> get copyWith;
+  @JsonKey(ignore: true)
+  _$WebsiteEntityCopyWith<_WebsiteEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }

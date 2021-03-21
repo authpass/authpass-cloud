@@ -13,37 +13,17 @@ ConfigFileRoot _$ConfigFileRootFromJson(Map json) {
       http: $checkedConvert(
           json,
           'http',
-          (dynamic v) => v == null
+          (v) => v == null
               ? null
-              : HttpConfig.fromJson(
-                  (v as Map<String, Object>).map<String, Object>(
-                  (dynamic k, Object e) =>
-                      MapEntry<String, Object>(k as String, e),
-                ))),
-      email: $checkedConvert(
-          json,
-          'email',
-          ((dynamic v) => v == null ? null : EmailConfig.fromJson(v as Map))
-              as EmailConfig Function(dynamic)),
+              : HttpConfig.fromJson(Map<String, dynamic>.from(v as Map))),
+      email:
+          $checkedConvert(json, 'email', (v) => EmailConfig.fromJson(v as Map)),
       secrets: $checkedConvert(
-          json,
-          'secrets',
-          ((dynamic v) => v == null ? null : SecretsConfig.fromJson(v as Map))
-              as SecretsConfig Function(dynamic)),
-      database: $checkedConvert(
-          json,
-          'database',
-          (dynamic v) =>
-              DatabaseConfig.fromJson(Map<String, dynamic>.from(v as Map))),
-      mailbox: $checkedConvert(
-          json,
-          'mailbox',
-          ((dynamic v) => v == null
-              ? null
-              : MailboxConfig.fromJson(
-                  (v as Map<String, Object>).map<String, Object>(
-                  (dynamic k, Object e) => MapEntry(k as String, e),
-                ))) as MailboxConfig Function(dynamic)),
+          json, 'secrets', (v) => SecretsConfig.fromJson(v as Map)),
+      database: $checkedConvert(json, 'database',
+          (v) => DatabaseConfig.fromJson(Map<String, dynamic>.from(v as Map))),
+      mailbox: $checkedConvert(json, 'mailbox',
+          (v) => MailboxConfig.fromJson(Map<String, dynamic>.from(v as Map))),
     );
     return val;
   });
@@ -72,9 +52,8 @@ Map<String, dynamic> _$MailboxConfigToJson(MailboxConfig instance) =>
 HttpConfig _$HttpConfigFromJson(Map json) {
   return $checkedNew('HttpConfig', json, () {
     final val = HttpConfig(
-      host: $checkedConvert(json, 'host', (dynamic v) => v as String?) ??
-          'localhost',
-      port: $checkedConvert(json, 'port', (dynamic v) => v as int?) ?? 8080,
+      host: $checkedConvert(json, 'host', (v) => v as String?) ?? 'localhost',
+      port: $checkedConvert(json, 'port', (v) => v as int?) ?? 8080,
     );
     return val;
   });
@@ -90,11 +69,10 @@ EmailConfig _$EmailConfigFromJson(Map json) {
   return $checkedNew('EmailConfig', json, () {
     $checkKeys(json, requiredKeys: const ['fromAddress']);
     final val = EmailConfig(
-      fromAddress: $checkedConvert(json, 'fromAddress',
-          ((dynamic v) => (v as String?)!) as String Function(dynamic)),
-      fromName: $checkedConvert(json, 'fromName', (dynamic v) => v as String?),
+      fromAddress: $checkedConvert(json, 'fromAddress', (v) => v as String),
+      fromName: $checkedConvert(json, 'fromName', (v) => v as String?),
       smtp: $checkedConvert(json, 'smtp',
-          (dynamic v) => v == null ? null : EmailSmtpConfig.fromJson(v as Map)),
+          (v) => v == null ? null : EmailSmtpConfig.fromJson(v as Map)),
     );
     return val;
   });
@@ -111,18 +89,16 @@ EmailSmtpConfig _$EmailSmtpConfigFromJson(Map json) {
   return $checkedNew('EmailSmtpConfig', json, () {
     $checkKeys(json, requiredKeys: const ['host']);
     final val = EmailSmtpConfig(
-      host: $checkedConvert(json, 'host',
-          ((dynamic v) => (v as String?)!) as String Function(dynamic)),
-      port: $checkedConvert(json, 'port', (dynamic v) => v as int?) ?? 25,
-      ssl: $checkedConvert(json, 'ssl', (dynamic v) => v as bool?) ?? false,
-      username: $checkedConvert(json, 'username', (dynamic v) => v as String?),
-      password: $checkedConvert(json, 'password', (dynamic v) => v as String?),
+      host: $checkedConvert(json, 'host', (v) => v as String),
+      port: $checkedConvert(json, 'port', (v) => v as int?) ?? 25,
+      ssl: $checkedConvert(json, 'ssl', (v) => v as bool?) ?? false,
+      username: $checkedConvert(json, 'username', (v) => v as String?),
+      password: $checkedConvert(json, 'password', (v) => v as String?),
       allowInsecure:
-          $checkedConvert(json, 'allowInsecure', (dynamic v) => v as bool?) ??
+          $checkedConvert(json, 'allowInsecure', (v) => v as bool?) ?? false,
+      ignoreBadCertificate:
+          $checkedConvert(json, 'ignoreBadCertificate', (v) => v as bool?) ??
               false,
-      ignoreBadCertificate: $checkedConvert(
-              json, 'ignoreBadCertificate', (dynamic v) => v as bool?) ??
-          false,
     );
     return val;
   });
@@ -142,14 +118,14 @@ Map<String, dynamic> _$EmailSmtpConfigToJson(EmailSmtpConfig instance) =>
 SecretsConfig _$SecretsConfigFromJson(Map json) {
   return $checkedNew('SecretsConfig', json, () {
     final val = SecretsConfig(
-      recaptchaSecretKey: $checkedConvert(
-          json, 'recaptchaSecretKey', (dynamic v) => v as String?),
-      recaptchaSiteKey: $checkedConvert(
-          json, 'recaptchaSiteKey', (dynamic v) => v as String?),
-      emailReceiveToken: $checkedConvert(
-          json, 'emailReceiveToken', (dynamic v) => v as String?),
-      systemStatusSecret: $checkedConvert(
-          json, 'systemStatusSecret', (dynamic v) => v as String?),
+      recaptchaSecretKey:
+          $checkedConvert(json, 'recaptchaSecretKey', (v) => v as String?),
+      recaptchaSiteKey:
+          $checkedConvert(json, 'recaptchaSiteKey', (v) => v as String?),
+      emailReceiveToken:
+          $checkedConvert(json, 'emailReceiveToken', (v) => v as String?),
+      systemStatusSecret:
+          $checkedConvert(json, 'systemStatusSecret', (v) => v as String?),
     );
     return val;
   });
