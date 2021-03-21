@@ -4,52 +4,62 @@ environment:
   sdk: '>=2.6.0 <3.0.0'
 
 dependencies:
-  meta: ^1.2.2
-  uuid: ^2.2.0
+  meta: ^1.3.0
+  uuid: ^3.0.1
   logging: ^1.0.0
   logging_appenders: ^1.0.0
-  freezed_annotation: ^0.11.0
-  json_annotation: ^3.0.1
-  pedantic: ^1.9.2
-  postgres: ^2.1.1
-  quiver: ^2.1.3
-  args: ^1.6.0
-  checked_yaml: ^1.0.2
-  http: ^0.12.1
-  clock: ^1.0.1
-  mailer: ^3.0.4
-  yaml: ^2.2.1
-  enough_mail: ^0.0.28
+  freezed_annotation: ^0.14.1
+  json_annotation: ^4.0.1
+  pedantic: ^1.11.0
+  postgres: ^2.3.0
+  quiver: ^3.0.0
+  args: ^2.0.0
+  checked_yaml: ^2.0.1
+  http: ^0.13.1
+  clock: ^1.1.0
+  mailer: ^4.0.0
+  yaml: ^3.1.0
+  enough_mail: ^1.0.0
   smtpd:
     path: ../../deps/smtpd.dart
 
-  openapi_base: ^0.1.5+1
+  openapi_base: ^0.2.0
   authpass_cloud_shared:
     path: ../authpass_cloud_shared
   postgres_utils:
     path: ../../deps/postgres_utils.dart
 
   # besticon
-  html: ^0.14.0+3
-  dartx: ^0.5.0
-#  image: ^2.1.14
-  image:
-    git:
-      url: https://github.com/authpass/image.git
-      ref: 04bed8d246ef90e3d4f49b12f9df2066f5df7a22
+  html: ^0.15.0
+  dartx: ^0.7.0
+  image: ^3.0.2
+#  image:
+#    git:
+#      url: https://github.com/authpass/image.git
+#      ref: 04bed8d246ef90e3d4f49b12f9df2066f5df7a22
 
 dev_dependencies:
-  test: ^1.15.1
-  mockito: ^4.1.1
+  test: ^1.16.8
+  mockito: ^5.0.2
   build_runner: ^1.10.0
-  freezed: ^0.11.2
-  json_serializable: ^3.3.0
+  freezed: ^0.14.1+1
+  json_serializable: ^4.1.0
 
 dependency_overrides:
-  openapi_base:
-    path: ../../deps/openapi_dart/packages/openapi_base
-  enough_mail:
-    git:
-      url: https://github.com/authpass/enough_mail.git
-      ref: 51239305f89cec75843ad873f73f7a7758823ef0
-
+  #openapi_base:
+  #  path: ../../deps/openapi_dart/packages/openapi_base
+#  quiver: ^2.1.3
+#  json_annotation: ^3.0.1
+#  openapi_base: ^0.1.5+1
+#  freezed_annotation: ^0.11.0
+#  dartx: ^0.5.0
+#  crypto: ^2.1.0
+#  intl: ^0.16.1
+#  logging: ^1.0.0
+#  http: ^0.12.2
+#  dio: ^3.0.0
+#  enough_mail:
+#    git:
+#      url: https://github.com/authpass/enough_mail.git
+#      ref: 51239305f89cec75843ad873f73f7a7758823ef0
+  source_gen: ^1.0.0

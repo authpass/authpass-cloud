@@ -98,9 +98,8 @@ class MailerEmailService extends EmailServiceImpl {
   @override
   Future<void> forwardMimeMessage(
       String mimeMessageContent, String recipientEmail) async {
-    final originalMessage = enough.MimeMessage()
-      ..bodyRaw = mimeMessageContent
-      ..parse();
+    final originalMessage =
+        enough.MimeMessage.parseFromText(mimeMessageContent);
     final newMessage = enough.MessageBuilder.prepareForwardMessage(
         originalMessage,
         from: originalMessage.to.first);
@@ -108,14 +107,13 @@ class MailerEmailService extends EmailServiceImpl {
     final message = newMessage.buildMimeMessage();
 
     final client = enough.SmtpClient(smtpConfig.host);
-    await client
-        .connectToServer(smtpConfig.host, smtpConfig.port,
-            isSecure: smtpConfig.ssl)
-        .expectOkStatus('connect');
+    // TODO: What happens on connection errors?
+    await client.connectToServer(smtpConfig.host, smtpConfig.port,
+        isSecure: smtpConfig.ssl);
     await client.ehlo().expectOkStatus('ehlo');
     if (smtpConfig.username != null) {
       await client
-          .login(smtpConfig.username, smtpConfig.password)
+          .authenticate(smtpConfig.username, smtpConfig.password)
           .expectOkStatus('login');
     }
     await client

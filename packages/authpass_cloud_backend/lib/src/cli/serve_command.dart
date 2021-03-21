@@ -42,7 +42,8 @@ abstract class BaseBackendCommand extends Command<void> {
 
   T _loadYaml<T>(String yamlContent, T Function(Map map) constructor,
       {String sourceUrl}) {
-    final yamlMap = loadYaml(yamlContent, sourceUrl: sourceUrl) as Map;
+    final yamlMap =
+        loadYaml(yamlContent, sourceUrl: Uri.parse(sourceUrl)) as Map;
     return constructor(yamlMap);
   }
 }

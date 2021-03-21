@@ -15,7 +15,7 @@ class RecaptchaService {
   Future<bool> verify(String response, [String remoteIp]) async {
     _client ??= Client();
     final resp = await _client.post(
-      'https://www.google.com/recaptcha/api/siteverify',
+      Uri.parse('https://www.google.com/recaptcha/api/siteverify'),
       body: {
         'secret': secret,
         'response': response,

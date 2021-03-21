@@ -21,9 +21,7 @@ class EmailDeliveryService {
           .withMessage('Missing From header.');
     }
     final sender = fromLine.split(' ')[1];
-    final message = MimeMessage();
-    message.bodyRaw = rawMessage;
-    message.parse();
+    final message = MimeMessage.parseFromText(rawMessage);
     final recipient = message.decodeHeaderValue('delivered-to');
     return await _deliverEmailTo(db, sender, recipient, message);
   }
@@ -34,9 +32,7 @@ class EmailDeliveryService {
     @required String recipient,
     @required String content,
   }) async {
-    final message = MimeMessage();
-    message.bodyRaw = content;
-    message.parse();
+    final message = MimeMessage.parseFromText(content);
     return await _deliverEmailTo(db, sender, recipient, message);
   }
 
@@ -63,12 +59,12 @@ class EmailDeliveryService {
       mailbox: mailbox,
       sender: sender,
       subject: subject ?? '',
-      message: message.bodyRaw,
+      message: message.body.bodyRaw,
     );
 
     _logger.info('Received email for {$recipient}.'
         ' (from {$sender})'
-        ' With the following body:\n\n${message.bodyRaw}');
+        ' With the following body:\n\n${message.body.bodyRaw}');
     return MailSystemStatusCodes.success;
   }
 }
