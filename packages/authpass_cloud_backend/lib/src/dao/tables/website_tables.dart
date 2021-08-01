@@ -11,7 +11,7 @@ import 'package:postgres_utils/postgres_utils.dart';
 part 'website_tables.freezed.dart';
 
 class WebsiteTable extends TableBase with TableConstants {
-  WebsiteTable({required this.cryptoService}) : assert(cryptoService != null);
+  WebsiteTable({required this.cryptoService});
 
   static const _TABLE_WEBSITE = 'website';
   static const _TABLE_WEBSITE_IMAGE = 'website_image';

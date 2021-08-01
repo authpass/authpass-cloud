@@ -1,7 +1,6 @@
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:enough_mail/enough_mail.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('email_delivery_service');

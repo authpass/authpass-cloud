@@ -4,11 +4,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dartx/dartx.dart';
+import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart';
 import 'package:image/image.dart';
-import 'package:meta/meta.dart';
-import 'package:html/parser.dart' show parse;
-
 import 'package:logging/logging.dart';
 
 final _logger = Logger('besticon');
@@ -44,7 +42,7 @@ class ImageInfo {
   final ImageLinkType imageLinkType;
 
   double score({int optimalSize = 512, int optimalRatio = 1}) {
-    final ImageInfo image = this;
+    final image = this;
     // const optimalSize = 512;
     // const optimalRatio = 1;
     // right now, this scoring only works for square images ;-)
@@ -257,7 +255,7 @@ class BestIcon {
       // extract the largest image and encode it to webp.
       final image = decoder.decodeImageLargest(bytes)!;
       final pngBytes = PngEncoder().encodeImage(image);
-      if (pngBytes == null || pngBytes.isEmpty) {
+      if (pngBytes.isEmpty) {
         _logger.severe('Unable to encode image to webp.');
       }
 

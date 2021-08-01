@@ -22,9 +22,7 @@ class TestUtils {
   }
 
   static Future<void> tearDown(DatabaseAccess db) async {
-    if (db != null) {
-      await db.dispose();
-    }
+    await db.dispose();
     final dbDrop = TestUtils.createDatabaseAccess(config);
     await dbDrop.forTestDropDatabase(db.config.databaseName);
     await dbDrop.dispose();

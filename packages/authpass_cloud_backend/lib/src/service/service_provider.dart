@@ -4,7 +4,6 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_delivery_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 class ServiceProvider {
   ServiceProvider({
@@ -12,10 +11,7 @@ class ServiceProvider {
     required this.cryptoService,
     required this.emailService,
     RecaptchaService? recaptchaService,
-  })  : assert(env != null),
-        assert(cryptoService != null),
-        assert(emailService != null),
-        recaptchaService = recaptchaService ??
+  })  : recaptchaService = recaptchaService ??
             RecaptchaService(secret: env.config.secrets.recaptchaSecretKey),
         emailDeliveryService = EmailDeliveryService();
 

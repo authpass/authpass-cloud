@@ -2,7 +2,6 @@ import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/website_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
-import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
@@ -16,9 +15,7 @@ class DatabaseAccess
   DatabaseAccess({
     required CryptoService cryptoService,
     required DatabaseConfig config,
-  })  : assert(config != null),
-        assert(cryptoService != null),
-        super(
+  }) : super(
           config: config,
           tables: AuthPassTables(cryptoService: cryptoService),
           migrations: AuthPassMigrationsProvider(),

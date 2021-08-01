@@ -4,21 +4,16 @@ import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
-import 'package:smtpd/smtpd.dart';
 import 'package:clock/clock.dart';
-import 'package:meta/meta.dart';
-
 import 'package:logging/logging.dart';
 import 'package:quiver/core.dart';
+import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('email_repository');
 
 class EmailRepository {
   EmailRepository(
-      {required this.db, required this.cryptoService, required this.env})
-      : assert(db != null),
-        assert(cryptoService != null),
-        assert(env != null);
+      {required this.db, required this.cryptoService, required this.env});
   final DatabaseTransaction db;
   final CryptoService cryptoService;
   final Env env;
@@ -28,10 +23,6 @@ class EmailRepository {
     required String label,
     required String clientEntryUuid,
   }) async {
-    assert(userEntity != null);
-    assert(label != null);
-    assert(clientEntryUuid != null);
-
     final mailboxes = await db.tables.email.findMailboxAll(db, userEntity);
     if (mailboxes.length > 800) {
       _logger.shout('More than 800 mailboxes for $userEntity');
@@ -56,8 +47,8 @@ class EmailRepository {
       }
       final address = '$addressLocal@${env.config.mailbox.defaultHost}';
 
-      final mailbox = db.tables.email.findMailbox(db, address: address);
-      if (mailbox != null) {
+      final mailbox = await db.tables.email.findMailbox(db, address: address);
+      if (mailbox == null) {
         await db.tables.email.insertMailbox(
           db,
           userEntity: userEntity,
@@ -81,8 +72,6 @@ class EmailRepository {
     bool? isDisabled,
     bool? isHidden,
   }) async {
-    assert(user != null);
-    assert(mailboxAddress != null);
     final mailbox =
         await db.tables.email.findMailbox(db, address: mailboxAddress);
     if (mailbox == null || mailbox.user.id != user.id) {
@@ -132,8 +121,6 @@ class EmailRepository {
   /// true if mail was found, false otherwise.
   Future<bool> markAsRead(UserEntity user,
       {required String messageId, required bool isRead}) async {
-    assert(messageId != null);
-    assert(isRead != null);
     final mail =
         await db.tables.email.findEmailForUser(db, user, messageId: messageId);
     if (mail != null) {

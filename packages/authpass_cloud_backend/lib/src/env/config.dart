@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
 part 'config.g.dart';
@@ -12,32 +11,28 @@ class ConfigFileRoot {
     required this.secrets,
     required this.database,
     required this.mailbox,
-  })  : http = http ?? HttpConfig.defaults(),
-        assert(email != null),
-        assert(secrets != null),
-        assert(database != null),
-        assert(mailbox != null);
+  }) : http = http ?? HttpConfig.defaults();
   factory ConfigFileRoot.fromJson(Map json) => _$ConfigFileRootFromJson(json);
   Map<String, dynamic> toJson() => _$ConfigFileRootToJson(this);
 
   final HttpConfig http;
   final EmailConfig email;
   final SecretsConfig secrets;
-  @JsonKey(nullable: false, required: true)
+  @JsonKey(required: true)
   final DatabaseConfig database;
   final MailboxConfig mailbox;
 }
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class MailboxConfig {
   MailboxConfig({
-    this.defaultHost,
+    required this.defaultHost,
   });
   factory MailboxConfig.fromJson(Map<String, dynamic> json) =>
       _$MailboxConfigFromJson(json);
   Map<String, dynamic> toJson() => _$MailboxConfigToJson(this);
 
-  final String? defaultHost;
+  final String defaultHost;
 }
 
 @JsonSerializable(anyMap: true, checked: true)
@@ -45,8 +40,7 @@ class HttpConfig {
   const HttpConfig({
     required this.host,
     required this.port,
-  })  : assert(host != null),
-        assert(port != null);
+  });
   factory HttpConfig.fromJson(Map<String, dynamic> json) =>
       _$HttpConfigFromJson(json);
   factory HttpConfig.defaults() => HttpConfig.fromJson(<String, dynamic>{});
@@ -64,7 +58,7 @@ class EmailConfig {
     required this.fromAddress,
     this.fromName,
     this.smtp,
-  }) : assert(fromAddress != null);
+  });
   factory EmailConfig.fromJson(Map json) => _$EmailConfigFromJson(json);
   Map<String, dynamic> toJson() => _$EmailConfigToJson(this);
 
@@ -84,8 +78,7 @@ class EmailSmtpConfig {
     this.password,
     this.allowInsecure = false,
     this.ignoreBadCertificate = false,
-  })  : assert(host != null),
-        assert(allowInsecure != null);
+  });
   factory EmailSmtpConfig.fromJson(Map json) => _$EmailSmtpConfigFromJson(json);
   Map<String, dynamic> toJson() => _$EmailSmtpConfigToJson(this);
 
@@ -104,7 +97,7 @@ class EmailSmtpConfig {
   final bool ignoreBadCertificate;
 }
 
-@JsonSerializable(nullable: false, anyMap: true, checked: true)
+@JsonSerializable(anyMap: true, checked: true)
 class SecretsConfig {
   SecretsConfig({
     required this.recaptchaSecretKey,
@@ -115,11 +108,11 @@ class SecretsConfig {
   factory SecretsConfig.fromJson(Map json) => _$SecretsConfigFromJson(json);
   Map<String, dynamic> toJson() => _$SecretsConfigToJson(this);
 
-  final String? recaptchaSecretKey;
+  final String recaptchaSecretKey;
 
-  final String? recaptchaSiteKey;
+  final String recaptchaSiteKey;
 
-  final String? emailReceiveToken;
+  final String emailReceiveToken;
 
-  final String? systemStatusSecret;
+  final String systemStatusSecret;
 }

@@ -26,11 +26,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
     this.userRepository,
     this.emailRepository,
     this.websiteRepository,
-  )   : assert(serviceProvider != null),
-        assert(db != null),
-        assert(userRepository != null),
-        assert(emailRepository != null),
-        assert(websiteRepository != null);
+  );
 
   final ServiceProvider serviceProvider;
   final OpenApiRequest request;

@@ -21,7 +21,7 @@ AuthTokenStatus authTokenStatusFromName(String? name) =>
     AuthTokenStatus.values.firstWhere((element) => element.name == name);
 
 class UserTable extends TableBase with TableConstants {
-  UserTable({required this.cryptoService}) : assert(cryptoService != null);
+  UserTable({required this.cryptoService});
 
   static const TABLE_USER = '"user"';
   static const _TABLE_AUTH_TOKEN = 'auth_token';
@@ -331,9 +331,7 @@ class AuthTokenEntity {
     required this.token,
     required this.status,
     required this.user,
-  })   : assert(id != null),
-        assert(token != null),
-        assert(status != null);
+  });
   final String id;
   final String token;
   final AuthTokenStatus status;
@@ -343,7 +341,7 @@ class AuthTokenEntity {
 class UserEntity {
   UserEntity({
     required this.id,
-  }) : assert(id != null);
+  });
 
   final String id;
 
@@ -359,9 +357,7 @@ class EmailEntity {
     required this.emailAddress,
     required this.user,
     required this.confirmedAt,
-  })   : assert(id != null),
-        assert(emailAddress != null),
-        assert(user != null);
+  });
 
   final String id;
   final String emailAddress;
@@ -375,8 +371,7 @@ class EmailConfirmEntity {
     required this.token,
     required this.authToken,
     required this.confirmedAt,
-  })   : assert(email != null),
-        assert(token != null);
+  });
 
   final EmailEntity email;
   final String token;

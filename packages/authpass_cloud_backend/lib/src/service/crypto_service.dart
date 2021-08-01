@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'dart:typed_data';
 
-import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
@@ -19,13 +17,13 @@ int _tokenTypeByteLength(TokenType type) {
     case TokenType.authToken:
       return 512;
   }
-  throw StateError('Invalid token type $type.');
+  // throw StateError('Invalid token type $type.');
 }
 
 class CryptoService {
   final Random _random = Random.secure();
   final Uuid _uuid =
-      Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
+      const Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
 
 //  static const _ADDRESS_LENGTH = 32;
   // for now limit length to 10 characters, that should be more than enough.

@@ -13,11 +13,13 @@ import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
+import 'endpoint_test.mocks.dart';
 
 final _logger = Logger('endpoint_test');
 
@@ -25,12 +27,13 @@ final _logger = Logger('endpoint_test');
 //
 //}
 
-class MockOpenApiRequest extends Mock implements OpenApiRequest {}
+// class MockOpenApiRequest extends Mock implements OpenApiRequest {}
 
-class MockEmailService extends Mock implements EmailService {}
+// class MockEmailService extends Mock implements EmailService {}
 
-class MockRecaptchaService extends Mock implements RecaptchaService {}
+// class MockRecaptchaService extends Mock implements RecaptchaService {}
 
+@GenerateMocks([OpenApiRequest, EmailService, RecaptchaService])
 @isTest
 void endpointTest(String description,
     Future<void> Function(AuthPassCloudImpl endpoint) body) {
@@ -41,8 +44,7 @@ void endpointTest(String description,
         final env = DevEnv();
         final cryptoService = CryptoService();
         final request = MockOpenApiRequest();
-        when(request
-                .headerParameter(argThat(equalsIgnoringCase('user-agent'))!))
+        when(request.headerParameter(argThat(equalsIgnoringCase('user-agent'))))
             .thenReturn(['unit test']);
         final endpoint = AuthPassCloudImpl(
           ServiceProvider(
@@ -131,12 +133,13 @@ void main() {
 
   endpointTest('creating user', (endpoint) async {
     await endpoint.expectSystemStatus(userConfirmed: 0, emailUnconfirmed: 0);
-    final emailService = endpoint.serviceProvider.emailService;
+    final emailService =
+        endpoint.serviceProvider.emailService as MockEmailService;
     final registerResponse =
         await endpoint.userRegisterPost(RegisterRequest(email: 'a@b.com'));
-    final captured = verify(
-            emailService.sendEmailConfirmationToken(captureAny!, captureAny!))
-        .captured;
+    final captured =
+        verify(emailService.sendEmailConfirmationToken(captureAny, captureAny))
+            .captured;
     expect(captured, ['a@b.com', matches('^http.+')]);
     final emailToken =
         Uri.parse(captured[1] as String).queryParameters['token']!;
@@ -152,7 +155,10 @@ void main() {
 
     await endpoint.expectSystemStatus(userConfirmed: 0, emailUnconfirmed: 1);
 
-    when(endpoint.serviceProvider.recaptchaService.verify(any!, any))
+    final recaptchaService =
+        endpoint.serviceProvider.recaptchaService as MockRecaptchaService;
+
+    when(recaptchaService.verify(any, any))
         .thenAnswer((realInvocation) async => true);
 
     await endpoint.emailConfirmPost(

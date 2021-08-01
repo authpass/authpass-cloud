@@ -3,7 +3,6 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 import 'package:quiver/check.dart';
@@ -12,7 +11,7 @@ import 'package:quiver/core.dart';
 final _logger = Logger('email_tables');
 
 class EmailTable extends TableBase with TableConstants {
-  EmailTable({required this.cryptoService}) : assert(cryptoService != null);
+  EmailTable({required this.cryptoService});
 
   static const _TABLE_EMAIL_MAILBOX = 'email_mailbox';
   static const _TABLE_EMAIL_MESSAGE = 'email_message';
@@ -132,7 +131,6 @@ class EmailTable extends TableBase with TableConstants {
   Future<MailboxEntity?> findMailbox(DatabaseTransactionBase db,
       {String? address, String? mailboxId}) async {
     assert(address != null || mailboxId != null);
-    assert(db != null);
     final where = SimpleWhere({
       _COLUMN_ADDRESS: address,
       columnId: mailboxId,
@@ -141,7 +139,8 @@ class EmailTable extends TableBase with TableConstants {
         '''SELECT $columnId, $_COLUMN_ADDRESS, $COLUMN_USER_ID, $_COLUMN_DISABLED_AT 
             FROM $_TABLE_EMAIL_MAILBOX
             WHERE $_COLUMN_DELETED_AT IS NULL AND ${where.sql()}''',
-        values: where.conditions as Map<String, Object>?).singleOrNull((row) => MailboxEntity(
+        values: where.conditions
+            as Map<String, Object>?).singleOrNull((row) => MailboxEntity(
           id: row[0] as String,
           address: row[1] as String,
           user: UserEntity(id: row[2] as String),
@@ -201,8 +200,6 @@ class EmailTable extends TableBase with TableConstants {
     UserEntity user, {
     required String messageId,
   }) async {
-    assert(user != null);
-    assert(messageId != null);
     final list = await _findEmailsForUser(
       db,
       user,
@@ -225,7 +222,6 @@ class EmailTable extends TableBase with TableConstants {
     required DateTime until,
     DateTime? since,
   }) async {
-    assert(until != null);
     return await _findEmailsForUser(db, user,
         offset: offset, limit: limit, until: until, since: since);
   }
@@ -282,8 +278,6 @@ class EmailTable extends TableBase with TableConstants {
   Future<String?> findEmailMessageBody(
       DatabaseTransactionBase db, UserEntity user,
       {required String messageId}) async {
-    assert(user != null);
-    assert(messageId != null);
     final message =
         await db.query('''SELECT m.$_COLUMN_MESSAGE, mb.$COLUMN_USER_ID 
     FROM $_TABLE_EMAIL_MESSAGE m 
@@ -317,7 +311,6 @@ class EmailTable extends TableBase with TableConstants {
     required DateTime? readAt,
     required DateTime? deletedAt,
   }) async {
-    assert(messageId != null);
     await db.executeUpdate(_TABLE_EMAIL_MESSAGE, set: {
       _COLUMN_READ_AT: readAt,
       _COLUMN_DELETED_AT: deletedAt,
@@ -355,7 +348,7 @@ class EmailTable extends TableBase with TableConstants {
     };
     switch (filter) {
       case MailMassupdatePostSchemaFilter.messageIds:
-        checkNotNull(messageIds);
+        ArgumentError.checkNotNull(messageIds);
         where = ' AND m.$columnId IN @messageIds';
         whereValues['messageIds'] = messageIds;
         break;
@@ -393,8 +386,7 @@ class EmailTable extends TableBase with TableConstants {
 }
 
 class UserEmailStatusEntity {
-  UserEmailStatusEntity({required this.messagesUnread})
-      : assert(messagesUnread != null);
+  UserEmailStatusEntity({required this.messagesUnread});
   final int messagesUnread;
 }
 
@@ -443,9 +435,7 @@ class MailboxEntity {
     required this.user,
     required this.disabledAt,
     required this.deletedAt,
-  })  : assert(id != null),
-        assert(address != null),
-        assert(user != null);
+  });
 
   final String id;
   final String address;

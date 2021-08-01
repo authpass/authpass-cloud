@@ -8,7 +8,6 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:openapi_base/openapi_base.dart';
@@ -16,7 +15,7 @@ import 'package:openapi_base/openapi_base.dart';
 final _logger = Logger('server');
 
 class BackendServer {
-  BackendServer({required this.env}) : assert(env != null);
+  BackendServer({required this.env});
 
   final Env env;
 

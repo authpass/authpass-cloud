@@ -39,11 +39,11 @@ dependencies:
 #      ref: 04bed8d246ef90e3d4f49b12f9df2066f5df7a22
 
 dev_dependencies:
-  test: ^1.16.8
-  mockito: ^5.0.2
-  build_runner: ^1.10.0
-  freezed: ^0.14.1+1
-  json_serializable: ^4.1.0
+  test: ^1.17.10
+  mockito: ^5.0.13
+  build_runner: ^2.0.6
+  freezed: ^0.14.3
+  json_serializable: ^5.0.0
 
 dependency_overrides:
   #openapi_base:
@@ -62,4 +62,4 @@ dependency_overrides:
 #    git:
 #      url: https://github.com/authpass/enough_mail.git
 #      ref: 51239305f89cec75843ad873f73f7a7758823ef0
-  source_gen: ^1.0.0
+#  source_gen: ^1.0.0
