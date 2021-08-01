@@ -37,11 +37,9 @@ jobs:
     #   run: |
     #     buildnumber=$(curl -s https://raw.githubusercontent.com/hpoul/git-buildnumber/v1.0/git-buildnumber.sh | bash /dev/stdin generate)
     #     echo "::set-output name=buildnumber::$buildnumber"
-    - uses: cedx/setup-dart@v2
+    - uses: dart-lang/setup-dart@v1
       with:
-            architecture: x64
-            release-channel: dev
-            version: 2.9.0-3.0.dev
+        sdk: 2.13.4
     - run: cd packages/authpass_cloud_backend && dart pub get && dart run --enable-asserts bin/authpass_backend.dart setupdb
       env:
         DBCONFIG: '{"host": "postgres"}'
