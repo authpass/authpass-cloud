@@ -204,8 +204,10 @@ class UserTable extends TableBase with TableConstants {
      $_COLUMN_TOKEN, $_COLUMN_AUTH_TOKEN_ID, $_COLUMN_CONFIRMED_AT 
      FROM $_TABLE_EMAIL_CONFIRM WHERE $_COLUMN_TOKEN = @token ''',
         values: {'token': token}).singleOrNull((row) async {
-      final email =
-          await (findEmailById(db, row[0] as String?) as FutureOr<EmailEntity>);
+      final email = await (findEmailById(db, row[0] as String?));
+      if (email == null) {
+        return null;
+      }
       final authToken = row[2] == null
           ? null
           : await findAuthToken(db, tokenId: row[2] as String?);

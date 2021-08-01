@@ -25,7 +25,7 @@ services:
       restart_policy:
         condition: any
         delay: 5s
-        max_attempts: 30
+        #max_attempts: 30
         window: 120s
       placement:
         constraints: [node.role == manager]

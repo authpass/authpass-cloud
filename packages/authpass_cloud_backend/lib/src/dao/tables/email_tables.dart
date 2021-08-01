@@ -139,8 +139,7 @@ class EmailTable extends TableBase with TableConstants {
         '''SELECT $columnId, $_COLUMN_ADDRESS, $COLUMN_USER_ID, $_COLUMN_DISABLED_AT 
             FROM $_TABLE_EMAIL_MAILBOX
             WHERE $_COLUMN_DELETED_AT IS NULL AND ${where.sql()}''',
-        values: where.conditions
-            as Map<String, Object>?).singleOrNull((row) => MailboxEntity(
+        values: where.conditions).singleOrNull((row) => MailboxEntity(
           id: row[0] as String,
           address: row[1] as String,
           user: UserEntity(id: row[2] as String),

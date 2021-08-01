@@ -53,17 +53,25 @@ class EmailDeliveryService {
       return MailSystemStatusCodes.failureBadDestinationAddress;
     }
     final subject = message.decodeHeaderValue('subject');
+    final mimeData = message.mimeData;
+    late String messageData;
+    if (mimeData is TextMimeData) {
+      messageData = mimeData.text;
+    } else {
+      throw StateError(
+          'We only support TextMimeData. But was: ${mimeData.runtimeType}');
+    }
     await db.tables.email.insertMessage(
       db,
       mailbox: mailbox,
       sender: sender,
       subject: subject ?? '',
-      message: message.body!.bodyRaw!,
+      message: messageData,
     );
 
     _logger.info('Received email for {$recipient}.'
         ' (from {$sender})'
-        ' With the following body:\n\n${message.body!.bodyRaw}');
+        ' With the following body:\n\n$messageData');
     return MailSystemStatusCodes.success;
   }
 }

@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:dartx/dartx.dart';
+import 'package:collection/collection.dart';
+import 'package:dartx/dartx.dart' show IterableDistinctBy;
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart';
 import 'package:image/image.dart';
@@ -319,7 +320,7 @@ class BestIcon {
       }
     })))
         .whereNotNull()
-        .toList() as List<ImageInfo>;
+        .toList();
     return FetchImageResult(
       urlCanonical: imageLinkResult.key,
       images: images,
@@ -357,8 +358,8 @@ class BestIcon {
                 .map((e) {
               final jsonText = e.text;
               try {
-                final ldJson = json.decode(jsonText) as Map<String, Object>;
-                final logo = ldJson['logo'];
+                final ldJson = json.decode(jsonText) as Map<String, dynamic>;
+                final dynamic logo = ldJson['logo'];
                 if (logo is String) {
                   return ImageLink(
                       type: ImageLinkType.logo, uri: Uri.parse(logo));
@@ -369,7 +370,7 @@ class BestIcon {
               }
               return null;
             }))
-            .myWhereNotNull()
+            .whereNotNull()
             .distinctBy((e) => e.uri)
             .toList());
   }
@@ -403,7 +404,7 @@ class BestIcon {
     }
 
     // Count pixels with brightness less then 10
-    final darkPixelCount = histogram.sublist(0, 10).sum();
+    final darkPixelCount = histogram.sublist(0, 10).sum;
     return darkPixelCount / count;
   }
 
