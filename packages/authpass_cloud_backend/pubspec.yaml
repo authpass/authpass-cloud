@@ -23,7 +23,7 @@ dependencies:
   smtpd:
     path: ../../deps/smtpd.dart
 
-  openapi_base: ^0.2.0
+  openapi_base: ^0.2.0+2
   authpass_cloud_shared:
     path: ../authpass_cloud_shared
   postgres_utils:

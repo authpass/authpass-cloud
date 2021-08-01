@@ -119,7 +119,7 @@ packages:
       name: codable_forked
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+1"
   code_builder:
     dependency: transitive
     description:
@@ -287,21 +287,21 @@ packages:
       path: "../../deps/openapi_dart/deps/open-api-dart"
       relative: true
     source: path
-    version: "3.0.0+2"
+    version: "3.0.0+3"
   openapi_base:
     dependency: "direct main"
     description:
       path: "../../deps/openapi_dart/packages/openapi_base"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.2.0+1"
   openapi_code_builder:
     dependency: "direct dev"
     description:
       path: "../../deps/openapi_dart/packages/openapi_code_builder"
       relative: true
     source: path
-    version: "0.1.4"
+    version: "0.1.4+1"
   package_config:
     dependency: transitive
     description:
