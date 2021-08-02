@@ -6,13 +6,12 @@ part of 'authpass_cloud.openapi.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SystemStatusUser _$SystemStatusUserFromJson(Map<String, dynamic> json) {
-  return SystemStatusUser(
-    emailConfirmed: json['emailConfirmed'] as int,
-    userConfirmed: json['userConfirmed'] as int,
-    emailUnconfirmed: json['emailUnconfirmed'] as int,
-  );
-}
+SystemStatusUser _$SystemStatusUserFromJson(Map<String, dynamic> json) =>
+    SystemStatusUser(
+      emailConfirmed: json['emailConfirmed'] as int,
+      userConfirmed: json['userConfirmed'] as int,
+      emailUnconfirmed: json['emailUnconfirmed'] as int,
+    );
 
 Map<String, dynamic> _$SystemStatusUserToJson(SystemStatusUser instance) =>
     <String, dynamic>{
@@ -21,12 +20,11 @@ Map<String, dynamic> _$SystemStatusUserToJson(SystemStatusUser instance) =>
       'emailUnconfirmed': instance.emailUnconfirmed,
     };
 
-SystemStatusWebsite _$SystemStatusWebsiteFromJson(Map<String, dynamic> json) {
-  return SystemStatusWebsite(
-    websiteCount: json['websiteCount'] as int,
-    urlCanonicalCount: json['urlCanonicalCount'] as int,
-  );
-}
+SystemStatusWebsite _$SystemStatusWebsiteFromJson(Map<String, dynamic> json) =>
+    SystemStatusWebsite(
+      websiteCount: json['websiteCount'] as int,
+      urlCanonicalCount: json['urlCanonicalCount'] as int,
+    );
 
 Map<String, dynamic> _$SystemStatusWebsiteToJson(
         SystemStatusWebsite instance) =>
@@ -35,13 +33,12 @@ Map<String, dynamic> _$SystemStatusWebsiteToJson(
       'urlCanonicalCount': instance.urlCanonicalCount,
     };
 
-SystemStatusMailbox _$SystemStatusMailboxFromJson(Map<String, dynamic> json) {
-  return SystemStatusMailbox(
-    mailboxCount: json['mailboxCount'] as int,
-    messageCount: json['messageCount'] as int,
-    messageReadCount: json['messageReadCount'] as int,
-  );
-}
+SystemStatusMailbox _$SystemStatusMailboxFromJson(Map<String, dynamic> json) =>
+    SystemStatusMailbox(
+      mailboxCount: json['mailboxCount'] as int,
+      messageCount: json['messageCount'] as int,
+      messageReadCount: json['messageReadCount'] as int,
+    );
 
 Map<String, dynamic> _$SystemStatusMailboxToJson(
         SystemStatusMailbox instance) =>
@@ -51,16 +48,14 @@ Map<String, dynamic> _$SystemStatusMailboxToJson(
       'messageReadCount': instance.messageReadCount,
     };
 
-SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) {
-  return SystemStatus(
-    user: SystemStatusUser.fromJson(json['user'] as Map<String, dynamic>),
-    website:
-        SystemStatusWebsite.fromJson(json['website'] as Map<String, dynamic>),
-    mailbox:
-        SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
-    queryTime: json['queryTime'] as int,
-  );
-}
+SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) => SystemStatus(
+      user: SystemStatusUser.fromJson(json['user'] as Map<String, dynamic>),
+      website:
+          SystemStatusWebsite.fromJson(json['website'] as Map<String, dynamic>),
+      mailbox:
+          SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
+      queryTime: json['queryTime'] as int,
+    );
 
 Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
     <String, dynamic>{
@@ -70,48 +65,42 @@ Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
       'queryTime': instance.queryTime,
     };
 
-UserEmail _$UserEmailFromJson(Map<String, dynamic> json) {
-  return UserEmail(
-    address: json['address'] as String,
-    confirmedAt: DateTime.parse(json['confirmedAt'] as String),
-  );
-}
+UserEmail _$UserEmailFromJson(Map<String, dynamic> json) => UserEmail(
+      address: json['address'] as String,
+      confirmedAt: DateTime.parse(json['confirmedAt'] as String),
+    );
 
 Map<String, dynamic> _$UserEmailToJson(UserEmail instance) => <String, dynamic>{
       'address': instance.address,
       'confirmedAt': instance.confirmedAt.toIso8601String(),
     };
 
-UserInfo _$UserInfoFromJson(Map<String, dynamic> json) {
-  return UserInfo(
-    emails: (json['emails'] as List<dynamic>?)
-        ?.map((e) => UserEmail.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
+      emails: (json['emails'] as List<dynamic>?)
+          ?.map((e) => UserEmail.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
       'emails': instance.emails,
     };
 
-RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
-  return RegisterRequest(
-    email: json['email'] as String,
-  );
-}
+RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) =>
+    RegisterRequest(
+      email: json['email'] as String,
+    );
 
 Map<String, dynamic> _$RegisterRequestToJson(RegisterRequest instance) =>
     <String, dynamic>{
       'email': instance.email,
     };
 
-RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) {
-  return RegisterResponse(
-    userUuid: json['userUuid'] as String,
-    authToken: json['authToken'] as String,
-    status: _$enumDecode(_$RegisterResponseStatusEnumMap, json['status']),
-  );
-}
+RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) =>
+    RegisterResponse(
+      userUuid: json['userUuid'] as String,
+      authToken: json['authToken'] as String,
+      status: _$enumDecode(_$RegisterResponseStatusEnumMap, json['status']),
+    );
 
 Map<String, dynamic> _$RegisterResponseToJson(RegisterResponse instance) =>
     <String, dynamic>{
@@ -151,30 +140,26 @@ const _$RegisterResponseStatusEnumMap = {
   RegisterResponseStatus.confirmed: 'confirmed',
 };
 
-Page _$PageFromJson(Map<String, dynamic> json) {
-  return Page(
-    nextPageToken: json['nextPageToken'] as String?,
-    sinceToken: json['sinceToken'] as String?,
-  );
-}
+Page _$PageFromJson(Map<String, dynamic> json) => Page(
+      nextPageToken: json['nextPageToken'] as String?,
+      sinceToken: json['sinceToken'] as String?,
+    );
 
 Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
       'nextPageToken': instance.nextPageToken,
       'sinceToken': instance.sinceToken,
     };
 
-EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) {
-  return EmailMessage(
-    id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
-    subject: json['subject'] as String,
-    sender: json['sender'] as String,
-    mailboxEntryUuid: const ApiUuidJsonConverter()
-        .fromJson(json['mailboxEntryUuid'] as String),
-    createdAt: DateTime.parse(json['createdAt'] as String),
-    size: json['size'] as int,
-    isRead: json['isRead'] as bool,
-  );
-}
+EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) => EmailMessage(
+      id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
+      subject: json['subject'] as String,
+      sender: json['sender'] as String,
+      mailboxEntryUuid: const ApiUuidJsonConverter()
+          .fromJson(json['mailboxEntryUuid'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      size: json['size'] as int,
+      isRead: json['isRead'] as bool,
+    );
 
 Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
     <String, dynamic>{
@@ -188,16 +173,14 @@ Map<String, dynamic> _$EmailMessageToJson(EmailMessage instance) =>
       'isRead': instance.isRead,
     };
 
-Mailbox _$MailboxFromJson(Map<String, dynamic> json) {
-  return Mailbox(
-    id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
-    address: json['address'] as String,
-    label: json['label'] as String,
-    entryUuid: json['entryUuid'] as String,
-    createdAt: DateTime.parse(json['createdAt'] as String),
-    isDisabled: json['isDisabled'] as bool,
-  );
-}
+Mailbox _$MailboxFromJson(Map<String, dynamic> json) => Mailbox(
+      id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
+      address: json['address'] as String,
+      label: json['label'] as String,
+      entryUuid: json['entryUuid'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      isDisabled: json['isDisabled'] as bool,
+    );
 
 Map<String, dynamic> _$MailboxToJson(Mailbox instance) => <String, dynamic>{
       'id': const ApiUuidJsonConverter().toJson(instance.id),
@@ -209,12 +192,11 @@ Map<String, dynamic> _$MailboxToJson(Mailbox instance) => <String, dynamic>{
     };
 
 EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
-    Map<String, dynamic> json) {
-  return EmailStatusGetResponseBody200(
-    status: _$enumDecodeNullable(
-        _$EmailStatusGetResponseBody200StatusEnumMap, json['status']),
-  );
-}
+        Map<String, dynamic> json) =>
+    EmailStatusGetResponseBody200(
+      status: _$enumDecodeNullable(
+          _$EmailStatusGetResponseBody200StatusEnumMap, json['status']),
+    );
 
 Map<String, dynamic> _$EmailStatusGetResponseBody200ToJson(
         EmailStatusGetResponseBody200 instance) =>
@@ -239,12 +221,11 @@ const _$EmailStatusGetResponseBody200StatusEnumMap = {
 };
 
 EmailConfirmPostSchema _$EmailConfirmPostSchemaFromJson(
-    Map<String, dynamic> json) {
-  return EmailConfirmPostSchema(
-    token: json['token'] as String,
-    gRecaptchaResponse: json['g-recaptcha-response'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    EmailConfirmPostSchema(
+      token: json['token'] as String,
+      gRecaptchaResponse: json['g-recaptcha-response'] as String,
+    );
 
 Map<String, dynamic> _$EmailConfirmPostSchemaToJson(
         EmailConfirmPostSchema instance) =>
@@ -254,11 +235,10 @@ Map<String, dynamic> _$EmailConfirmPostSchemaToJson(
     };
 
 StatusGetResponseBody200Mail _$StatusGetResponseBody200MailFromJson(
-    Map<String, dynamic> json) {
-  return StatusGetResponseBody200Mail(
-    messagesUnread: json['messagesUnread'] as int,
-  );
-}
+        Map<String, dynamic> json) =>
+    StatusGetResponseBody200Mail(
+      messagesUnread: json['messagesUnread'] as int,
+    );
 
 Map<String, dynamic> _$StatusGetResponseBody200MailToJson(
         StatusGetResponseBody200Mail instance) =>
@@ -267,12 +247,11 @@ Map<String, dynamic> _$StatusGetResponseBody200MailToJson(
     };
 
 StatusGetResponseBody200 _$StatusGetResponseBody200FromJson(
-    Map<String, dynamic> json) {
-  return StatusGetResponseBody200(
-    mail: StatusGetResponseBody200Mail.fromJson(
-        json['mail'] as Map<String, dynamic>),
-  );
-}
+        Map<String, dynamic> json) =>
+    StatusGetResponseBody200(
+      mail: StatusGetResponseBody200Mail.fromJson(
+          json['mail'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$StatusGetResponseBody200ToJson(
         StatusGetResponseBody200 instance) =>
@@ -281,13 +260,12 @@ Map<String, dynamic> _$StatusGetResponseBody200ToJson(
     };
 
 MailboxGetResponseBody200 _$MailboxGetResponseBody200FromJson(
-    Map<String, dynamic> json) {
-  return MailboxGetResponseBody200(
-    data: (json['data'] as List<dynamic>?)
-        ?.map((e) => Mailbox.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+        Map<String, dynamic> json) =>
+    MailboxGetResponseBody200(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => Mailbox.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$MailboxGetResponseBody200ToJson(
         MailboxGetResponseBody200 instance) =>
@@ -296,11 +274,10 @@ Map<String, dynamic> _$MailboxGetResponseBody200ToJson(
     };
 
 MailboxCreatePostResponseBody200 _$MailboxCreatePostResponseBody200FromJson(
-    Map<String, dynamic> json) {
-  return MailboxCreatePostResponseBody200(
-    address: json['address'] as String?,
-  );
-}
+        Map<String, dynamic> json) =>
+    MailboxCreatePostResponseBody200(
+      address: json['address'] as String?,
+    );
 
 Map<String, dynamic> _$MailboxCreatePostResponseBody200ToJson(
         MailboxCreatePostResponseBody200 instance) =>
@@ -309,12 +286,11 @@ Map<String, dynamic> _$MailboxCreatePostResponseBody200ToJson(
     };
 
 MailboxCreatePostSchema _$MailboxCreatePostSchemaFromJson(
-    Map<String, dynamic> json) {
-  return MailboxCreatePostSchema(
-    label: json['label'] as String,
-    entryUuid: json['entryUuid'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    MailboxCreatePostSchema(
+      label: json['label'] as String,
+      entryUuid: json['entryUuid'] as String,
+    );
 
 Map<String, dynamic> _$MailboxCreatePostSchemaToJson(
         MailboxCreatePostSchema instance) =>
@@ -324,14 +300,13 @@ Map<String, dynamic> _$MailboxCreatePostSchemaToJson(
     };
 
 MailboxListGetResponseBody200 _$MailboxListGetResponseBody200FromJson(
-    Map<String, dynamic> json) {
-  return MailboxListGetResponseBody200(
-    page: Page.fromJson(json['page'] as Map<String, dynamic>),
-    data: (json['data'] as List<dynamic>)
-        .map((e) => EmailMessage.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+        Map<String, dynamic> json) =>
+    MailboxListGetResponseBody200(
+      page: Page.fromJson(json['page'] as Map<String, dynamic>),
+      data: (json['data'] as List<dynamic>)
+          .map((e) => EmailMessage.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$MailboxListGetResponseBody200ToJson(
         MailboxListGetResponseBody200 instance) =>
@@ -341,16 +316,15 @@ Map<String, dynamic> _$MailboxListGetResponseBody200ToJson(
     };
 
 MailMassupdatePostSchema _$MailMassupdatePostSchemaFromJson(
-    Map<String, dynamic> json) {
-  return MailMassupdatePostSchema(
-    filter:
-        _$enumDecode(_$MailMassupdatePostSchemaFilterEnumMap, json['filter']),
-    messageIds: (json['messageIds'] as List<dynamic>?)
-        ?.map((e) => e as String)
-        .toList(),
-    isRead: json['isRead'] as bool?,
-  );
-}
+        Map<String, dynamic> json) =>
+    MailMassupdatePostSchema(
+      filter:
+          _$enumDecode(_$MailMassupdatePostSchemaFilterEnumMap, json['filter']),
+      messageIds: (json['messageIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      isRead: json['isRead'] as bool?,
+    );
 
 Map<String, dynamic> _$MailMassupdatePostSchemaToJson(
         MailMassupdatePostSchema instance) =>
@@ -365,15 +339,14 @@ const _$MailMassupdatePostSchemaFilterEnumMap = {
   MailMassupdatePostSchemaFilter.all: 'all',
 };
 
-MailboxUpdateSchema _$MailboxUpdateSchemaFromJson(Map<String, dynamic> json) {
-  return MailboxUpdateSchema(
-    label: json['label'] as String?,
-    entryUuid: json['entryUuid'] as String?,
-    isDeleted: json['isDeleted'] as bool?,
-    isDisabled: json['isDisabled'] as bool?,
-    isHidden: json['isHidden'] as bool?,
-  );
-}
+MailboxUpdateSchema _$MailboxUpdateSchemaFromJson(Map<String, dynamic> json) =>
+    MailboxUpdateSchema(
+      label: json['label'] as String?,
+      entryUuid: json['entryUuid'] as String?,
+      isDeleted: json['isDeleted'] as bool?,
+      isDisabled: json['isDisabled'] as bool?,
+      isHidden: json['isHidden'] as bool?,
+    );
 
 Map<String, dynamic> _$MailboxUpdateSchemaToJson(
         MailboxUpdateSchema instance) =>
@@ -386,11 +359,10 @@ Map<String, dynamic> _$MailboxUpdateSchemaToJson(
     };
 
 MailboxMessageForwardSchema _$MailboxMessageForwardSchemaFromJson(
-    Map<String, dynamic> json) {
-  return MailboxMessageForwardSchema(
-    email: json['email'] as String?,
-  );
-}
+        Map<String, dynamic> json) =>
+    MailboxMessageForwardSchema(
+      email: json['email'] as String?,
+    );
 
 Map<String, dynamic> _$MailboxMessageForwardSchemaToJson(
         MailboxMessageForwardSchema instance) =>
