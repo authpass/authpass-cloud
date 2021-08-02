@@ -124,6 +124,51 @@ CREATE TABLE public.email_message (
 ALTER TABLE public.email_message OWNER TO authpass;
 
 --
+-- Name: filecloud_file; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_file (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    user_id uuid NOT NULL,
+    name character varying NOT NULL,
+    last_content_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.filecloud_file OWNER TO authpass;
+
+--
+-- Name: filecloud_file_content; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_file_content (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    file_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    bytes bytea NOT NULL,
+    length integer NOT NULL
+);
+
+
+ALTER TABLE public.filecloud_file_content OWNER TO authpass;
+
+--
+-- Name: filecloud_token; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_token (
+    token character varying NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    file_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.filecloud_token OWNER TO authpass;
+
+--
 -- Name: user; Type: TABLE; Schema: public; Owner: authpass
 --
 
@@ -258,6 +303,30 @@ ALTER TABLE ONLY public.email_message
 
 
 --
+-- Name: filecloud_file_content filecloud_file_content_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file_content
+    ADD CONSTRAINT filecloud_file_content_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: filecloud_file filecloud_file_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file
+    ADD CONSTRAINT filecloud_file_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: filecloud_token filecloud_token_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_token
+    ADD CONSTRAINT filecloud_token_pkey PRIMARY KEY (token);
+
+
+--
 -- Name: user_email_confirm user_email_confirm_token_key; Type: CONSTRAINT; Schema: public; Owner: authpass
 --
 
@@ -349,6 +418,46 @@ ALTER TABLE ONLY public.email_mailbox
 
 ALTER TABLE ONLY public.email_message
     ADD CONSTRAINT email_message_mailbox_id_fkey FOREIGN KEY (mailbox_id) REFERENCES public.email_mailbox(id);
+
+
+--
+-- Name: filecloud_file_content filecloud_file_content_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file_content
+    ADD CONSTRAINT filecloud_file_content_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.filecloud_file(id);
+
+
+--
+-- Name: filecloud_file_content filecloud_file_content_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file_content
+    ADD CONSTRAINT filecloud_file_content_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: filecloud_file filecloud_file_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file
+    ADD CONSTRAINT filecloud_file_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: filecloud_token filecloud_token_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_token
+    ADD CONSTRAINT filecloud_token_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.filecloud_file(id);
+
+
+--
+-- Name: filecloud_file last_content_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file
+    ADD CONSTRAINT last_content_id_fkey FOREIGN KEY (last_content_id) REFERENCES public.filecloud_file_content(id);
 
 
 --
