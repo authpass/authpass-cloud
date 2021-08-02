@@ -8,13 +8,12 @@ import 'package:logging/logging.dart';
 final _logger = Logger('recaptcha_service');
 
 class RecaptchaService {
-  RecaptchaService({this.secret});
-  final String? secret;
-  Client? _client;
+  RecaptchaService({required this.secret});
+  final String secret;
+  late final Client _client = Client();
 
   Future<bool> verify(String response, [String? remoteIp]) async {
-    _client ??= Client();
-    final resp = await _client!.post(
+    final resp = await _client.post(
       Uri.parse('https://www.google.com/recaptcha/api/siteverify'),
       body: {
         'secret': secret,

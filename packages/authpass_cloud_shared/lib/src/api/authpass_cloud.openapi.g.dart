@@ -76,8 +76,8 @@ Map<String, dynamic> _$UserEmailToJson(UserEmail instance) => <String, dynamic>{
     };
 
 UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
-      emails: (json['emails'] as List<dynamic>?)
-          ?.map((e) => UserEmail.fromJson(e as Map<String, dynamic>))
+      emails: (json['emails'] as List<dynamic>)
+          .map((e) => UserEmail.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

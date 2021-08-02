@@ -123,13 +123,13 @@ class UserEmail implements OpenApiContent {
 
 @_i1.JsonSerializable()
 class UserInfo implements OpenApiContent {
-  UserInfo({this.emails});
+  UserInfo({required this.emails});
 
   factory UserInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserInfoFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'emails')
-  final List<UserEmail>? emails;
+  final List<UserEmail> emails;
 
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);
   @override

@@ -217,7 +217,7 @@ class UserTable extends TableBase with TableConstants {
      $_COLUMN_TOKEN, $_COLUMN_AUTH_TOKEN_ID, $_COLUMN_CONFIRMED_AT 
      FROM $_TABLE_EMAIL_CONFIRM WHERE $_COLUMN_TOKEN = @token ''',
         values: {'token': token}).singleOrNull((row) async {
-      final email = await (findEmailById(db, row[0] as String?));
+      final email = await (findEmailById(db, row[0] as String));
       if (email == null) {
         return null;
       }
@@ -234,10 +234,10 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<EmailEntity?> findEmailById(
-      DatabaseTransactionBase db, String? emailId) async {
+      DatabaseTransactionBase db, String emailId) async {
     return db.query('''SELECT $COLUMN_USER_ID, $_COLUMN_EMAIL_ADDRESS, 
     $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL WHERE $columnId = @id''',
-        values: {'id': emailId!}).singleOrNull((row) {
+        values: {'id': emailId}).singleOrNull((row) {
       return EmailEntity(
         id: emailId,
         emailAddress: row[1] as String,

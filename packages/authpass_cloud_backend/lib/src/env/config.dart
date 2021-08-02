@@ -72,8 +72,8 @@ class EmailConfig {
 class EmailSmtpConfig {
   EmailSmtpConfig({
     required this.host,
-    this.port,
-    this.ssl,
+    this.port = 25,
+    this.ssl = false,
     this.username,
     this.password,
     this.allowInsecure = false,
@@ -84,10 +84,8 @@ class EmailSmtpConfig {
 
   @JsonKey(required: true)
   final String host;
-  @JsonKey(defaultValue: 25)
-  final int? port;
-  @JsonKey(defaultValue: false)
-  final bool? ssl;
+  final int port;
+  final bool ssl;
   final String? username;
   final String? password;
 

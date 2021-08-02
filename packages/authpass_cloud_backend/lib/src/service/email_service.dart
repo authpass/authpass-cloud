@@ -10,7 +10,7 @@ final _logger = Logger('email_service');
 abstract class EmailService {
   Future<void> sendEmailConfirmationToken(String recipient, String url);
   Future<void> forwardMimeMessage(
-      String? mimeMessageContent, String recipientEmail);
+      String mimeMessageContent, String recipientEmail);
 }
 
 abstract class EmailServiceImpl extends EmailService {
@@ -59,16 +59,15 @@ class FakeEmailService extends EmailServiceImpl {
 
 class MailerEmailService extends EmailServiceImpl {
   MailerEmailService({required this.emailConfig})
-      : smtpConfig = emailConfig.smtp,
-        assert(emailConfig.smtp != null);
+      : smtpConfig = ArgumentError.checkNotNull(emailConfig.smtp);
 
   final EmailConfig emailConfig;
-  final EmailSmtpConfig? smtpConfig;
+  final EmailSmtpConfig smtpConfig;
 
   @override
   Future<void> sendEmail(
       {String? recipient, String? subject, String? body}) async {
-    _logger.fine('sending email. config: ${smtpConfig!.toJson()}');
+    _logger.fine('sending email. config: ${smtpConfig.toJson()}');
     final message = mailer.Message()
       ..from = mailer.Address(emailConfig.fromAddress, emailConfig.fromName)
       ..recipients.add(recipient)
@@ -76,13 +75,13 @@ class MailerEmailService extends EmailServiceImpl {
       ..text = body;
 
     final smtpServer = smtp.SmtpServer(
-      smtpConfig!.host,
-      ssl: smtpConfig!.ssl!,
-      port: smtpConfig!.port ?? 587,
-      username: smtpConfig!.username,
-      password: smtpConfig!.password,
-      allowInsecure: smtpConfig!.allowInsecure,
-      ignoreBadCertificate: smtpConfig!.ignoreBadCertificate,
+      smtpConfig.host,
+      ssl: smtpConfig.ssl,
+      port: smtpConfig.port,
+      username: smtpConfig.username,
+      password: smtpConfig.password,
+      allowInsecure: smtpConfig.allowInsecure,
+      ignoreBadCertificate: smtpConfig.ignoreBadCertificate,
     );
     try {
       final response = await mailer.send(message, smtpServer,
@@ -97,23 +96,23 @@ class MailerEmailService extends EmailServiceImpl {
 
   @override
   Future<void> forwardMimeMessage(
-      String? mimeMessageContent, String recipientEmail) async {
+      String mimeMessageContent, String recipientEmail) async {
     final originalMessage =
-        enough.MimeMessage.parseFromText(mimeMessageContent!);
+        enough.MimeMessage.parseFromText(mimeMessageContent);
     final newMessage = enough.MessageBuilder.prepareForwardMessage(
         originalMessage,
-        from: originalMessage.to!.first);
+        from: originalMessage.to?.first);
     newMessage.to = [enough.MailAddress(null, recipientEmail)];
     final message = newMessage.buildMimeMessage();
 
-    final client = enough.SmtpClient(smtpConfig!.host);
+    final client = enough.SmtpClient(smtpConfig.host);
     // TODO: What happens on connection errors?
-    await client.connectToServer(smtpConfig!.host, smtpConfig!.port!,
-        isSecure: smtpConfig!.ssl!);
+    await client.connectToServer(smtpConfig.host, smtpConfig.port,
+        isSecure: smtpConfig.ssl);
     await client.ehlo().expectOkStatus('ehlo');
-    if (smtpConfig!.username != null) {
+    if (smtpConfig.username != null) {
       await client
-          .authenticate(smtpConfig!.username, smtpConfig!.password)
+          .authenticate(smtpConfig.username, smtpConfig.password)
           .expectOkStatus('login');
     }
     await client

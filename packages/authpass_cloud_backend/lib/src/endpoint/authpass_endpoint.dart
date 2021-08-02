@@ -255,8 +255,12 @@ class AuthPassCloudImpl extends AuthPassCloud {
         messageId: messageId.encodeToString());
     final userInfo = await userRepository.findUserInfo(authToken: token);
 
+    if (body == null) {
+      throw NotFoundException('Message not found.');
+    }
+
     await serviceProvider.emailService
-        .forwardMimeMessage(body, userInfo.emails!.first.address);
+        .forwardMimeMessage(body, userInfo.emails.first.address);
     return MailboxMessageForwardResponse.response200();
   }
 

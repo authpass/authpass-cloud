@@ -176,7 +176,7 @@ void main() {
       await _createUserConfirmed(endpoint);
       final user = await endpoint.userGet().requireSuccess();
       expect(user.emails, hasLength(1));
-      expect(user.emails!.first.confirmedAt, isNotNull);
+      expect(user.emails.first.confirmedAt, isNotNull);
     });
   });
 

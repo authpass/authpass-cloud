@@ -330,7 +330,7 @@ class BestIcon {
 
   Future<MapEntry<Uri, List<ImageLink>>> _findImageLinks(Uri uri) async {
     final response = await _requestGet(uri);
-    final baseUri = response.request!.url;
+    final baseUri = response.request?.url ?? uri;
     _requireSuccess(response);
     final dom = parse(response.body, sourceUrl: baseUri.toString());
 

@@ -47,7 +47,7 @@ abstract class Env {
     })());
     if (!assertEnabled && debug) {
       _logger.warning(
-          'Assertions are disabled, but you still use dev environment!');
+          'Assertions are disabled, but you still use dev environment');
     }
   }
 
