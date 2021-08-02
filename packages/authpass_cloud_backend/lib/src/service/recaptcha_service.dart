@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:quiver/check.dart';
-
 import 'package:logging/logging.dart';
+import 'package:quiver/check.dart';
 
 final _logger = Logger('recaptcha_service');
 

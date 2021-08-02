@@ -110,9 +110,10 @@ class MailerEmailService extends EmailServiceImpl {
     await client.connectToServer(smtpConfig.host, smtpConfig.port,
         isSecure: smtpConfig.ssl);
     await client.ehlo().expectOkStatus('ehlo');
-    if (smtpConfig.username != null) {
+    final username = smtpConfig.username;
+    if (username != null) {
       await client
-          .authenticate(smtpConfig.username, smtpConfig.password)
+          .authenticate(username, smtpConfig.password ?? '')
           .expectOkStatus('login');
     }
     await client
@@ -120,7 +121,7 @@ class MailerEmailService extends EmailServiceImpl {
         .expectOkStatus('send');
     await client.quit().expectOkStatus('quit');
 
-    await client.closeConnection();
+    await client.disconnect();
   }
 }
 

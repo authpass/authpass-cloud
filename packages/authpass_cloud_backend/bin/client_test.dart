@@ -1,7 +1,6 @@
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
-import 'package:logging_appenders/logging_appenders.dart';
-
 import 'package:logging/logging.dart';
+import 'package:logging_appenders/logging_appenders.dart';
 import 'package:openapi_base/openapi_base.dart';
 
 final _logger = Logger('client_test');

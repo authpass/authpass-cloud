@@ -4,10 +4,9 @@ import 'dart:typed_data';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:clock/clock.dart';
+import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:postgres_utils/postgres_utils.dart';
-
-import 'package:logging/logging.dart';
 
 final _logger = Logger('filecloud_tables');
 

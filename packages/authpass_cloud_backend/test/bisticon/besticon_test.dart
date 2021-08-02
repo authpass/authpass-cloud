@@ -1,8 +1,7 @@
 import 'package:authpass_cloud_backend/src/companyimage/besticon.dart';
+import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:test/test.dart';
-
-import 'package:logging/logging.dart';
 
 final _logger = Logger('besticon_test');
 

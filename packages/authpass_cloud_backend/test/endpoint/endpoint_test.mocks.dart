@@ -3,10 +3,11 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i3;
+import 'dart:typed_data' as _i4;
 
-import 'package:authpass_cloud_backend/src/service/email_service.dart' as _i4;
+import 'package:authpass_cloud_backend/src/service/email_service.dart' as _i5;
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart'
-    as _i5;
+    as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:openapi_base/src/openapi_base.dart' as _i2;
 
@@ -64,13 +65,18 @@ class MockOpenApiRequest extends _i1.Mock implements _i2.OpenApiRequest {
       (super.noSuchMethod(Invocation.method(#readBodyString, []),
           returnValue: Future<String>.value('')) as _i3.Future<String>);
   @override
+  _i3.Future<_i4.Uint8List> readBodyBytes() =>
+      (super.noSuchMethod(Invocation.method(#readBodyBytes, []),
+              returnValue: Future<_i4.Uint8List>.value(_i4.Uint8List(0)))
+          as _i3.Future<_i4.Uint8List>);
+  @override
   String toString() => super.toString();
 }
 
 /// A class which mocks [EmailService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEmailService extends _i1.Mock implements _i4.EmailService {
+class MockEmailService extends _i1.Mock implements _i5.EmailService {
   MockEmailService() {
     _i1.throwOnMissingStub(this);
   }
@@ -96,11 +102,15 @@ class MockEmailService extends _i1.Mock implements _i4.EmailService {
 /// A class which mocks [RecaptchaService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRecaptchaService extends _i1.Mock implements _i5.RecaptchaService {
+class MockRecaptchaService extends _i1.Mock implements _i6.RecaptchaService {
   MockRecaptchaService() {
     _i1.throwOnMissingStub(this);
   }
 
+  @override
+  String get secret =>
+      (super.noSuchMethod(Invocation.getter(#secret), returnValue: '')
+          as String);
   @override
   _i3.Future<bool> verify(String? response, [String? remoteIp]) =>
       (super.noSuchMethod(Invocation.method(#verify, [response, remoteIp]),
