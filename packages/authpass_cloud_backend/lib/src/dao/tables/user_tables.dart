@@ -20,6 +20,8 @@ extension on AuthTokenStatus {
 AuthTokenStatus authTokenStatusFromName(String? name) =>
     AuthTokenStatus.values.firstWhere((element) => element.name == name);
 
+const _MISSING_VALUE = '____';
+
 class UserTable extends TableBase with TableConstants {
   UserTable({required this.cryptoService});
 
@@ -164,10 +166,10 @@ class UserTable extends TableBase with TableConstants {
   }
 
   Future<bool> isValidEmailToken(
-      DatabaseTransactionBase db, String? token) async {
+      DatabaseTransactionBase db, String token) async {
     final result = await db.query(
         '''SELECT $_COLUMN_CONFIRMED_AT FROM $_TABLE_EMAIL_CONFIRM WHERE token = @token''',
-        values: {'token': token!});
+        values: {'token': token});
     if (result.isEmpty) {
       return false;
     }
@@ -179,16 +181,27 @@ class UserTable extends TableBase with TableConstants {
     return true;
   }
 
-  Future<AuthTokenEntity?> findAuthToken(DatabaseTransactionBase db,
-      {String? authToken, String? tokenId}) async {
-    assert(authToken != null || tokenId != null);
-    final where =
-        authToken != null ? ' $_COLUMN_TOKEN = @token ' : '$columnId = @id ';
+  Future<AuthTokenEntity?> findAuthToken(
+    DatabaseTransactionBase db, {
+    String authToken = _MISSING_VALUE,
+    String tokenId = _MISSING_VALUE,
+  }) async {
+    late String where;
+    late Map<String, Object?> values;
+
+    if (!identical(authToken, _MISSING_VALUE)) {
+      where = ' $_COLUMN_TOKEN = @token ';
+      values = {'token': authToken};
+    } else if (!identical(tokenId, _MISSING_VALUE)) {
+      where = '$columnId = @id ';
+      values = {'id': tokenId};
+    } else {
+      throw ArgumentError.notNull(
+          'either authToken or tokenId must be defined.');
+    }
     return db.query(
         '''select $columnId, $COLUMN_USER_ID, $_COLUMN_TOKEN, $_COLUMN_STATUS FROM $_TABLE_AUTH_TOKEN WHERE $where''',
-        values: authToken != null
-            ? {'token': authToken}
-            : {'id': tokenId!}).singleOrNull((row) {
+        values: values).singleOrNull((row) {
       return AuthTokenEntity(
         id: row[0] as String,
         token: row[2] as String,
@@ -210,7 +223,7 @@ class UserTable extends TableBase with TableConstants {
       }
       final authToken = row[2] == null
           ? null
-          : await findAuthToken(db, tokenId: row[2] as String?);
+          : await findAuthToken(db, tokenId: row[2] as String);
       return EmailConfirmEntity(
         email: email,
         token: row[1] as String,

@@ -98,7 +98,7 @@ class WebsiteTable extends TableBase with TableConstants {
       _COL_MIME_TYPE: image.mimeType,
       _COL_BYTES: CustomBind(
           "decode(@$_COL_BYTES, 'base64')", base64.encode(image.bytes)),
-      _COL_ORIGINAL_BYTE_LENGTH: image.originalByteLength!,
+      _COL_ORIGINAL_BYTE_LENGTH: image.originalByteLength,
       _COL_WIDTH: image.width,
       _COL_HEIGHT: image.height,
       _COL_BRIGHTNESS: image.brightness,
@@ -126,7 +126,7 @@ class WebsiteTable extends TableBase with TableConstants {
       uri: row[3] as String,
       mimeType: row[4] as String,
       brightness: row[5] as double,
-      imageLinkType: ImageLinkTypeExt.fromString(row[6] as String)!,
+      imageLinkType: ImageLinkTypeExt.fromString(row[6] as String),
       originalByteLength: row[7] as int?,
       fileName: row[8] as String,
     );

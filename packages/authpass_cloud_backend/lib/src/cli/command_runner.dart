@@ -70,7 +70,8 @@ class HealthCheckCommand extends Command<void> {
 
   @override
   Future<void> run() async {
-    final baseUri = argResults!['url'] as String;
+    final argResults = ArgumentError.checkNotNull(this.argResults);
+    final baseUri = argResults['url'] as String;
     final requestSender = HttpRequestSender();
     try {
       final client = AuthPassCloudClient(Uri.parse(baseUri), requestSender);

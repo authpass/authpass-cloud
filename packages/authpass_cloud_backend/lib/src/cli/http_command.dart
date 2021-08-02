@@ -23,13 +23,14 @@ class HttpCommand extends Command<void> {
 
   @override
   Future<void> run() async {
-    if (argResults!.rest.isEmpty) {
+    final argResults = this.argResults;
+    if (argResults == null || argResults.rest.isEmpty) {
       printUsage();
       return;
     }
-    final url = argResults!.rest.first;
+    final url = argResults.rest.first;
     final c = Client();
-    final req = Request(argResults!['method'] as String, Uri.parse(url));
+    final req = Request(argResults['method'] as String, Uri.parse(url));
     _logger.finest('Sending request...');
     final streamResponse = await c.send(req);
     _logger.finest('Sent request. ${streamResponse.statusCode}');

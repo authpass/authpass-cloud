@@ -30,7 +30,7 @@ class UserRepository {
     );
   }
 
-  Future<bool> isValidEmailConfirmToken(String? token) =>
+  Future<bool> isValidEmailConfirmToken(String token) =>
       db.tables.user.isValidEmailToken(db, token);
 
   Future<bool> confirmEmailAddress(String token) async {
@@ -47,14 +47,15 @@ class UserRepository {
     final now = clock.now().toUtc();
     await db.tables.user
         .updateEmailConfirmToken(db, emailConfirmToken, confirmedAt: now);
-    if (emailConfirmToken.authToken!.status == AuthTokenStatus.created) {
-      await db.tables.user.updateAuthToken(db, emailConfirmToken.authToken!.id,
-          status: AuthTokenStatus.active);
+    final authToken = emailConfirmToken.authToken;
+    if (authToken != null && authToken.status == AuthTokenStatus.created) {
+      await db.tables.user
+          .updateAuthToken(db, authToken.id, status: AuthTokenStatus.active);
     }
     return true;
   }
 
-  Future<AuthTokenEntity?> findValidAuthToken(String? authToken,
+  Future<AuthTokenEntity?> findValidAuthToken(String authToken,
       {bool acceptUnconfirmed = false}) async {
     final token = await db.tables.user.findAuthToken(db, authToken: authToken);
     if (token == null) {

@@ -58,6 +58,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
       body.email,
       request.headerParameter(HttpHeaders.userAgentHeader).single,
     );
+    final authToken = ArgumentError.checkNotNull(emailConfirm.authToken);
     final urlResolve = AuthPassCloudUrlResolve();
     final url = urlResolve
         .emailConfirmGet(token: emailConfirm.token)
@@ -67,13 +68,14 @@ class AuthPassCloudImpl extends AuthPassCloud {
     _logger.fine('Creating new user. ${body.email}');
     return UserRegisterPostResponse.response200(RegisterResponse(
       userUuid: emailConfirm.email.user.id,
-      authToken: emailConfirm.authToken!.token,
+      authToken: authToken.token,
       status: RegisterResponseStatus.created,
     ));
   }
 
   @override
-  Future<EmailConfirmGetResponse> emailConfirmGet({String? token}) async {
+  Future<EmailConfirmGetResponse> emailConfirmGet(
+      {required String token}) async {
     if (!await userRepository.isValidEmailConfirmToken(token)) {
       return EmailConfirmGetResponse.response400();
     }
@@ -108,11 +110,12 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<AuthTokenEntity> _requireAuthToken(
       {bool acceptUnconfirmed = false}) async {
     final data = SecuritySchemes.authToken.fromRequest(request);
-    if (data == null || data.bearerToken == null || data.bearerToken!.isEmpty) {
+    final bearerToken = data?.bearerToken;
+    if (data == null || bearerToken == null || bearerToken.isEmpty) {
       throw UnauthorizedException('Missing auth token.');
     }
     final validToken = await userRepository.findValidAuthToken(
-      data.bearerToken,
+      bearerToken,
       acceptUnconfirmed: acceptUnconfirmed,
     );
 

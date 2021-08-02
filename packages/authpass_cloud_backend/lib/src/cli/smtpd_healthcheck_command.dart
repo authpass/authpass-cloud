@@ -30,12 +30,13 @@ class SmtpdHealthCheckCommand extends Command<void> {
 
   @override
   Future<void> run() async {
+    final argResults = ArgumentError.checkNotNull(this.argResults);
     final watch = Stopwatch()..start();
     try {
-      final host = argResults![_ARG_HOST] as String;
-      final port = int.parse(argResults![_ARG_PORT] as String);
-      final from = argResults![_ARG_FROM] as String?;
-      final prefix = argResults![_ARG_RCPT_PREFIX] as String?;
+      final host = argResults[_ARG_HOST] as String;
+      final port = int.parse(argResults[_ARG_PORT] as String);
+      final from = argResults[_ARG_FROM] as String?;
+      final prefix = argResults[_ARG_RCPT_PREFIX] as String?;
       final server = mailer.SmtpServer(
         host,
         port: port,

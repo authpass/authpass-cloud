@@ -24,7 +24,7 @@ class WebsiteRepository {
     final bi = BestIcon();
     final imagesResult = await bi.fetchImages(uri);
     final images = imagesResult.images;
-    if (images == null || images.isEmpty) {
+    if (images.isEmpty) {
       return null;
     }
     images.sort((a, b) => -(a.score().compareTo(b.score())));
@@ -37,7 +37,7 @@ class WebsiteRepository {
     );
     await db.tables.website.insertWebsite(db, website);
     String? bestImageId;
-    for (final image in imagesResult.images!) {
+    for (final image in images) {
       final imageId =
           await db.tables.website.insertWebsiteImage(db, website, image);
       bestImageId ??= imageId;

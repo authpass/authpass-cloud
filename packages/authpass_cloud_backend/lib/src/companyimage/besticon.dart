@@ -99,7 +99,8 @@ extension ImageLinkTypeExt on ImageLinkType {
   static const _length = _LinkImageTypeName.length;
   static final _mapping = _createMapping();
 
-  static ImageLinkType? fromString(String value) => _mapping[value];
+  static ImageLinkType fromString(String value) =>
+      _mapping[value] ?? (() => throw StateError('Invalid type: $value'))();
 
   static Map<String, ImageLinkType> _createMapping() {
     if (_LinkImageTypeName !=
@@ -124,7 +125,7 @@ class ResponseException implements Exception {
   @override
   String toString() {
     return 'Invalid response ${response.statusCode} for '
-        '${response.request!.url}';
+        '${response.request?.url}';
   }
 }
 
@@ -285,15 +286,15 @@ class BestIcon {
         final ct = ContentType.parse(contentType);
         final imageBytes = response.bodyBytes;
         final decoded = _decodeImageAndReEncode(imageBytes);
-        if (decoded == null || decoded.image == null) {
+        final decodedImage = decoded?.image;
+        if (decoded == null || decodedImage == null) {
           _logger.fine('Unable to decode ${imageBytes.length} bytes for '
               '${imageLink.uri} - ${ct.mimeType}');
           return null;
         }
-        final image = decoded.image!;
         final fileName = imageLink.uri.pathSegments.last;
 
-        final brightness = _analyseImageBrightnessRatio(image);
+        final brightness = _analyseImageBrightnessRatio(decodedImage);
         return ImageInfo(
           uri: imageLink.uri.toString(),
           fileName: fileName + (decoded.encodedFileExtension ?? ''),
@@ -301,8 +302,8 @@ class BestIcon {
           bytes: decoded.encodedBytes ?? imageBytes,
           originalByteLength:
               decoded.encodedBytes == null ? null : imageBytes.length,
-          width: image.width,
-          height: image.height,
+          width: decodedImage.width,
+          height: decodedImage.height,
           brightness: brightness,
           imageLinkType: imageLink.type,
         );
@@ -415,9 +416,9 @@ class BestIcon {
 }
 
 class FetchImageResult {
-  FetchImageResult({this.urlCanonical, this.images});
+  FetchImageResult({required this.urlCanonical, required this.images});
   final Uri? urlCanonical;
-  final List<ImageInfo>? images;
+  final List<ImageInfo> images;
 
   @override
   String toString() {

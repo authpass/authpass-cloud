@@ -44,8 +44,9 @@ class SmtpdCommand extends BaseBackendCommand {
 
   @override
   Future<void> run() async {
-    final port = int.parse(argResults!['port'] as String);
-    final hostname = argResults!['hostname'] as String;
+    final argResults = ArgumentError.checkNotNull(this.argResults);
+    final port = int.parse(argResults['port'] as String);
+    final hostname = argResults['hostname'] as String;
 
     final env = await loadEnv();
 
@@ -97,7 +98,7 @@ class AuthPassMailHandler extends MailHandler {
           db,
           sender: mailObject.envelope.sender,
           recipient: recipient,
-          content: mailObject.content!,
+          content: mailObject.content ?? '',
         );
       }
       return SmtpStatusMessage.successCompleted;

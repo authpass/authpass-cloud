@@ -187,7 +187,7 @@ class EmailTable extends TableBase with TableConstants {
       columnCreatedAt: clock.now().toUtc(),
       _COLUMN_MAILBOX_ID: mailbox.id,
       _COLUMN_MESSAGE: message,
-      _COLUMN_SENDER: sender!,
+      _COLUMN_SENDER: sender,
       _COLUMN_SIZE: message.length,
       _COLUMN_SUBJECT: subject.maxLength(SUBJECT_MAX_LENGTH),
     });
@@ -262,12 +262,12 @@ class EmailTable extends TableBase with TableConstants {
     });
     return result
         .map((row) => EmailMessageEntity(
-              id: row[0] as String?,
-              subject: row[1] as String?,
-              sender: row[2] as String?,
-              createdAt: row[3] as DateTime?,
-              mailboxEntryUuid: row[4] as String?,
-              size: row[5] as int?,
+              id: row[0] as String,
+              subject: row[1] as String,
+              sender: row[2] as String,
+              createdAt: row[3] as DateTime,
+              mailboxEntryUuid: row[4] as String,
+              size: row[5] as int,
               readAt: row[6] as DateTime?,
               deletedAt: row[7] as DateTime?,
             ))
@@ -455,17 +455,17 @@ class EmailMessageEntity {
     required this.deletedAt,
   });
 
-  final String? id;
+  final String id;
 
-  final String? subject;
+  final String subject;
 
-  final String? sender;
+  final String sender;
 
-  final String? mailboxEntryUuid;
+  final String mailboxEntryUuid;
 
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
-  final int? size;
+  final int size;
 
   final DateTime? readAt;
 
@@ -474,12 +474,12 @@ class EmailMessageEntity {
   final DateTime? deletedAt;
 
   EmailMessage toEmailMessage() => EmailMessage(
-        id: ApiUuid.parse(id!),
-        subject: subject!,
-        sender: sender!,
-        mailboxEntryUuid: ApiUuid.parse(mailboxEntryUuid!),
-        createdAt: createdAt!,
-        size: size!,
+        id: ApiUuid.parse(id),
+        subject: subject,
+        sender: sender,
+        mailboxEntryUuid: ApiUuid.parse(mailboxEntryUuid),
+        createdAt: createdAt,
+        size: size,
         isRead: readAt != null,
       );
 }
