@@ -369,3 +369,41 @@ Map<String, dynamic> _$MailboxMessageForwardSchemaToJson(
     <String, dynamic>{
       'email': instance.email,
     };
+
+FilecloudFileRetrievePostSchema _$FilecloudFileRetrievePostSchemaFromJson(
+        Map<String, dynamic> json) =>
+    FilecloudFileRetrievePostSchema(
+      fileToken: json['fileToken'] as String,
+    );
+
+Map<String, dynamic> _$FilecloudFileRetrievePostSchemaToJson(
+        FilecloudFileRetrievePostSchema instance) =>
+    <String, dynamic>{
+      'fileToken': instance.fileToken,
+    };
+
+FilecloudFilePutResponseBody200 _$FilecloudFilePutResponseBody200FromJson(
+        Map<String, dynamic> json) =>
+    FilecloudFilePutResponseBody200(
+      versionToken: json['versionToken'] as String,
+    );
+
+Map<String, dynamic> _$FilecloudFilePutResponseBody200ToJson(
+        FilecloudFilePutResponseBody200 instance) =>
+    <String, dynamic>{
+      'versionToken': instance.versionToken,
+    };
+
+FilecloudFilePostResponseBody200 _$FilecloudFilePostResponseBody200FromJson(
+        Map<String, dynamic> json) =>
+    FilecloudFilePostResponseBody200(
+      fileToken: json['fileToken'] as String,
+      versionToken: json['versionToken'] as String,
+    );
+
+Map<String, dynamic> _$FilecloudFilePostResponseBody200ToJson(
+        FilecloudFilePostResponseBody200 instance) =>
+    <String, dynamic>{
+      'fileToken': instance.fileToken,
+      'versionToken': instance.versionToken,
+    };

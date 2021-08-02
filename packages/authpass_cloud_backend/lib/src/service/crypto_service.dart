@@ -8,6 +8,7 @@ import 'package:uuid/uuid_util.dart';
 enum TokenType {
   emailConfirm,
   authToken,
+  fileToken,
 }
 
 int _tokenTypeByteLength(TokenType type) {
@@ -16,6 +17,8 @@ int _tokenTypeByteLength(TokenType type) {
       return 32;
     case TokenType.authToken:
       return 512;
+    case TokenType.fileToken:
+      return 128;
   }
   // throw StateError('Invalid token type $type.');
 }

@@ -366,6 +366,95 @@ paths:
               schema:
                 type: string
                 description: 'Email error codes similar to https://tools.ietf.org/html/rfc3463 expected.'
+  /filecloud/file/retrieve:
+    post:
+      summary: Retrieve a previously created file.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileToken]
+              properties:
+                fileToken:
+                  type: string
+      responses:
+        '200':
+          description: 'The requested file'
+          headers:
+            etag:
+              required: true
+              schema:
+                type: string
+          content:
+            application/octet-set:
+              schema:
+                type: string
+                format: binary
+  /filecloud/file:
+    post:
+      summary: Create new file
+      parameters:
+        - name: fileName
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: 'successful file creation.'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [fileToken, versionToken]
+                properties:
+                  fileToken:
+                    type: string
+                    description: 'Unique token to reference the newly created file.'
+                  versionToken:
+                    type: string
+                    description: 'Token identifieing the version of this file. Must be used for updating the file.'
+    put:
+      summary: Update file
+      parameters:
+        - name: fileToken
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: versionToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: 'Successful file update'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [versionToken]
+                properties:
+                  versionToken:
+                    type: string
+                    description: 'Token identifieing the version of this file. Must be used for updating the file.'
+        '409':
+          description: 'conflict: versionToken was not the latest version.'
   /website/image:
     get:
       summary: Load the best image for the given website.

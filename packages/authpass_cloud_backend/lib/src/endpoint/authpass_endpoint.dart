@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/filecloud_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/system_dao.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
@@ -18,22 +20,25 @@ import 'package:smtpd/smtpd.dart';
 
 final _logger = Logger('authpass_service');
 
+abstract class RepositoryProvider {
+  UserRepository get user;
+  EmailRepository get email;
+  WebsiteRepository get website;
+  FileCloudRepository get fileCloud;
+}
+
 class AuthPassCloudImpl extends AuthPassCloud {
   AuthPassCloudImpl(
     this.serviceProvider,
     this.request,
     this.db,
-    this.userRepository,
-    this.emailRepository,
-    this.websiteRepository,
+    this.repository,
   );
 
   final ServiceProvider serviceProvider;
   final OpenApiRequest request;
   final DatabaseTransaction db;
-  final UserRepository userRepository;
-  final EmailRepository emailRepository;
-  final WebsiteRepository websiteRepository;
+  final RepositoryProvider repository;
 
   Env get _env => serviceProvider.env;
 
@@ -48,13 +53,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<UserGetResponse> userGet() async {
     final authToken = await _requireAuthToken();
     return UserGetResponse.response200(
-        await userRepository.findUserInfo(authToken: authToken));
+        await repository.user.findUserInfo(authToken: authToken));
   }
 
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
-    final emailConfirm = await userRepository.createUserOrConfirmEmail(
+    final emailConfirm = await repository.user.createUserOrConfirmEmail(
       body.email,
       request.headerParameter(HttpHeaders.userAgentHeader).single,
     );
@@ -76,7 +81,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<EmailConfirmGetResponse> emailConfirmGet(
       {required String token}) async {
-    if (!await userRepository.isValidEmailConfirmToken(token)) {
+    if (!await repository.user.isValidEmailConfirmToken(token)) {
       return EmailConfirmGetResponse.response400();
     }
     return EmailConfirmGetResponse.response200(
@@ -90,7 +95,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
     final success =
         await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
     if (success) {
-      await userRepository.confirmEmailAddress(body.token);
+      await repository.user.confirmEmailAddress(body.token);
       return EmailConfirmPostResponse.response200('Success.');
     }
     return EmailConfirmPostResponse.response400();
@@ -114,7 +119,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
     if (data == null || bearerToken == null || bearerToken.isEmpty) {
       throw UnauthorizedException('Missing auth token.');
     }
-    final validToken = await userRepository.findValidAuthToken(
+    final validToken = await repository.user.findValidAuthToken(
       bearerToken,
       acceptUnconfirmed: acceptUnconfirmed,
     );
@@ -147,7 +152,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxCreatePostResponse> mailboxCreatePost(
       MailboxCreatePostSchema body) async {
     final token = await _requireAuthToken();
-    final address = await emailRepository.createAddress(
+    final address = await repository.email.createAddress(
       token.user,
       label: body.label,
       clientEntryUuid: body.entryUuid,
@@ -174,7 +179,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
     const limit = 50;
 
-    final emails = await emailRepository.findEmailsForUser(
+    final emails = await repository.email.findEmailsForUser(
       token.user,
       offset: page.offset,
       limit: limit,
@@ -197,7 +202,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxMessageGetResponse> mailboxMessageGet(
       {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
-    final body = await emailRepository.findEmailMessageBody(token.user,
+    final body = await repository.email.findEmailMessageBody(token.user,
         messageId: messageId.encodeToString());
     if (body == null) {
       throw NotFoundException('Message not found.');
@@ -208,7 +213,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<MailboxGetResponse> mailboxGet() async {
     final token = await _requireAuthToken();
-    final mailboxList = await emailRepository.findMailboxAll(token.user);
+    final mailboxList = await repository.email.findMailboxAll(token.user);
     return MailboxGetResponse.response200(
         MailboxGetResponseBody200(data: mailboxList));
   }
@@ -217,7 +222,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
       {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
-    if (!await emailRepository.markAsRead(token.user,
+    if (!await repository.email.markAsRead(token.user,
         messageId: messageId.encodeToString(), isRead: true)) {
       throw NotFoundException('Message not found.');
     }
@@ -228,7 +233,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailMassupdatePostResponse> mailMassupdatePost(
       MailMassupdatePostSchema body) async {
     final token = await _requireAuthToken();
-    final updated = await emailRepository.messageMassUpdate(
+    final updated = await repository.email.messageMassUpdate(
         token.user, body.filter,
         messageIds: body.messageIds, isRead: body.isRead);
     _logger.fine('Updated $updated messages for $body');
@@ -239,7 +244,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
       {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
-    if (!await emailRepository.markAsRead(token.user,
+    if (!await repository.email.markAsRead(token.user,
         messageId: messageId.encodeToString(), isRead: false)) {
       throw NotFoundException('Message not found.');
     }
@@ -251,9 +256,9 @@ class AuthPassCloudImpl extends AuthPassCloud {
       MailboxMessageForwardSchema body,
       {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
-    final body = await emailRepository.findEmailMessageBody(token.user,
+    final body = await repository.email.findEmailMessageBody(token.user,
         messageId: messageId.encodeToString());
-    final userInfo = await userRepository.findUserInfo(authToken: token);
+    final userInfo = await repository.user.findUserInfo(authToken: token);
 
     if (body == null) {
       throw NotFoundException('Message not found.');
@@ -268,8 +273,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
       {required ApiUuid messageId}) async {
     final token = await _requireAuthToken();
-    if (!await emailRepository.deleteMessage(token.user,
-        messageId: messageId.encodeToString())) {
+    if (!await repository.email
+        .deleteMessage(token.user, messageId: messageId.encodeToString())) {
       throw NotFoundException('Message not found.');
     }
     return MailboxMessageDeleteResponse.response200();
@@ -279,7 +284,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
       {required String mailboxAddress}) async {
     final token = await _requireAuthToken();
-    if (await emailRepository.updateMailbox(
+    if (await repository.email.updateMailbox(
       token.user,
       mailboxAddress: mailboxAddress,
       label: body.label,
@@ -295,7 +300,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<StatusGetResponse> statusGet() async {
     final token = await _requireAuthToken();
-    final status = await emailRepository.generateUserStatus(token.user);
+    final status = await repository.email.generateUserStatus(token.user);
     return StatusGetResponse.response200(StatusGetResponseBody200(
         mail: StatusGetResponseBody200Mail(
             messagesUnread: status.messagesUnread)));
@@ -304,7 +309,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<WebsiteImageGetResponse> websiteImageGet({required String url}) async {
     final uri = Uri.parse(url);
-    final image = await websiteRepository.findBestImage(uri);
+    final image = await repository.website.findBestImage(uri);
     if (image == null) {
       throw NotFoundException('Unable to find image for $uri ($url)');
     }
@@ -326,6 +331,48 @@ class AuthPassCloudImpl extends AuthPassCloud {
       throw NotFoundException('Invalid.');
     }
     return CheckStatusPostResponse.response200(await SystemDao(db).getStats());
+  }
+
+  @override
+  Future<FilecloudFilePostResponse> filecloudFilePost(Uint8List body,
+      {required String fileName}) async {
+    final token = await _requireAuthToken();
+    final response =
+        await repository.fileCloud.createFile(token.user, fileName, body);
+    return FilecloudFilePostResponse.response200(
+        FilecloudFilePostResponseBody200(
+      fileToken: response.fileToken,
+      versionToken: response.versionToken,
+    ));
+  }
+
+  @override
+  Future<FilecloudFilePutResponse> filecloudFilePut(Uint8List body,
+      {required String fileToken, required String versionToken}) async {
+    final token = await _requireAuthToken();
+    final version = await repository.fileCloud.updateFile(
+      token.user,
+      fileToken: fileToken,
+      versionToken: versionToken,
+      bytes: body,
+    );
+    return FilecloudFilePutResponse.response200(FilecloudFilePutResponseBody200(
+      versionToken: version.versionToken,
+    ));
+  }
+
+  @override
+  Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
+      FilecloudFileRetrievePostSchema body) async {
+    final token = await _requireAuthToken();
+    assert(token.id.isNotEmpty);
+    final fc = await repository.fileCloud
+        .retrieveFileContent(fileToken: body.fileToken);
+    return FilecloudFileRetrievePostResponse.response200(fc.body)
+      ..headers.addAll({
+        'etag': [fc.versionToken],
+      });
+    throw UnimplementedError();
   }
 }
 

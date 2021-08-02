@@ -1,4 +1,6 @@
+import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
+import 'package:authpass_cloud_backend/src/dao/filecloud_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
@@ -64,6 +66,30 @@ class Server extends BackendServer {
   }
 }
 
+class RepositoryProviderImpl extends RepositoryProvider {
+  RepositoryProviderImpl(this.serviceProvider, this.db);
+  final DatabaseTransaction db;
+  final ServiceProvider serviceProvider;
+
+  @override
+  late final EmailRepository email = EmailRepository(
+    db: db,
+    cryptoService: serviceProvider.cryptoService,
+    env: serviceProvider.env,
+  );
+  @override
+  late final FileCloudRepository fileCloud = FileCloudRepository(
+    db: db,
+    cryptoService: serviceProvider.cryptoService,
+    env: serviceProvider.env,
+  );
+  @override
+  late final UserRepository user = UserRepository(db);
+  @override
+  late final WebsiteRepository website =
+      WebsiteRepository(db, serviceProvider.cryptoService);
+}
+
 class AuthPassEndpointProvider extends ApiEndpointProvider<AuthPassCloudImpl> {
   AuthPassEndpointProvider(this.serviceProvider);
 
@@ -78,13 +104,7 @@ class AuthPassEndpointProvider extends ApiEndpointProvider<AuthPassCloudImpl> {
           serviceProvider,
           request,
           conn,
-          UserRepository(conn),
-          EmailRepository(
-            db: conn,
-            cryptoService: serviceProvider.cryptoService,
-            env: serviceProvider.env,
-          ),
-          WebsiteRepository(conn, serviceProvider.cryptoService),
+          RepositoryProviderImpl(serviceProvider, conn),
         ));
       });
     } finally {

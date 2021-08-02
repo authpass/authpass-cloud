@@ -1,4 +1,5 @@
 import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/website_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
@@ -30,14 +31,15 @@ class DatabaseAccess
 
 class AuthPassTables extends TablesBase {
   AuthPassTables({
-    required CryptoService cryptoService,
-  })  : user = UserTable(cryptoService: cryptoService),
-        email = EmailTable(cryptoService: cryptoService),
-        website = WebsiteTable(cryptoService: cryptoService);
+    required this.cryptoService,
+  });
 
-  final UserTable user;
-  final EmailTable email;
-  final WebsiteTable website;
+  final CryptoService cryptoService;
+  late final UserTable user = UserTable(cryptoService: cryptoService);
+  late final EmailTable email = EmailTable(cryptoService: cryptoService);
+  late final WebsiteTable website = WebsiteTable(cryptoService: cryptoService);
+  late final FileCloudTable fileCloud =
+      FileCloudTable(cryptoService: cryptoService);
 
   @override
   List<TableBase> get tables => [
@@ -70,6 +72,10 @@ class AuthPassMigrationsProvider
           id: 6, up: (db) async => await db.tables.website.createTables(db)),
       Migrations(id: 7, up: (db) async => await db.tables.website.migrate7(db)),
       Migrations(id: 8, up: (db) async => await db.tables.user.migrate8(db)),
+      Migrations(
+        id: 9,
+        up: (db) async => await db.tables.fileCloud.createTables(db),
+      ),
     ];
   }
 }

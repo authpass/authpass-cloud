@@ -1,10 +1,8 @@
-import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
-import 'package:authpass_cloud_backend/src/dao/user_repository.dart';
-import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
+import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
@@ -46,22 +44,17 @@ void endpointTest(String description,
         final request = MockOpenApiRequest();
         when(request.headerParameter(argThat(equalsIgnoringCase('user-agent'))))
             .thenReturn(['unit test']);
+        final serviceProvider = ServiceProvider(
+          env: env,
+          cryptoService: cryptoService,
+          emailService: MockEmailService(),
+          recaptchaService: MockRecaptchaService(),
+        );
         final endpoint = AuthPassCloudImpl(
-          ServiceProvider(
-            env: env,
-            cryptoService: cryptoService,
-            emailService: MockEmailService(),
-            recaptchaService: MockRecaptchaService(),
-          ),
+          serviceProvider,
           request,
           db,
-          UserRepository(db),
-          EmailRepository(
-            db: db,
-            cryptoService: cryptoService,
-            env: env,
-          ),
-          WebsiteRepository(db, cryptoService),
+          RepositoryProviderImpl(serviceProvider, db),
         );
         await body(endpoint);
       });
@@ -76,7 +69,7 @@ Future<AuthTokenEntity?> _createUserConfirmed(
   final db = endpoint.db;
   final confirm =
       await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
-  await endpoint.userRepository.confirmEmailAddress(confirm.token);
+  await endpoint.repository.user.confirmEmailAddress(confirm.token);
   when(endpoint.request.headerParameter('Authorization'))
       .thenReturn(['Bearer ${confirm.authToken!.token}']);
   return confirm.authToken;
