@@ -133,7 +133,8 @@ CREATE TABLE public.filecloud_file (
     updated_at timestamp without time zone NOT NULL,
     user_id uuid NOT NULL,
     name character varying NOT NULL,
-    last_content_id uuid NOT NULL
+    last_content_id uuid NOT NULL,
+    owner_token character varying NOT NULL
 );
 
 
@@ -458,6 +459,14 @@ ALTER TABLE ONLY public.filecloud_token
 
 ALTER TABLE ONLY public.filecloud_file
     ADD CONSTRAINT last_content_id_fkey FOREIGN KEY (last_content_id) REFERENCES public.filecloud_file_content(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: filecloud_file owner_token_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_file
+    ADD CONSTRAINT owner_token_fkey FOREIGN KEY (owner_token) REFERENCES public.filecloud_token(token) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
