@@ -31,76 +31,92 @@ final _logger = Logger('endpoint_test');
 
 // class MockRecaptchaService extends Mock implements RecaptchaService {}
 
-@GenerateMocks([OpenApiRequest, EmailService, RecaptchaService])
+typedef EndpointTesterCallback = Future<void> Function(
+    AuthPassCloudImpl endpoint);
+
 @isTest
-void endpointTest(String description,
-    Future<void> Function(AuthPassCloudImpl endpoint) body) {
-  test(description, () async {
-    final db = await TestUtils.setUpDatabase();
-    try {
-      await db.run((db) async {
-        final env = DevEnv();
-        final cryptoService = CryptoService();
-        final request = MockOpenApiRequest();
-        when(request.headerParameter(argThat(equalsIgnoringCase('user-agent'))))
-            .thenReturn(['unit test']);
-        final serviceProvider = ServiceProvider(
-          env: env,
-          cryptoService: cryptoService,
-          emailService: MockEmailService(),
-          recaptchaService: MockRecaptchaService(),
-        );
-        final endpoint = AuthPassCloudImpl(
-          serviceProvider,
-          request,
-          db,
-          RepositoryProviderImpl(serviceProvider, db),
-        );
-        await body(endpoint);
-      });
-    } finally {
-      await TestUtils.tearDown(db);
-    }
-  });
+void endpointTest(
+  String description,
+  EndpointTesterCallback callback, {
+  bool? skip,
+  dynamic tags,
+}) {
+  test(
+    description,
+    () async {
+      final db = await TestUtils.setUpDatabase();
+      try {
+        await db.run((db) async {
+          final env = DevEnv();
+          final cryptoService = CryptoService();
+          final request = MockOpenApiRequest();
+          when(request
+                  .headerParameter(argThat(equalsIgnoringCase('user-agent'))))
+              .thenReturn(['unit test']);
+          final serviceProvider = ServiceProvider(
+            env: env,
+            cryptoService: cryptoService,
+            emailService: MockEmailService(),
+            recaptchaService: MockRecaptchaService(),
+          );
+          final endpoint = AuthPassCloudImpl(
+            serviceProvider,
+            request,
+            db,
+            RepositoryProviderImpl(serviceProvider, db),
+          );
+          await callback(endpoint);
+        });
+      } finally {
+        await TestUtils.tearDown(db);
+      }
+    },
+    tags: tags,
+    skip: skip,
+  );
 }
 
-Future<AuthTokenEntity?> _createUserConfirmed(
-    AuthPassCloudImpl endpoint) async {
-  final db = endpoint.db;
-  final confirm =
-      await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
-  await endpoint.repository.user.confirmEmailAddress(confirm.token);
-  when(endpoint.request.headerParameter('Authorization'))
-      .thenReturn(['Bearer ${confirm.authToken!.token}']);
-  return confirm.authToken;
-}
-
-Future<MailboxEntity> _createUserWithMailbox(AuthPassCloudImpl endpoint) async {
-  final authToken = await _createUserConfirmed(endpoint);
-  if (authToken == null) {
-    throw StateError('Must not be null.');
+@GenerateMocks([OpenApiRequest, EmailService, RecaptchaService])
+class EndpointTestUtil {
+  static Future<AuthTokenEntity?> createUserConfirmed(
+      AuthPassCloudImpl endpoint) async {
+    final db = endpoint.db;
+    final confirm =
+        await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
+    await endpoint.repository.user.confirmEmailAddress(confirm.token);
+    when(endpoint.request.headerParameter('Authorization'))
+        .thenReturn(['Bearer ${confirm.authToken!.token}']);
+    return confirm.authToken;
   }
-  const address = 'x@mail.authpass.app';
-  await endpoint.db.tables.email.insertMailbox(
-    endpoint.db,
-    userEntity: authToken.user,
-    label: '',
-    address: address,
-    clientEntryUuid: '',
-  );
-  return (await endpoint.db.tables.email
-      .findMailbox(endpoint.db, address: address))!;
-}
 
-Future<ApiUuid> _createMessage(
-    AuthPassCloudImpl endpoint, MailboxEntity mailbox) async {
-  return await endpoint.db.tables.email.insertMessage(
-    endpoint.db,
-    mailbox: mailbox,
-    sender: 'nobody@example.com',
-    subject: 'Lorem',
-    message: 'Ipsum',
-  );
+  static Future<MailboxEntity> createUserWithMailbox(
+      AuthPassCloudImpl endpoint) async {
+    final authToken = await createUserConfirmed(endpoint);
+    if (authToken == null) {
+      throw StateError('Must not be null.');
+    }
+    const address = 'x@mail.authpass.app';
+    await endpoint.db.tables.email.insertMailbox(
+      endpoint.db,
+      userEntity: authToken.user,
+      label: '',
+      address: address,
+      clientEntryUuid: '',
+    );
+    return (await endpoint.db.tables.email
+        .findMailbox(endpoint.db, address: address))!;
+  }
+
+  static Future<ApiUuid> createMessage(
+      AuthPassCloudImpl endpoint, MailboxEntity mailbox) async {
+    return await endpoint.db.tables.email.insertMessage(
+      endpoint.db,
+      mailbox: mailbox,
+      sender: 'nobody@example.com',
+      subject: 'Lorem',
+      message: 'Ipsum',
+    );
+  }
 }
 
 extension on AuthPassCloudImpl {
@@ -166,7 +182,7 @@ void main() {
 
   group('user info', () {
     endpointTest('fetch user info', (endpoint) async {
-      await _createUserConfirmed(endpoint);
+      await EndpointTestUtil.createUserConfirmed(endpoint);
       final user = await endpoint.userGet().requireSuccess();
       expect(user.emails, hasLength(1));
       expect(user.emails.first.confirmedAt, isNotNull);
@@ -175,7 +191,7 @@ void main() {
 
   group('Email', () {
     endpointTest('list emails', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
       await endpoint.db.tables.email.insertMessage(
         endpoint.db,
         mailbox: mailbox,
@@ -188,7 +204,7 @@ void main() {
       expect(list.data, hasLength(1));
     });
     endpointTest('fetch email body', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
       final id = await endpoint.db.tables.email.insertMessage(
         endpoint.db,
         mailbox: mailbox,
@@ -202,7 +218,7 @@ void main() {
       expect(body, 'Ipsum');
     });
     endpointTest('mark as read', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
       final id = await endpoint.db.tables.email.insertMessage(
         endpoint.db,
         mailbox: mailbox,
@@ -226,8 +242,8 @@ void main() {
       expect(l3.data.single.isRead, false);
     });
     endpointTest('delete message', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
-      final id = await _createMessage(endpoint, mailbox);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
+      final id = await EndpointTestUtil.createMessage(endpoint, mailbox);
       final list = await endpoint.mailboxListGet().requireSuccess();
       expect(list.data, hasLength(1));
       expect(list.data.first.isRead, false);
@@ -238,11 +254,11 @@ void main() {
       expect(l2.data, isEmpty);
     });
     endpointTest('mark all read', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
-      await _createMessage(endpoint, mailbox);
-      await _createMessage(endpoint, mailbox);
-      await _createMessage(endpoint, mailbox);
-      await _createMessage(endpoint, mailbox);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
       final status = await endpoint.statusGet().requireSuccess();
       expect(status.mail.messagesUnread, 4);
       await endpoint
@@ -256,9 +272,9 @@ void main() {
 
   group('stats endpoint', () {
     endpointTest('request stats', (endpoint) async {
-      final mailbox = await _createUserWithMailbox(endpoint);
-      await _createMessage(endpoint, mailbox);
-      final id = await _createMessage(endpoint, mailbox);
+      final mailbox = await EndpointTestUtil.createUserWithMailbox(endpoint);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      final id = await EndpointTestUtil.createMessage(endpoint, mailbox);
       await endpoint.mailboxMessageMarkRead(messageId: id);
       final status = await endpoint
           .checkStatusPost(

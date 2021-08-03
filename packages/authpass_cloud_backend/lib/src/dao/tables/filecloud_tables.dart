@@ -63,7 +63,8 @@ class FileCloudTable extends TableBase with TableConstants {
     
     ALTER TABLE $TABLE_FILE ADD CONSTRAINT $_lastContentIdFkConstraint
       FOREIGN KEY ($_columnLastContentId) 
-      REFERENCES $TABLE_FILE_CONTENT ($columnId);
+      REFERENCES $TABLE_FILE_CONTENT ($columnId)
+      DEFERRABLE INITIALLY DEFERRED;
     
     CREATE TABLE $TABLE_FILE_TOKEN (
       $_columnToken varchar not null primary key,
@@ -129,20 +130,24 @@ class FileCloudTable extends TableBase with TableConstants {
       throw NotFoundException('Unable to find file.');
     }
     if (details.lastVersionToken != lastVersionToken) {
-      throw ConflictException('Invalid content id');
+      throw ConflictException('Invalid version token');
     }
 
     final contentId = cryptoService.createSecureUuid();
+    final now = clock.now().toUtc();
     await db.executeInsert(TABLE_FILE_CONTENT, {
       columnId: contentId,
       _columnFileId: details.fileId,
       columnUserId: userEntity.id,
+      columnCreatedAt: now,
       _columnBytes:
           CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
       _columnLength: bytes.length,
     });
     final rows = await db.executeUpdate(TABLE_FILE, set: {
-      _columnLastContentId: contentId
+      _columnLastContentId: contentId,
+      columnCreatedAt: now,
+      _columnUpdatedAt: now,
     }, where: {
       columnId: details.fileId,
       _columnLastContentId: details.lastVersionToken,
