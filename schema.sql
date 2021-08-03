@@ -457,7 +457,7 @@ ALTER TABLE ONLY public.filecloud_token
 --
 
 ALTER TABLE ONLY public.filecloud_file
-    ADD CONSTRAINT last_content_id_fkey FOREIGN KEY (last_content_id) REFERENCES public.filecloud_file_content(id);
+    ADD CONSTRAINT last_content_id_fkey FOREIGN KEY (last_content_id) REFERENCES public.filecloud_file_content(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
