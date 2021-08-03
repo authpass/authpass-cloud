@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
@@ -23,6 +24,10 @@ class FileCloudTable extends TableBase with TableConstants {
   static const _columnFileId = 'file_id';
   static const _columnBytes = 'bytes';
   static const _columnLength = 'length';
+
+  /// the "main" token created for the owner of this file.
+  static const _columnOwnerToken = 'owner_token';
+  static const _columnOwnerTokenFkConstraint = '${_columnOwnerToken}_fkey';
   // static const
   static const _columnUpdatedAt = 'updated_at';
   String get specColumnUpdatedAtAt =>
@@ -75,6 +80,18 @@ class FileCloudTable extends TableBase with TableConstants {
 ''');
   }
 
+  Future<void> migrate10(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $TABLE_FILE ADD $_columnOwnerToken VARCHAR;
+    UPDATE $TABLE_FILE f SET $_columnOwnerToken = (SELECT ft.$_columnToken FROM $TABLE_FILE_TOKEN ft WHERE ft.$_columnFileId = f.$columnId);
+    ALTER TABLE $TABLE_FILE ALTER $_columnOwnerToken SET NOT NULL;
+    ALTER TABLE $TABLE_FILE ADD CONSTRAINT $_columnOwnerTokenFkConstraint
+      FOREIGN KEY ($_columnOwnerToken) 
+      REFERENCES $TABLE_FILE_TOKEN ($_columnToken)
+      DEFERRABLE INITIALLY DEFERRED;
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
@@ -87,6 +104,7 @@ class FileCloudTable extends TableBase with TableConstants {
         cryptoService.createSecureToken(type: TokenType.fileToken);
 
     await db.execute('SET CONSTRAINTS $_lastContentIdFkConstraint DEFERRED');
+    await db.execute('SET CONSTRAINTS $_columnOwnerTokenFkConstraint DEFERRED');
 
     await db.executeInsert(TABLE_FILE, {
       columnId: fileId,
@@ -94,6 +112,7 @@ class FileCloudTable extends TableBase with TableConstants {
       _columnUpdatedAt: clock.now().toUtc(),
       _columnName: name,
       _columnLastContentId: contentId,
+      _columnOwnerToken: fileToken,
     });
     await db.executeInsert(TABLE_FILE_CONTENT, {
       columnId: contentId,
@@ -177,6 +196,42 @@ class FileCloudTable extends TableBase with TableConstants {
         body: row[2] as Uint8List,
       );
     });
+  }
+
+  Future<List<FileInfo>> listAllFiles(
+      DatabaseTransactionBase db, UserEntity user) async {
+    final rows = await db.query('''
+        SELECT 
+          f.$_columnOwnerToken, f.$_columnLastContentId,
+          f.$_columnName, f.$columnCreatedAt, f.$_columnUpdatedAt, 
+          fc.$_columnLength
+           
+        FROM $TABLE_FILE f
+          INNER JOIN $TABLE_FILE_CONTENT fc 
+          ON fc.$columnId = f.$_columnLastContentId
+        WHERE fc.$columnUserId = @userId
+        ORDER BY f.$_columnUpdatedAt DESC
+        ''', values: {'userId': user.id});
+    return rows
+        .map((row) => FileInfo(
+              fileToken: row[0] as String,
+              versionToken: row[1] as String,
+              name: row[2] as String,
+              createdAt: row[3] as DateTime,
+              updatedAt: row[4] as DateTime,
+              size: row[5] as int,
+            ))
+        .toList();
+  }
+
+  Future<SystemStatusFileCloud> countStats(DatabaseTransactionBase db) async {
+    final f = await db.query('SELECT COUNT(*) FROM $TABLE_FILE').single;
+    final fc =
+        await (db.query('SELECT COUNT(*) FROM $TABLE_FILE_CONTENT')).single;
+    return SystemStatusFileCloud(
+      fileCount: f[0] as int,
+      fileContentCount: fc[0] as int,
+    );
   }
 }
 

@@ -393,6 +393,15 @@ paths:
                 type: string
                 format: binary
   /filecloud/file:
+    get:
+      summary: List available files for user
+      responses:
+        '200':
+          description: 'List of files of the user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileListResponse'
     post:
       summary: Create new file
       parameters:
@@ -479,8 +488,9 @@ components:
         user: { $ref: '#/components/schemas/SystemStatusUser' }
         website: { $ref: '#/components/schemas/SystemStatusWebsite' }
         mailbox: { $ref: '#/components/schemas/SystemStatusMailbox' }
+        fileCloud: { $ref: '#/components/schemas/SystemStatusFileCloud' }
         queryTime: { type: integer }
-      required: [user, website, mailbox, queryTime]
+      required: [user, website, mailbox, queryTime, fileCloud]
     SystemStatusUser:
       properties:
         emailConfirmed:
@@ -503,6 +513,11 @@ components:
         messageCount: { type: integer }
         messageReadCount: { type: integer }
       required: [mailboxCount, messageCount, messageReadCount]
+    SystemStatusFileCloud:
+      properties:
+        fileCount: { type: integer }
+        fileContentCount: { type: integer }
+      required: [fileCount, fileContentCount]
     UserInfo:
       required: [emails]
       properties:
@@ -608,6 +623,32 @@ components:
         - entryUuid
         - createdAt
         - isDisabled
+    FileListResponse:
+      type: object
+      required: [files]
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfo'
+    FileInfo:
+      type: object
+      required: [fileToken, versionToken, name, createdAt, updatedAt, size]
+      properties:
+        fileToken:
+          type: string
+        versionToken:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        size:
+          type: integer
   securitySchemes:
     auth_token:
       type: http

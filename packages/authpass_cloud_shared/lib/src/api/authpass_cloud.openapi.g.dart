@@ -48,12 +48,28 @@ Map<String, dynamic> _$SystemStatusMailboxToJson(
       'messageReadCount': instance.messageReadCount,
     };
 
+SystemStatusFileCloud _$SystemStatusFileCloudFromJson(
+        Map<String, dynamic> json) =>
+    SystemStatusFileCloud(
+      fileCount: json['fileCount'] as int,
+      fileContentCount: json['fileContentCount'] as int,
+    );
+
+Map<String, dynamic> _$SystemStatusFileCloudToJson(
+        SystemStatusFileCloud instance) =>
+    <String, dynamic>{
+      'fileCount': instance.fileCount,
+      'fileContentCount': instance.fileContentCount,
+    };
+
 SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) => SystemStatus(
       user: SystemStatusUser.fromJson(json['user'] as Map<String, dynamic>),
       website:
           SystemStatusWebsite.fromJson(json['website'] as Map<String, dynamic>),
       mailbox:
           SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
+      fileCloud: SystemStatusFileCloud.fromJson(
+          json['fileCloud'] as Map<String, dynamic>),
       queryTime: json['queryTime'] as int,
     );
 
@@ -62,6 +78,7 @@ Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
       'user': instance.user,
       'website': instance.website,
       'mailbox': instance.mailbox,
+      'fileCloud': instance.fileCloud,
       'queryTime': instance.queryTime,
     };
 
@@ -189,6 +206,36 @@ Map<String, dynamic> _$MailboxToJson(Mailbox instance) => <String, dynamic>{
       'entryUuid': instance.entryUuid,
       'createdAt': instance.createdAt.toIso8601String(),
       'isDisabled': instance.isDisabled,
+    };
+
+FileInfo _$FileInfoFromJson(Map<String, dynamic> json) => FileInfo(
+      fileToken: json['fileToken'] as String,
+      versionToken: json['versionToken'] as String,
+      name: json['name'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      size: json['size'] as int,
+    );
+
+Map<String, dynamic> _$FileInfoToJson(FileInfo instance) => <String, dynamic>{
+      'fileToken': instance.fileToken,
+      'versionToken': instance.versionToken,
+      'name': instance.name,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'size': instance.size,
+    };
+
+FileListResponse _$FileListResponseFromJson(Map<String, dynamic> json) =>
+    FileListResponse(
+      files: (json['files'] as List<dynamic>)
+          .map((e) => FileInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$FileListResponseToJson(FileListResponse instance) =>
+    <String, dynamic>{
+      'files': instance.files,
     };
 
 EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(

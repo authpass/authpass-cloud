@@ -374,6 +374,13 @@ class AuthPassCloudImpl extends AuthPassCloud {
       });
     // throw UnimplementedError();
   }
+
+  @override
+  Future<FilecloudFileGetResponse> filecloudFileGet() async {
+    final token = await _requireAuthToken();
+    final list = await repository.fileCloud.listAllFiles(token.user);
+    return FilecloudFileGetResponse.response200(FileListResponse(files: list));
+  }
 }
 
 class PageToken {

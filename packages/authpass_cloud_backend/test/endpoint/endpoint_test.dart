@@ -79,10 +79,11 @@ void endpointTest(
 @GenerateMocks([OpenApiRequest, EmailService, RecaptchaService])
 class EndpointTestUtil {
   static Future<AuthTokenEntity?> createUserConfirmed(
-      AuthPassCloudImpl endpoint) async {
+      AuthPassCloudImpl endpoint,
+      {String email = 'a@b.com'}) async {
     final db = endpoint.db;
     final confirm =
-        await db.tables.user.insertUser(endpoint.db, 'a@b.com', 'unit test');
+        await db.tables.user.insertUser(endpoint.db, email, 'unit test');
     await endpoint.repository.user.confirmEmailAddress(confirm.token);
     when(endpoint.request.headerParameter('Authorization'))
         .thenReturn(['Bearer ${confirm.authToken!.token}']);

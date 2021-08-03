@@ -76,6 +76,8 @@ class AuthPassMigrationsProvider
         id: 9,
         up: (db) async => await db.tables.fileCloud.createTables(db),
       ),
+      Migrations(
+          id: 10, up: (db) async => await db.tables.fileCloud.migrate10(db)),
     ];
   }
 }

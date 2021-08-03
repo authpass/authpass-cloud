@@ -73,5 +73,31 @@ void main() {
         expect(e, isA<ConflictException>());
       }
     });
+    endpointTest('list files', (endpoint) async {
+      await EndpointTestUtil.createUserConfirmed(endpoint);
+      final result = await endpoint
+          .filecloudFilePost(_content, fileName: _fileName)
+          .requireSuccess();
+      expect(result.versionToken, isNotEmpty);
+      expect(result.fileToken, isNotEmpty);
+
+      final list1 = await endpoint.filecloudFileGet().requireSuccess();
+      expect(list1.files, hasLength(1));
+
+      await EndpointTestUtil.createUserConfirmed(endpoint,
+          email: 'second@example.com');
+      final list2 = await endpoint.filecloudFileGet().requireSuccess();
+      expect(list2.files, hasLength(0));
+
+      final result2 = await endpoint
+          .filecloudFilePost(_content, fileName: _fileName)
+          .requireSuccess();
+      final list3 = await endpoint.filecloudFileGet().requireSuccess();
+      expect(list3.files, hasLength(1));
+      final f = list3.files.single;
+      expect(f.fileToken, result2.fileToken);
+      expect(f.versionToken, result2.versionToken);
+      expect(f.size, _content.length);
+    });
   });
 }
