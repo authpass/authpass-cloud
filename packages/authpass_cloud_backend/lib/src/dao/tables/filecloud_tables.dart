@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_backend/src/util/enum_util.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
@@ -11,11 +12,52 @@ import 'package:postgres_utils/postgres_utils.dart';
 
 final _logger = Logger('filecloud_tables');
 
+enum VersionSignificance {
+  firstOfHour,
+  firstOfDay,
+  firstOfWeek,
+  firstOfMonth,
+  firstOfQuarter,
+  firstOfYear,
+}
+
+final _versionSignificance = EnumUtil(VersionSignificance.values);
+
+extension VersionSignificanceExt on VersionSignificance {
+  static VersionSignificance? forDates(DateTime before, DateTime after) {
+    assert(before.isBefore(after));
+    if (after.year != before.year) {
+      return VersionSignificance.firstOfYear;
+    }
+    if (after.month != before.month) {
+      if (after.month % 4 == 1) {
+        return VersionSignificance.firstOfQuarter;
+      }
+      return VersionSignificance.firstOfMonth;
+    }
+    if (after.day != before.day) {
+      if (after.weekday == DateTime.monday) {
+        return VersionSignificance.firstOfWeek;
+      }
+      return VersionSignificance.firstOfDay;
+    }
+    if (after.hour != before.hour) {
+      return VersionSignificance.firstOfHour;
+    }
+    return null;
+  }
+
+  String get name => _versionSignificance.enumToString(this);
+}
+
 class FileCloudTable extends TableBase with TableConstants {
   FileCloudTable({required this.cryptoService});
   static const TABLE_FILE = 'filecloud_file';
   static const TABLE_FILE_CONTENT = 'filecloud_file_content';
   static const TABLE_FILE_TOKEN = 'filecloud_token';
+
+  /// enum of [VersionSignificance].
+  static const typeVersionSignificance = 'version_significance';
 
   static const columnUserId = UserTable.COLUMN_USER_ID;
   static const _columnName = 'name';
@@ -24,6 +66,7 @@ class FileCloudTable extends TableBase with TableConstants {
   static const _columnFileId = 'file_id';
   static const _columnBytes = 'bytes';
   static const _columnLength = 'length';
+  static const _columnSignificance = 'version_significance';
 
   /// the "main" token created for the owner of this file.
   static const _columnOwnerToken = 'owner_token';
@@ -92,6 +135,13 @@ class FileCloudTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate11(DatabaseTransactionBase db) async {
+    await db.execute('''
+    CREATE TYPE $typeVersionSignificance AS ENUM (${VersionSignificance.values.map((e) => "'${e.name}'").join(',')});
+    ALTER TABLE $TABLE_FILE_CONTENT ADD COLUMN $_columnSignificance $typeVersionSignificance NULL;
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
@@ -137,13 +187,16 @@ class FileCloudTable extends TableBase with TableConstants {
     required Uint8List bytes,
   }) async {
     final details = await db.query('''
-    SELECT f.$columnId, f.$_columnLastContentId 
+    SELECT f.$columnId, f.$_columnLastContentId, f.$_columnUpdatedAt
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     WHERE ft.$_columnToken = @token
     ''', values: {'token': fileToken}).singleOrNull((row) async {
       return _FileDetails(
-          fileId: row[0] as String, lastVersionToken: row[1] as String);
+        fileId: row[0] as String,
+        lastVersionToken: row[1] as String,
+        lastVersionDate: row[2] as DateTime,
+      );
     });
     if (details == null) {
       throw NotFoundException('Unable to find file.');
@@ -159,6 +212,8 @@ class FileCloudTable extends TableBase with TableConstants {
       _columnFileId: details.fileId,
       columnUserId: userEntity.id,
       columnCreatedAt: now,
+      _columnSignificance:
+          VersionSignificanceExt.forDates(details.lastVersionDate, now),
       _columnBytes:
           CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
       _columnLength: bytes.length,
@@ -242,9 +297,14 @@ class FileContent {
 }
 
 class _FileDetails {
-  _FileDetails({required this.fileId, required this.lastVersionToken});
+  _FileDetails({
+    required this.fileId,
+    required this.lastVersionToken,
+    required this.lastVersionDate,
+  });
   final String fileId;
   final String lastVersionToken;
+  final DateTime lastVersionDate;
 }
 
 class FileUpdated {

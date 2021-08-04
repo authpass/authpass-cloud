@@ -73,6 +73,18 @@ void main() {
         expect(e, isA<ConflictException>());
       }
     });
+    endpointTest('Load file', (endpoint) async {
+      await EndpointTestUtil.createUserConfirmed(endpoint);
+      final result = await endpoint
+          .filecloudFilePost(_content, fileName: _fileName)
+          .requireSuccess();
+      expect(result.versionToken, isNotEmpty);
+      expect(result.fileToken, isNotEmpty);
+
+      final response = await endpoint.filecloudFileRetrievePost(
+          FilecloudFileRetrievePostSchema(fileToken: result.fileToken));
+      expect(response.headers['etag']?.first, result.versionToken);
+    });
     endpointTest('list files', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
