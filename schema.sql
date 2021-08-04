@@ -29,6 +29,22 @@ CREATE TYPE public.authtokenstatus AS ENUM (
 
 ALTER TYPE public.authtokenstatus OWNER TO authpass;
 
+--
+-- Name: version_significance; Type: TYPE; Schema: public; Owner: authpass
+--
+
+CREATE TYPE public.version_significance AS ENUM (
+    'firstOfHour',
+    'firstOfDay',
+    'firstOfWeek',
+    'firstOfMonth',
+    'firstOfQuarter',
+    'firstOfYear'
+);
+
+
+ALTER TYPE public.version_significance OWNER TO authpass;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -150,7 +166,8 @@ CREATE TABLE public.filecloud_file_content (
     file_id uuid NOT NULL,
     user_id uuid NOT NULL,
     bytes bytea NOT NULL,
-    length integer NOT NULL
+    length integer NOT NULL,
+    version_significance public.version_significance
 );
 
 
