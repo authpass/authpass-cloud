@@ -145,7 +145,7 @@ class WebsiteTable extends TableBase with TableConstants {
 }
 
 @freezed
-abstract class WebsiteEntity with _$WebsiteEntity {
+class WebsiteEntity with _$WebsiteEntity {
   const factory WebsiteEntity({
     required String id,
     required String url,

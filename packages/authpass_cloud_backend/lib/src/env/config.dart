@@ -89,9 +89,7 @@ class EmailSmtpConfig {
   final String? username;
   final String? password;
 
-  @JsonKey(defaultValue: false)
   final bool allowInsecure;
-  @JsonKey(defaultValue: false)
   final bool ignoreBadCertificate;
 }
 
