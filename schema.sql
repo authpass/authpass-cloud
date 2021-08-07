@@ -39,7 +39,8 @@ CREATE TYPE public.version_significance AS ENUM (
     'firstOfWeek',
     'firstOfMonth',
     'firstOfQuarter',
-    'firstOfYear'
+    'firstOfYear',
+    'firstVersion'
 );
 
 
