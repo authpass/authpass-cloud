@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:mockito/mockito.dart';
@@ -37,25 +38,32 @@ void main() {
       expect(result.fileToken, isNotEmpty);
     });
     endpointTest('update success', (endpoint) async {
-      await EndpointTestUtil.createUserConfirmed(endpoint);
-      final created = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
-          .requireSuccess();
-      final response = await endpoint
-          .filecloudFilePut(_content2,
-              fileToken: created.fileToken, versionToken: created.versionToken)
-          .requireSuccess();
-      final response2 = await endpoint
-          .filecloudFilePut(_content3,
-              fileToken: created.fileToken, versionToken: response.versionToken)
-          .requireSuccess();
-      expect(created.versionToken, isNot(response.versionToken));
-      expect(response.versionToken, isNot(response2.versionToken));
-      final getResponse = await endpoint
-          .filecloudFileRetrievePost(
-              FilecloudFileRetrievePostSchema(fileToken: created.fileToken))
-          .requireSuccess();
-      expect(getResponse, _content3);
+      var fakeDate = DateTime(2020);
+      final clock = Clock(() => fakeDate);
+      await withClock(clock, () async {
+        await EndpointTestUtil.createUserConfirmed(endpoint);
+        final created = await endpoint
+            .filecloudFilePost(_content, fileName: _fileName)
+            .requireSuccess();
+        final response = await endpoint
+            .filecloudFilePut(_content2,
+                fileToken: created.fileToken,
+                versionToken: created.versionToken)
+            .requireSuccess();
+        fakeDate = fakeDate.add(const Duration(days: 14));
+        final response2 = await endpoint
+            .filecloudFilePut(_content3,
+                fileToken: created.fileToken,
+                versionToken: response.versionToken)
+            .requireSuccess();
+        expect(created.versionToken, isNot(response.versionToken));
+        expect(response.versionToken, isNot(response2.versionToken));
+        final getResponse = await endpoint
+            .filecloudFileRetrievePost(
+                FilecloudFileRetrievePostSchema(fileToken: created.fileToken))
+            .requireSuccess();
+        expect(getResponse, _content3);
+      });
     });
     endpointTest('update conflict', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);

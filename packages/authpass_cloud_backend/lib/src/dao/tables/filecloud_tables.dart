@@ -19,13 +19,14 @@ enum VersionSignificance {
   firstOfMonth,
   firstOfQuarter,
   firstOfYear,
+  firstVersion,
 }
 
 final _versionSignificance = EnumUtil(VersionSignificance.values);
 
 extension VersionSignificanceExt on VersionSignificance {
   static VersionSignificance? forDates(DateTime before, DateTime after) {
-    assert(before.isBefore(after));
+    assert(before == after || before.isBefore(after), '$before vs $after');
     if (after.year != before.year) {
       return VersionSignificance.firstOfYear;
     }
@@ -171,6 +172,7 @@ class FileCloudTable extends TableBase with TableConstants {
       _columnBytes:
           CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
       _columnLength: bytes.length,
+      _columnSignificance: VersionSignificance.firstVersion.name,
     });
     await db.executeInsert(TABLE_FILE_TOKEN, {
       _columnToken: fileToken,
@@ -213,7 +215,7 @@ class FileCloudTable extends TableBase with TableConstants {
       columnUserId: userEntity.id,
       columnCreatedAt: now,
       _columnSignificance:
-          VersionSignificanceExt.forDates(details.lastVersionDate, now),
+          VersionSignificanceExt.forDates(details.lastVersionDate, now)?.name,
       _columnBytes:
           CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
       _columnLength: bytes.length,
