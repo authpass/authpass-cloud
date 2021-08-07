@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/email_repository.dart';
 import 'package:authpass_cloud_backend/src/dao/filecloud_repository.dart';
@@ -9,6 +11,8 @@ import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
+import 'package:authpass_cloud_backend/src/util/cors_middleware.dart';
+import 'package:authpass_cloud_backend/src/util/header_middleware.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
@@ -56,7 +60,20 @@ class Server extends BackendServer {
     final serviceProvider = await prepareServiceProviderAndDatabase();
 
     final server = OpenApiShelfServer(
-        AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)));
+      AuthPassCloudRouter(AuthPassEndpointProvider(serviceProvider)),
+      customizePipeline: (pipeline) => pipeline
+          .addMiddleware(customizeHeaders({
+            HttpHeaders.serverHeader: 'AuthPass Cloud',
+          }))
+          .addMiddleware(
+            corsHeaders(
+              originChecker: originOneOf([
+                'https://web.authpass.app',
+                'https://authpass.github.io',
+              ]),
+            ),
+          ),
+    );
     final process = await server.startServer(
       address: env.config.http.host,
       port: env.config.http.port,

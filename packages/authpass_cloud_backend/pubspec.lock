@@ -294,7 +294,7 @@ packages:
       name: freezed
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.3"
+    version: "0.14.4"
   freezed_annotation:
     dependency: "direct main"
     description:
@@ -441,7 +441,7 @@ packages:
       name: mockito
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.13"
+    version: "5.0.14"
   node_preamble:
     dependency: transitive
     description:
@@ -462,7 +462,7 @@ packages:
       name: openapi_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1+1"
+    version: "1.0.2"
   package_config:
     dependency: transitive
     description:

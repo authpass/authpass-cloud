@@ -23,7 +23,7 @@ dependencies:
   smtpd:
     path: ../../deps/smtpd.dart
 
-  openapi_base: ^1.0.1
+  openapi_base: ^1.0.2
   authpass_cloud_shared:
     path: ../authpass_cloud_shared
   postgres_utils:
@@ -44,6 +44,10 @@ dev_dependencies:
   build_runner: ^2.1.0
   freezed: ^0.14.3
   json_serializable: ^5.0.0
+
+#dependency_overrides:
+#  openapi_base:
+#    path: /Users/herbert/dev/openapi_dart/packages/openapi_base
 
 #dependency_overrides:
 #  openapi_base:
