@@ -67,11 +67,8 @@ class Server extends BackendServer {
           }))
           .addMiddleware(
             corsHeaders(
-              headers: {
-                ACCESS_CONTROL_EXPOSE_HEADERS: [
-                  'etag',
-                ]
-              },
+              exposeHeaders: ['etag'],
+              allowHeaders: ['filetoken', 'versiontoken'],
               originChecker: originOneOfPrefix([
                 'https://web.authpass.app',
                 'https://authpass.github.io',

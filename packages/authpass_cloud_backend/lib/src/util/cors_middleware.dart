@@ -28,18 +28,6 @@ const _defaultMethodsList = [
   'PUT'
 ];
 
-final Map<String, String> _defaultHeadersMap = {
-  // ACCESS_CONTROL_ALLOW_ORIGIN: '*',
-  ACCESS_CONTROL_EXPOSE_HEADERS: '',
-  ACCESS_CONTROL_ALLOW_CREDENTIALS: 'true',
-  ACCESS_CONTROL_ALLOW_HEADERS: _defaultHeadersList.join(','),
-  ACCESS_CONTROL_ALLOW_METHODS: _defaultMethodsList.join(','),
-  ACCESS_CONTROL_MAX_AGE: '86400',
-};
-
-final _defaultHeaders =
-    _defaultHeadersMap.map((key, value) => MapEntry(key, [value]));
-
 typedef OriginChecker = bool Function(String origin);
 
 bool allowAll(String origin) => true;
@@ -52,8 +40,22 @@ OriginChecker originOneOfPrefix(List<String> originPrefix) => (origin) =>
 
 Middleware corsHeaders({
   Map<String, List<String>>? headers,
+  List<String>? allowHeaders,
+  List<String>? exposeHeaders,
   OriginChecker originChecker = allowAll,
 }) {
+  final _defaultHeadersMap = {
+    // ACCESS_CONTROL_ALLOW_ORIGIN: '*',
+    ACCESS_CONTROL_EXPOSE_HEADERS: [...?exposeHeaders].join(','),
+    ACCESS_CONTROL_ALLOW_CREDENTIALS: 'true',
+    ACCESS_CONTROL_ALLOW_HEADERS:
+        [..._defaultHeadersList, ...?allowHeaders].join(','),
+    ACCESS_CONTROL_ALLOW_METHODS: _defaultMethodsList.join(','),
+    ACCESS_CONTROL_MAX_AGE: '86400',
+  };
+  final _defaultHeaders =
+      _defaultHeadersMap.map((key, value) => MapEntry(key, [value]));
+
   return (Handler handler) {
     return (Request request) async {
       final origin = request.headers[ORIGIN];
