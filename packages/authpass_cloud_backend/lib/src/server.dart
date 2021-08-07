@@ -67,9 +67,11 @@ class Server extends BackendServer {
           }))
           .addMiddleware(
             corsHeaders(
-              originChecker: originOneOf([
+              originChecker: originOneOfPrefix([
                 'https://web.authpass.app',
                 'https://authpass.github.io',
+                // FIXME remove localhost.
+                'http://localhost',
               ]),
             ),
           ),

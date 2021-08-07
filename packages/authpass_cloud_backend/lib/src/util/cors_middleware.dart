@@ -47,6 +47,9 @@ bool allowAll(String origin) => true;
 OriginChecker originOneOf(List<String> origins) =>
     (origin) => origins.contains(origin);
 
+OriginChecker originOneOfPrefix(List<String> originPrefix) => (origin) =>
+    originPrefix.where((prefix) => origin.startsWith(prefix)).isNotEmpty;
+
 Middleware corsHeaders({
   Map<String, List<String>>? headers,
   OriginChecker originChecker = allowAll,
