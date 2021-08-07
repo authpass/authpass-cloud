@@ -96,7 +96,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
         await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
     if (success) {
       await repository.user.confirmEmailAddress(body.token);
-      return EmailConfirmPostResponse.response200('Success.');
+      return EmailConfirmPostResponse.response200(
+          emailConfirmationSuccess(serviceProvider.env));
     }
     return EmailConfirmPostResponse.response400();
   }
