@@ -7,3 +7,6 @@
 [submodule "deps/smtpd.dart"]
 	path = deps/smtpd.dart
 	url = ../../authpass/smtpd.dart
+[submodule "deps/mailer"]
+	path = deps/mailer
+	url = ../../authpass/mailer.git

@@ -45,9 +45,11 @@ dev_dependencies:
   freezed: ^0.14.3
   json_serializable: ^5.0.0
 
-#dependency_overrides:
+dependency_overrides:
 #  openapi_base:
 #    path: /Users/herbert/dev/openapi_dart/packages/openapi_base
+  mailer:
+    path: ../../deps/mailer
 
 #dependency_overrides:
 #  openapi_base:
