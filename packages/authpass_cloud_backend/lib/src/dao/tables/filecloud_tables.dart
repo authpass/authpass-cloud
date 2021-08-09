@@ -22,6 +22,15 @@ enum VersionSignificance {
   firstVersion,
 }
 
+final v11Values = <VersionSignificance>[
+  VersionSignificance.firstOfHour,
+  VersionSignificance.firstOfDay,
+  VersionSignificance.firstOfWeek,
+  VersionSignificance.firstOfMonth,
+  VersionSignificance.firstOfQuarter,
+  VersionSignificance.firstOfYear,
+];
+
 final _versionSignificance = EnumUtil(VersionSignificance.values);
 
 extension VersionSignificanceExt on VersionSignificance {
@@ -138,14 +147,14 @@ class FileCloudTable extends TableBase with TableConstants {
 
   Future<void> migrate11(DatabaseTransactionBase db) async {
     await db.execute('''
-    CREATE TYPE $typeVersionSignificance AS ENUM (${VersionSignificance.values.map((e) => "'${e.name}'").join(',')});
+    CREATE TYPE $typeVersionSignificance AS ENUM (${v11Values.map((e) => "'${e.name}'").join(',')});
     ALTER TABLE $TABLE_FILE_CONTENT ADD COLUMN $_columnSignificance $typeVersionSignificance NULL;
     ''');
   }
 
   Future<void> migrate12(DatabaseTransactionBase db) async {
     await db.execute('''
-    ALTER TYPE $typeVersionSignificance ADD VALUE ${VersionSignificance.firstVersion.name};
+    ALTER TYPE $typeVersionSignificance ADD VALUE '${VersionSignificance.firstVersion.name}';
     ''');
   }
 
