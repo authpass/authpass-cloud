@@ -143,6 +143,12 @@ class FileCloudTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate12(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TYPE $typeVersionSignificance ADD VALUE ${VersionSignificance.firstVersion.name};
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
