@@ -102,6 +102,10 @@ class WebsiteRepository {
       _logger.finest('Uri with non-standard port, ignored. $uri');
       return false;
     }
+    if (uri.userInfo.isNotEmpty) {
+      _logger.finest('Uri with userInfo. ignored. $uri');
+      return false;
+    }
     if (['local', 'localhost'].contains(uri.host)) {
       _logger.finest('Localhost ignored. $uri');
       return false;
