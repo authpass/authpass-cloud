@@ -259,7 +259,7 @@ class FileCloudTable extends TableBase with TableConstants {
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     INNER JOIN $TABLE_FILE_CONTENT fc ON fc.$columnId = f.$_columnLastContentId
-    WHERE ft.$_columnToken = @token
+    WHERE ft.$_columnToken = @token AND f.$_columnDeletedAt IS NULL
     ''', values: {'token': fileToken}).singleOrNull((row) async {
       final tokenType = fileTokenTypeUtil.stringToEnum(row[3] as String);
       return FileContent(

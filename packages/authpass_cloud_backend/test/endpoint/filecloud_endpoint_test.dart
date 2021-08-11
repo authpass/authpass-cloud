@@ -9,6 +9,7 @@ import 'package:mockito/mockito.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
+import 'package:test/test.dart';
 
 import 'endpoint_test.dart';
 
@@ -78,6 +79,37 @@ void main() {
         fail('Did not throw conflict.');
       } catch (e) {
         expect(e, isA<ConflictException>());
+      }
+    });
+    endpointTest('Delete file', (endpoint) async {
+      await EndpointTestUtil.createUserConfirmed(endpoint);
+      final result = await endpoint
+          .filecloudFilePost(_content, fileName: _fileName)
+          .requireSuccess();
+      expect(result.versionToken, isNotEmpty);
+      expect(result.fileToken, isNotEmpty);
+
+      await endpoint
+          .filecloudFileDeletePost(FileId(fileToken: result.fileToken));
+
+      try {
+        await endpoint
+            .filecloudFileRetrievePost(FileId(fileToken: result.fileToken));
+        fail('should throw');
+      } catch (e) {
+        expect(e, isA<NotFoundException>());
+      }
+
+      final list = await endpoint.filecloudFileGet().requireSuccess();
+      expect(list.files, isEmpty);
+
+      try {
+        await endpoint
+            .filecloudFileMetadataPost(FileId(fileToken: result.fileToken));
+        fail('should have thrown.');
+      } catch (e, stackTrace) {
+        _logger.fine('Got exception', e, stackTrace);
+        expect(e, isA<NotFoundException>());
       }
     });
     endpointTest('Load file', (endpoint) async {
