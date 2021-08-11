@@ -151,7 +151,8 @@ CREATE TABLE public.filecloud_file (
     user_id uuid NOT NULL,
     name character varying NOT NULL,
     last_content_id uuid NOT NULL,
-    owner_token character varying NOT NULL
+    owner_token character varying NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -181,7 +182,9 @@ ALTER TABLE public.filecloud_file_content OWNER TO authpass;
 CREATE TABLE public.filecloud_token (
     token character varying NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    file_id uuid NOT NULL
+    file_id uuid NOT NULL,
+    token_type character varying DEFAULT 'creator'::character varying NOT NULL,
+    label character varying DEFAULT ''::character varying NOT NULL
 );
 
 
