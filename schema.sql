@@ -241,7 +241,9 @@ CREATE TABLE public.website (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     best_image_id uuid,
     url character varying NOT NULL,
-    url_canonical character varying NOT NULL
+    url_canonical character varying NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    error_code character varying
 );
 
 
