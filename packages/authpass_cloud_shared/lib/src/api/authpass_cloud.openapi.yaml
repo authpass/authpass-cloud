@@ -559,6 +559,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '404':
+          description: 'No image found for this url.'
 components:
   schemas:
     SystemStatus:

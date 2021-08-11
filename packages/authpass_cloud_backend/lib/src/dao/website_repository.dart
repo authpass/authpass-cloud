@@ -21,12 +21,41 @@ class WebsiteRepository {
     if (image != null) {
       return image;
     }
+
+    {
+      final cachedWebsite = await db.tables.website.findWebsite(db, uri);
+      if (cachedWebsite != null) {
+        // TODO occasionally refresh the website.
+        _logger.finest(
+            'Recorded website without image. $uri ${cachedWebsite.errorCode}');
+        return null;
+      }
+    }
+
     final bi = BestIcon();
-    final imagesResult = await bi.fetchImages(uri);
-    final images = imagesResult.images;
-    if (images.isEmpty) {
+    final FetchImageResult imagesResult;
+    try {
+      imagesResult = await bi.fetchImages(uri);
+    } catch (e, stackTrace) {
+      _logger.finer('Error fetching images from $uri.', e, stackTrace);
+      final String errorCode;
+      if (e is ResponseException) {
+        errorCode = e.response.statusCode.toString();
+      } else {
+        errorCode = 'e: ${e.toString()}';
+      }
+      await db.tables.website.insertWebsite(
+        db,
+        WebsiteEntity(
+          id: cryptoService.createSecureUuid(),
+          url: uri.toString(),
+          urlCanonical: uri.toString(),
+        ),
+        errorCode: errorCode,
+      );
       return null;
     }
+    final images = imagesResult.images;
     images.sort((a, b) => -(a.score().compareTo(b.score())));
     _logger.finer('found images for ${imagesResult.urlCanonical}: \n'
         '${images.toDebugString()}');
@@ -35,6 +64,10 @@ class WebsiteRepository {
       url: uri.toString(),
       urlCanonical: imagesResult.urlCanonical.toString(),
     );
+    if (images.isEmpty) {
+      await db.tables.website.insertWebsite(db, website, errorCode: 'empty');
+      return null;
+    }
     await db.tables.website.insertWebsite(db, website);
     String? bestImageId;
     for (final image in images) {
@@ -43,8 +76,12 @@ class WebsiteRepository {
       bestImageId ??= imageId;
     }
     if (bestImageId != null) {
-      await db.tables.website
-          .updateWebsite(db, websiteId: website.id, bestImageId: bestImageId);
+      await db.tables.website.updateWebsite(
+        db,
+        websiteId: website.id,
+        bestImageId: bestImageId,
+        errorCode: null,
+      );
     } else {
       _logger.warning('Unable to find bestImage for ${website.id} $uri');
     }

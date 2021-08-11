@@ -2223,6 +2223,21 @@ class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
+class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
+  /// No image found for this url.
+  _WebsiteImageGetResponse404.response404() : status = 404;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
 abstract class WebsiteImageGetResponse extends OpenApiResponse
     implements HasSuccessResponse<_i2.Uint8List> {
   WebsiteImageGetResponse();
@@ -2232,9 +2247,17 @@ abstract class WebsiteImageGetResponse extends OpenApiResponse
           OpenApiContentType contentType, _i2.Uint8List body) =>
       _WebsiteImageGetResponse200.response200(contentType, body);
 
-  void map({required ResponseMap<_WebsiteImageGetResponse200> on200}) {
+  /// No image found for this url.
+  factory WebsiteImageGetResponse.response404() =>
+      _WebsiteImageGetResponse404.response404();
+
+  void map(
+      {required ResponseMap<_WebsiteImageGetResponse200> on200,
+      required ResponseMap<_WebsiteImageGetResponse404> on404}) {
     if (this is _WebsiteImageGetResponse200) {
       on200((this as _WebsiteImageGetResponse200));
+    } else if (this is _WebsiteImageGetResponse404) {
+      on404((this as _WebsiteImageGetResponse404));
     } else {
       throw StateError('Invalid instance type $this');
     }
@@ -3122,7 +3145,9 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       '200': (OpenApiClientResponse response) async =>
           _WebsiteImageGetResponse200.response200(
               response.responseContentType(),
-              await response.responseBodyBytes())
+              await response.responseBodyBytes()),
+      '404': (OpenApiClientResponse response) async =>
+          _WebsiteImageGetResponse404.response404()
     });
   }
 }

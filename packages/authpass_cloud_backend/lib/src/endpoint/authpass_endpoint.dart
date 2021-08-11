@@ -329,10 +329,14 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<WebsiteImageGetResponse> websiteImageGet({required String url}) async {
     final uri = Uri.parse(url);
     final image = await repository.website.findBestImage(uri);
-    if (image == null) {
-      throw NotFoundException('Unable to find image for $uri ($url)');
-    }
     const maxAge = Duration(days: 7);
+    if (image == null) {
+      return WebsiteImageGetResponse.response404()
+        ..headers.addAll({
+          'cache-control': ['public, max-age=${maxAge.inSeconds}']
+        });
+      // throw NotFoundException('Unable to find image for $uri ($url)');
+    }
     return WebsiteImageGetResponse.response200(
         OpenApiContentType.parse(image.mimeType), image.bytes)
       ..headers.addAll({

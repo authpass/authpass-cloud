@@ -5,6 +5,7 @@ import 'package:authpass_cloud_backend/src/companyimage/besticon.dart';
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
@@ -27,6 +28,8 @@ class WebsiteTable extends TableBase with TableConstants {
   static const _COL_WIDTH = 'width';
   static const _COL_HEIGHT = 'height';
   static const _COL_BRIGHTNESS = 'brightness';
+  static const _COL_UPDATED_AT = 'updated_at';
+  static const _COL_ERROR_CODE = 'error_code';
 
   /// See [ImageLinkType]
   static const _COL_IMAGE_TYPE = 'image_type';
@@ -71,20 +74,64 @@ class WebsiteTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate14(DatabaseTransaction db) async {
+    await db.execute(
+        'ALTER TABLE $_TABLE_WEBSITE ADD $_COL_UPDATED_AT $typeTimestampNotNull DEFAULT NOW();',
+        timeoutInSeconds: 120);
+    await db.execute(
+        'UPDATE $_TABLE_WEBSITE SET $_COL_UPDATED_AT = $columnCreatedAt;',
+        timeoutInSeconds: 120);
+    await db.execute(
+        'ALTER TABLE $_TABLE_WEBSITE ADD $_COL_ERROR_CODE VARCHAR NULL;',
+        timeoutInSeconds: 120);
+  }
+
   Future<void> insertWebsite(
-      DatabaseTransactionBase db, WebsiteEntity entity) async {
+    DatabaseTransactionBase db,
+    WebsiteEntity entity, {
+    String? errorCode,
+  }) async {
     await db.executeInsert(_TABLE_WEBSITE, {
       columnId: entity.id,
       _COL_URL: entity.url,
       _COL_URL_CANONICAL: entity.urlCanonical,
+      _COL_ERROR_CODE: errorCode,
 //      _COL_BEST_IMAGE: bestImageId,
     });
   }
 
-  Future<void> updateWebsite(DatabaseTransactionBase db,
-      {required String websiteId, required String bestImageId}) async {
-    await db.executeUpdate(_TABLE_WEBSITE,
-        set: {_COL_BEST_IMAGE: bestImageId}, where: {columnId: websiteId});
+  Future<WebsiteInfoDto?> findWebsite(
+      DatabaseTransactionBase db, Uri uri) async {
+    return await db.query('''
+    SELECT $columnId, $_COL_URL, $_COL_URL_CANONICAL, $columnCreatedAt, $_COL_UPDATED_AT, $_COL_ERROR_CODE
+    FROM $_TABLE_WEBSITE
+    WHERE $_COL_URL = @url
+    ''', values: {'url': uri.toString()}).singleOrNull((row) {
+      return WebsiteInfoDto(
+        id: row[0] as String,
+        url: row[1] as String,
+        createdAt: row[3] as DateTime,
+        updatedAt: row[4] as DateTime,
+        errorCode: row[5] as String?,
+      );
+    });
+  }
+
+  Future<void> updateWebsite(
+    DatabaseTransactionBase db, {
+    required String websiteId,
+    required String? bestImageId,
+    required String? errorCode,
+  }) async {
+    await db.executeUpdate(
+      _TABLE_WEBSITE,
+      set: {
+        _COL_BEST_IMAGE: bestImageId,
+        _COL_ERROR_CODE: errorCode,
+        _COL_UPDATED_AT: clock.now().toUtc(),
+      },
+      where: {columnId: websiteId},
+    );
   }
 
   Future<String> insertWebsiteImage(DatabaseTransactionBase db,
@@ -151,4 +198,20 @@ class WebsiteEntity with _$WebsiteEntity {
     required String url,
     required String urlCanonical,
   }) = _WebsiteEntity;
+}
+
+class WebsiteInfoDto {
+  WebsiteInfoDto({
+    required this.id,
+    required this.url,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.errorCode,
+  });
+
+  final String id;
+  final String url;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? errorCode;
 }

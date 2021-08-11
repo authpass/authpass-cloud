@@ -229,7 +229,17 @@ extension MyIterableWhereNotNull<E> on Iterable<E?> {
 
 class BestIcon {
   Client? __client;
-  Client get _client => __client ??= Client();
+  Client get _client => __client ??= _createClient();
+
+  Client _createClient() {
+    final c = Client();
+    if (c is HttpClient) {
+      final httpClient = c as HttpClient;
+      _logger.finer('Setting http client connection timeout.');
+      httpClient.connectionTimeout = const Duration(seconds: 5);
+    }
+    return c;
+  }
 
   Future<Response> _requestGet(Uri uri, {int count = 0}) async {
     if (count > 10) {
