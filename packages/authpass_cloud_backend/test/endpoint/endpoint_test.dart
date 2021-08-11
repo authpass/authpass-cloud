@@ -90,6 +90,10 @@ class EndpointTestUtil {
     return confirm.authToken;
   }
 
+  static void clearAuthToken(AuthPassCloudImpl endpoint) {
+    when(endpoint.request.headerParameter('Authorization')).thenReturn(['']);
+  }
+
   static Future<MailboxEntity> createUserWithMailbox(
       AuthPassCloudImpl endpoint) async {
     final authToken = await createUserConfirmed(endpoint);

@@ -42,8 +42,12 @@ class WebsiteRepository {
           await db.tables.website.insertWebsiteImage(db, website, image);
       bestImageId ??= imageId;
     }
-    await db.tables.website
-        .updateWebsite(db, websiteId: website.id, bestImageId: bestImageId);
+    if (bestImageId != null) {
+      await db.tables.website
+          .updateWebsite(db, websiteId: website.id, bestImageId: bestImageId);
+    } else {
+      _logger.warning('Unable to find bestImage for ${website.id} $uri');
+    }
     return images.first;
   }
 }

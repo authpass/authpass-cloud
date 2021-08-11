@@ -1,64 +1,18 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables_enum.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
-import 'package:authpass_cloud_backend/src/util/enum_util.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
+import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
+import 'package:postgres/postgres.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
 final _logger = Logger('filecloud_tables');
-
-enum VersionSignificance {
-  firstOfHour,
-  firstOfDay,
-  firstOfWeek,
-  firstOfMonth,
-  firstOfQuarter,
-  firstOfYear,
-  firstVersion,
-}
-
-final v11Values = <VersionSignificance>[
-  VersionSignificance.firstOfHour,
-  VersionSignificance.firstOfDay,
-  VersionSignificance.firstOfWeek,
-  VersionSignificance.firstOfMonth,
-  VersionSignificance.firstOfQuarter,
-  VersionSignificance.firstOfYear,
-];
-
-final _versionSignificance = EnumUtil(VersionSignificance.values);
-
-extension VersionSignificanceExt on VersionSignificance {
-  static VersionSignificance? forDates(DateTime before, DateTime after) {
-    assert(before == after || before.isBefore(after), '$before vs $after');
-    if (after.year != before.year) {
-      return VersionSignificance.firstOfYear;
-    }
-    if (after.month != before.month) {
-      if (after.month % 4 == 1) {
-        return VersionSignificance.firstOfQuarter;
-      }
-      return VersionSignificance.firstOfMonth;
-    }
-    if (after.day != before.day) {
-      if (after.weekday == DateTime.monday) {
-        return VersionSignificance.firstOfWeek;
-      }
-      return VersionSignificance.firstOfDay;
-    }
-    if (after.hour != before.hour) {
-      return VersionSignificance.firstOfHour;
-    }
-    return null;
-  }
-
-  String get name => _versionSignificance.enumToString(this);
-}
 
 class FileCloudTable extends TableBase with TableConstants {
   FileCloudTable({required this.cryptoService});
@@ -77,6 +31,9 @@ class FileCloudTable extends TableBase with TableConstants {
   static const _columnBytes = 'bytes';
   static const _columnLength = 'length';
   static const _columnSignificance = 'version_significance';
+  static const _columnDeletedAt = 'deleted_at';
+  static const _columnTokenType = 'token_type';
+  static const _columnLabel = 'label';
 
   /// the "main" token created for the owner of this file.
   static const _columnOwnerToken = 'owner_token';
@@ -158,6 +115,14 @@ class FileCloudTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate13(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $TABLE_FILE ADD COLUMN $_columnDeletedAt $typeTimestamp NULL;
+    ALTER TABLE $TABLE_FILE_TOKEN ADD COLUMN $_columnTokenType VARCHAR NOT NULL default '${FileTokenType.creator.name}';
+    ALTER TABLE $TABLE_FILE_TOKEN ADD COLUMN $_columnLabel VARCHAR NOT NULL default '';
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
@@ -194,6 +159,39 @@ class FileCloudTable extends TableBase with TableConstants {
       _columnFileId: fileId,
     });
     return FileUpdated(versionToken: contentId, fileToken: fileToken);
+  }
+
+  Future<bool> deleteFile(
+    DatabaseTransactionBase db, {
+    required String fileId,
+  }) async {
+    final now = clock.now().toUtc();
+    final count = await db.executeUpdate(TABLE_FILE, set: {
+      _columnDeletedAt: now
+    }, where: {
+      columnId: fileId,
+      _columnDeletedAt: whereIsNotNull,
+    });
+    return count == 1;
+  }
+
+  Future<String> createFileToken(
+    DatabaseTransactionBase db, {
+    required String fileId,
+    required String label,
+    required FileTokenType fileTokenType,
+  }) async {
+    final newFileToken =
+        cryptoService.createSecureToken(type: TokenType.fileToken);
+
+    await db.executeInsert(TABLE_FILE_TOKEN, {
+      _columnToken: newFileToken,
+      _columnFileId: fileId,
+      _columnLabel: label,
+      _columnTokenType: fileTokenType.name,
+    });
+
+    return newFileToken;
   }
 
   Future<FileUpdated> updateFileContent(
@@ -257,43 +255,123 @@ class FileCloudTable extends TableBase with TableConstants {
   Future<FileContent?> selectFileContent(DatabaseTransactionBase db,
       {required String fileToken}) async {
     return await db.query('''
-    SELECT f.$columnId, fc.$columnId, fc.$_columnBytes
+    SELECT f.$columnId, fc.$columnId, fc.$_columnBytes, ft.$_columnTokenType
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     INNER JOIN $TABLE_FILE_CONTENT fc ON fc.$columnId = f.$_columnLastContentId
     WHERE ft.$_columnToken = @token
     ''', values: {'token': fileToken}).singleOrNull((row) async {
+      final tokenType = fileTokenTypeUtil.stringToEnum(row[3] as String);
       return FileContent(
         versionToken: row[1] as String,
         body: row[2] as Uint8List,
+        readOnly: tokenType.isReadOnly,
       );
     });
   }
 
+  Future<FileInfoDto?> getFile(
+    DatabaseTransactionBase db,
+    UserEntity? user, {
+    required String fileToken,
+  }) async {
+    return (await _listFiles(db, user, fileToken: fileToken)).firstOrNull;
+  }
+
   Future<List<FileInfo>> listAllFiles(
-      DatabaseTransactionBase db, UserEntity user) async {
+    DatabaseTransactionBase db,
+    UserEntity user,
+  ) async =>
+      (await _listFiles(db, user)).map((e) => e.fileInfo).toList();
+
+  Future<List<FileInfoDto>> _listFiles(
+    DatabaseTransactionBase db,
+    UserEntity? user, {
+    String? fileToken,
+  }) async {
+    if (user == null && fileToken == null) {
+      throw ArgumentError('Either user or fileToken must not be null.');
+    }
+    final values = <String, Object?>{};
+    final String fileTokenWhere;
+    if (fileToken != null) {
+      fileTokenWhere = 'ft.$_columnToken = @fileToken';
+      values['fileToken'] = fileToken;
+    } else {
+      fileTokenWhere = 'ft.$_columnToken = f.$_columnOwnerToken';
+    }
+    final String whereUser;
+    if (user != null) {
+      values['userId'] = user.id;
+      whereUser = 'fc.$columnUserId = @userId';
+    } else {
+      whereUser = '1=1';
+    }
     final rows = await db.query('''
         SELECT 
-          f.$_columnOwnerToken, f.$_columnLastContentId,
-          f.$_columnName, f.$columnCreatedAt, f.$_columnUpdatedAt, 
-          fc.$_columnLength
+          $_fileInfoSelect
            
         FROM $TABLE_FILE f
           INNER JOIN $TABLE_FILE_CONTENT fc 
-          ON fc.$columnId = f.$_columnLastContentId
-        WHERE fc.$columnUserId = @userId
+            ON fc.$columnId = f.$_columnLastContentId
+          INNER JOIN $TABLE_FILE_TOKEN ft ON ft.$_columnFileId = f.$columnId 
+          
+        WHERE $whereUser AND f.$_columnDeletedAt IS NULL AND $fileTokenWhere
         ORDER BY f.$_columnUpdatedAt DESC
-        ''', values: {'userId': user.id});
-    return rows
-        .map((row) => FileInfo(
-              fileToken: row[0] as String,
-              versionToken: row[1] as String,
-              name: row[2] as String,
-              createdAt: row[3] as DateTime,
-              updatedAt: row[4] as DateTime,
-              size: row[5] as int,
-            ))
-        .toList();
+        ''', values: values);
+    return rows.map(_fileInfoParse).toList();
+  }
+
+  late final _fileInfoSelect = '''
+            ft.$_columnToken, f.$_columnLastContentId,
+          f.$_columnName, f.$columnCreatedAt, f.$_columnUpdatedAt, 
+          fc.$_columnLength,
+          f.$columnUserId, f.$columnId, ft.$_columnTokenType
+  ''';
+
+  FileInfoDto _fileInfoParse(PostgreSQLResultRow row) {
+    return FileInfoDto(
+      fileId: row[7] as String,
+      owner: UserEntity(id: row[6] as String),
+      fileInfo: FileInfo(
+        fileToken: row[0] as String,
+        versionToken: row[1] as String,
+        name: row[2] as String,
+        createdAt: row[3] as DateTime,
+        updatedAt: row[4] as DateTime,
+        size: row[5] as int,
+        readOnly: fileTokenTypeUtil.stringToEnum(row[8] as String).isReadOnly,
+      ),
+    );
+  }
+
+  Future<List<FileTokenDto>> listFileTokens(
+    DatabaseTransactionBase db, {
+    required String fileId,
+  }) async {
+    final rows = await db.query('''
+    SELECT 
+      ft.$_columnToken,
+      ft.$_columnTokenType,
+      ft.$columnCreatedAt,
+      ft.$_columnLabel
+    FROM $TABLE_FILE_TOKEN ft 
+      INNER JOIN $TABLE_FILE f ON f.$columnId = ft.$_columnFileId
+    WHERE
+      f.$_columnDeletedAt IS NULL AND f.$columnId = @fileId
+    ''', values: {'fileId': fileId});
+    return rows.map((row) {
+      final fileTokenType = fileTokenTypeUtil.stringToEnum(row[1] as String);
+      return FileTokenDto(
+        fileTokenType: fileTokenType,
+        fileTokenInfo: FileTokenInfo(
+          fileToken: row[0] as String,
+          createdAt: row[2] as DateTime,
+          label: row[3] as String,
+          readOnly: fileTokenType.isReadOnly,
+        ),
+      );
+    }).toList();
   }
 
   Future<SystemStatusFileCloud> countStats(DatabaseTransactionBase db) async {
@@ -307,10 +385,37 @@ class FileCloudTable extends TableBase with TableConstants {
   }
 }
 
+class FileInfoDto {
+  FileInfoDto({
+    required this.fileId,
+    required this.owner,
+    required this.fileInfo,
+  });
+
+  final String fileId;
+  final UserEntity owner;
+  final FileInfo fileInfo;
+}
+
+class FileTokenDto {
+  FileTokenDto({
+    required this.fileTokenType,
+    required this.fileTokenInfo,
+  });
+  final FileTokenType fileTokenType;
+  final FileTokenInfo fileTokenInfo;
+}
+
 class FileContent {
-  FileContent({required this.versionToken, required this.body});
+  FileContent({
+    required this.versionToken,
+    required this.body,
+    required this.readOnly,
+  });
+
   final String versionToken;
   final Uint8List body;
+  final bool readOnly;
 }
 
 class _FileDetails {

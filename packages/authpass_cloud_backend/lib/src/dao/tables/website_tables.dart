@@ -82,7 +82,7 @@ class WebsiteTable extends TableBase with TableConstants {
   }
 
   Future<void> updateWebsite(DatabaseTransactionBase db,
-      {required String websiteId, required String? bestImageId}) async {
+      {required String websiteId, required String bestImageId}) async {
     await db.executeUpdate(_TABLE_WEBSITE,
         set: {_COL_BEST_IMAGE: bestImageId}, where: {columnId: websiteId});
   }

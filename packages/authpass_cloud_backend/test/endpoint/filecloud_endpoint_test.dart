@@ -23,7 +23,7 @@ void main() {
   final _content2 = utf8.encode('test2') as Uint8List;
   final _content3 = utf8.encode('test3') as Uint8List;
 
-  group('filecloud test', () {
+  group('filecloud file test', () {
     endpointTest('fail anonymous', (endpoint) async {
       when(endpoint.request.headerParameter('Authorization')).thenReturn([]);
       final result = endpoint.filecloudFilePost(_content, fileName: _fileName);
@@ -59,8 +59,7 @@ void main() {
         expect(created.versionToken, isNot(response.versionToken));
         expect(response.versionToken, isNot(response2.versionToken));
         final getResponse = await endpoint
-            .filecloudFileRetrievePost(
-                FilecloudFileRetrievePostSchema(fileToken: created.fileToken))
+            .filecloudFileRetrievePost(FileId(fileToken: created.fileToken))
             .requireSuccess();
         expect(getResponse, _content3);
       });
@@ -89,8 +88,8 @@ void main() {
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
 
-      final response = await endpoint.filecloudFileRetrievePost(
-          FilecloudFileRetrievePostSchema(fileToken: result.fileToken));
+      final response = await endpoint
+          .filecloudFileRetrievePost(FileId(fileToken: result.fileToken));
       expect(response.headers['etag']?.first, result.versionToken);
     });
     endpointTest('list files', (endpoint) async {
@@ -118,6 +117,38 @@ void main() {
       expect(f.fileToken, result2.fileToken);
       expect(f.versionToken, result2.versionToken);
       expect(f.size, _content.length);
+    });
+  });
+  group('file cloud share', () {
+    endpointTest('create tokens', (endpoint) async {
+      await EndpointTestUtil.createUserConfirmed(endpoint);
+      final result = await endpoint
+          .filecloudFilePost(_content, fileName: _fileName)
+          .requireSuccess();
+      expect(result.versionToken, isNotEmpty);
+      expect(result.fileToken, isNotEmpty);
+
+      final tokenResponse = await endpoint
+          .filecloudFileTokenCreatePost(FilecloudFileTokenCreatePostSchema(
+        fileToken: result.fileToken,
+        label: 'foo',
+        readOnly: true,
+      ));
+      final token = tokenResponse.requireSuccess();
+      expect(token.fileToken, isNotEmpty);
+
+      final list = await endpoint
+          .filecloudFileTokenListPost(FileId(fileToken: result.fileToken))
+          .requireSuccess();
+      expect(list.tokens, hasLength(1));
+      expect(list.tokens.single.fileToken, token.fileToken);
+
+      EndpointTestUtil.clearAuthToken(endpoint);
+
+      final metadata = await endpoint
+          .filecloudFileMetadataPost(FileId(fileToken: token.fileToken))
+          .requireSuccess();
+      expect(metadata.readOnly, true);
     });
   });
 }

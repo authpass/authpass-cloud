@@ -214,6 +214,7 @@ FileInfo _$FileInfoFromJson(Map<String, dynamic> json) => FileInfo(
       name: json['name'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      readOnly: json['readOnly'] as bool,
       size: json['size'] as int,
     );
 
@@ -223,6 +224,7 @@ Map<String, dynamic> _$FileInfoToJson(FileInfo instance) => <String, dynamic>{
       'name': instance.name,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'readOnly': instance.readOnly,
       'size': instance.size,
     };
 
@@ -236,6 +238,30 @@ FileListResponse _$FileListResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FileListResponseToJson(FileListResponse instance) =>
     <String, dynamic>{
       'files': instance.files,
+    };
+
+FileId _$FileIdFromJson(Map<String, dynamic> json) => FileId(
+      fileToken: json['fileToken'] as String,
+    );
+
+Map<String, dynamic> _$FileIdToJson(FileId instance) => <String, dynamic>{
+      'fileToken': instance.fileToken,
+    };
+
+FileTokenInfo _$FileTokenInfoFromJson(Map<String, dynamic> json) =>
+    FileTokenInfo(
+      fileToken: json['fileToken'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      label: json['label'] as String,
+      readOnly: json['readOnly'] as bool,
+    );
+
+Map<String, dynamic> _$FileTokenInfoToJson(FileTokenInfo instance) =>
+    <String, dynamic>{
+      'fileToken': instance.fileToken,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'label': instance.label,
+      'readOnly': instance.readOnly,
     };
 
 EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
@@ -417,16 +443,37 @@ Map<String, dynamic> _$MailboxMessageForwardSchemaToJson(
       'email': instance.email,
     };
 
-FilecloudFileRetrievePostSchema _$FilecloudFileRetrievePostSchemaFromJson(
+FilecloudFileTokenCreatePostSchema _$FilecloudFileTokenCreatePostSchemaFromJson(
         Map<String, dynamic> json) =>
-    FilecloudFileRetrievePostSchema(
+    FilecloudFileTokenCreatePostSchema(
       fileToken: json['fileToken'] as String,
+      label: json['label'] as String,
+      userEmail: json['userEmail'] as String?,
+      readOnly: json['readOnly'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$FilecloudFileRetrievePostSchemaToJson(
-        FilecloudFileRetrievePostSchema instance) =>
+Map<String, dynamic> _$FilecloudFileTokenCreatePostSchemaToJson(
+        FilecloudFileTokenCreatePostSchema instance) =>
     <String, dynamic>{
       'fileToken': instance.fileToken,
+      'label': instance.label,
+      'userEmail': instance.userEmail,
+      'readOnly': instance.readOnly,
+    };
+
+FilecloudFileTokenListPostResponseBody200
+    _$FilecloudFileTokenListPostResponseBody200FromJson(
+            Map<String, dynamic> json) =>
+        FilecloudFileTokenListPostResponseBody200(
+          tokens: (json['tokens'] as List<dynamic>)
+              .map((e) => FileTokenInfo.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$FilecloudFileTokenListPostResponseBody200ToJson(
+        FilecloudFileTokenListPostResponseBody200 instance) =>
+    <String, dynamic>{
+      'tokens': instance.tokens,
     };
 
 FilecloudFilePutResponseBody200 _$FilecloudFilePutResponseBody200FromJson(

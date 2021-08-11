@@ -366,6 +366,23 @@ paths:
               schema:
                 type: string
                 description: 'Email error codes similar to https://tools.ietf.org/html/rfc3463 expected.'
+  /filecloud/file/metadata:
+    post:
+      summary: Retrieve file meta data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileId'
+      responses:
+        '200':
+          description: Successful retrieving file metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
+
   /filecloud/file/retrieve:
     post:
       summary: Retrieve a previously created file.
@@ -374,11 +391,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: [fileToken]
-              properties:
-                fileToken:
-                  type: string
+              $ref: '#/components/schemas/FileId'
       responses:
         '200':
           description: 'The requested file'
@@ -392,6 +405,71 @@ paths:
               schema:
                 type: string
                 format: binary
+  /filecloud/file/delete:
+    post:
+      summary: Deletes a file with the given fileToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileId'
+      responses:
+        '204':
+          description: 'Successfully deleted the file.'
+
+  /filecloud/file/token/create:
+    post:
+      summary: 'Create file tokens which can be used to share the file.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileToken, label]
+              properties:
+                fileToken:
+                  description: 'The fileToken identifying the file to share'
+                  type: string
+                label:
+                  description: 'Some label to help the user remember why they created the token.'
+                  type: string
+                userEmail:
+                  description: 'Email address for the user to create a token. If null, the token will not be bound to a specific user.'
+                  type: string
+                readOnly:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: 'Successfully created token.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileId'
+  /filecloud/file/token/list:
+    post:
+      summary: 'List all tokens for a given file. Only available for the owner of the file.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileId'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required: ['tokens']
+                properties:
+                  tokens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FileTokenInfo'
   /filecloud/file:
     get:
       summary: List available files for user
@@ -631,9 +709,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FileInfo'
+    FileId:
+      description: Object wrapping a [fileToken].
+      type: object
+      required: [fileToken]
+      properties:
+        fileToken:
+          type: string
     FileInfo:
       type: object
-      required: [fileToken, versionToken, name, createdAt, updatedAt, size]
+      required: [fileToken, versionToken, name, createdAt, updatedAt, size, readOnly]
       properties:
         fileToken:
           type: string
@@ -647,8 +732,23 @@ components:
         updatedAt:
           type: string
           format: date-time
+        readOnly:
+          type: boolean
         size:
           type: integer
+    FileTokenInfo:
+      type: object
+      required: [fileToken, createdAt, label, readOnly]
+      properties:
+        fileToken:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        label:
+          type: string
+        readOnly:
+          type: boolean
   securitySchemes:
     auth_token:
       type: http

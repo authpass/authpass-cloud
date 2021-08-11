@@ -12,6 +12,7 @@ import 'package:authpass_cloud_backend/src/dao/website_repository.dart';
 import 'package:authpass_cloud_backend/src/endpoint/email_confirmation.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
+import 'package:authpass_cloud_backend/src/util/extension_methods.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
@@ -113,11 +114,28 @@ class AuthPassCloudImpl extends AuthPassCloud {
         EmailStatusGetResponseBody200(status: status));
   }
 
-  Future<AuthTokenEntity> _requireAuthToken(
-      {bool acceptUnconfirmed = false}) async {
+  String? _authTokenString() {
     final data = SecuritySchemes.authToken.fromRequest(request);
     final bearerToken = data?.bearerToken;
     if (data == null || bearerToken == null || bearerToken.isEmpty) {
+      return null;
+    }
+    return bearerToken;
+  }
+
+  Future<AuthTokenEntity?> _optionalAuthToken(
+      {bool acceptUnconfirmed = false}) async {
+    return _authTokenString()
+        ?.let((bearerToken) => repository.user.findValidAuthToken(
+              bearerToken,
+              acceptUnconfirmed: acceptUnconfirmed,
+            ));
+  }
+
+  Future<AuthTokenEntity> _requireAuthToken(
+      {bool acceptUnconfirmed = false}) async {
+    final bearerToken = _authTokenString();
+    if (bearerToken == null) {
       throw UnauthorizedException('Missing auth token.');
     }
     final validToken = await repository.user.findValidAuthToken(
@@ -364,7 +382,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
 
   @override
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
-      FilecloudFileRetrievePostSchema body) async {
+      FileId body) async {
     final token = await _requireAuthToken();
     assert(token.id.isNotEmpty);
     final fc = await repository.fileCloud
@@ -381,6 +399,54 @@ class AuthPassCloudImpl extends AuthPassCloud {
     final token = await _requireAuthToken();
     final list = await repository.fileCloud.listAllFiles(token.user);
     return FilecloudFileGetResponse.response200(FileListResponse(files: list));
+  }
+
+  @override
+  Future<FilecloudFileDeletePostResponse> filecloudFileDeletePost(
+      FileId body) async {
+    final token = await _requireAuthToken();
+    if (await repository.fileCloud
+        .deleteFile(token.user, fileToken: body.fileToken)) {
+      return FilecloudFileDeletePostResponse.response204();
+    } else {
+      throw NotFoundException('File not found.');
+    }
+  }
+
+  @override
+  Future<FilecloudFileTokenCreatePostResponse> filecloudFileTokenCreatePost(
+      FilecloudFileTokenCreatePostSchema body) async {
+    final token = await _requireAuthToken();
+    if (body.userEmail != null) {
+      throw UnimplementedError();
+    }
+    final newFileToken = await repository.fileCloud.createToken(
+      token.user,
+      fileToken: body.fileToken,
+      readOnly: body.readOnly,
+      label: body.label,
+    );
+    return FilecloudFileTokenCreatePostResponse.response200(
+        FileId(fileToken: newFileToken));
+  }
+
+  @override
+  Future<FilecloudFileTokenListPostResponse> filecloudFileTokenListPost(
+      FileId body) async {
+    final token = await _requireAuthToken();
+    final tokens = await repository.fileCloud
+        .listFileTokens(token.user, fileToken: body.fileToken);
+    return FilecloudFileTokenListPostResponse.response200(
+        FilecloudFileTokenListPostResponseBody200(tokens: tokens));
+  }
+
+  @override
+  Future<FilecloudFileMetadataPostResponse> filecloudFileMetadataPost(
+      FileId body) async {
+    final token = await _optionalAuthToken();
+    final details = await repository.fileCloud
+        .getFileDetails(token?.user, fileToken: body.fileToken);
+    return FilecloudFileMetadataPostResponse.response200(details);
   }
 }
 

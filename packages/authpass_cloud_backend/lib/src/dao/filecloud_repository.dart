@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables.dart';
+import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables_enum.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
@@ -39,6 +40,22 @@ class FileCloudRepository {
     );
   }
 
+  /// returns false if file was not found.
+  Future<bool> deleteFile(
+    UserEntity user, {
+    required String fileToken,
+  }) async {
+    final file = await db.tables.fileCloud.getFile(
+      db,
+      user,
+      fileToken: fileToken,
+    );
+    if (file == null) {
+      return false;
+    }
+    return await db.tables.fileCloud.deleteFile(db, fileId: file.fileId);
+  }
+
   Future<FileContent> retrieveFileContent({required String fileToken}) async {
     final fc =
         await db.tables.fileCloud.selectFileContent(db, fileToken: fileToken);
@@ -48,7 +65,52 @@ class FileCloudRepository {
     return fc;
   }
 
+  Future<FileInfo> getFileDetails(UserEntity? user,
+      {required String fileToken}) async {
+    final file =
+        await db.tables.fileCloud.getFile(db, user, fileToken: fileToken);
+    if (file == null) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    return file.fileInfo;
+  }
+
   Future<List<FileInfo>> listAllFiles(UserEntity user) async {
     return db.tables.fileCloud.listAllFiles(db, user);
+  }
+
+  Future<String> createToken(
+    UserEntity user, {
+    required String label,
+    required String fileToken,
+    required bool readOnly,
+  }) async {
+    final type = readOnly ? FileTokenType.shareReadonly : FileTokenType.share;
+    final f = await db.tables.fileCloud.getFile(db, user, fileToken: fileToken);
+    if (f == null) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    if (f.owner.id != user.id) {
+      throw ArgumentError('Only the owner can share a file right now.');
+    }
+    return await db.tables.fileCloud.createFileToken(
+      db,
+      fileId: f.fileId,
+      label: label,
+      fileTokenType: type,
+    );
+  }
+
+  Future<List<FileTokenInfo>> listFileTokens(UserEntity user,
+      {required String fileToken}) async {
+    final file =
+        await db.tables.fileCloud.getFile(db, user, fileToken: fileToken);
+    if (file == null || file.owner != user) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    return (await db.tables.fileCloud.listFileTokens(db, fileId: file.fileId))
+        .where((e) => e.fileTokenType != FileTokenType.creator)
+        .map((e) => e.fileTokenInfo)
+        .toList();
   }
 }

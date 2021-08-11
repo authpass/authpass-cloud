@@ -361,6 +361,17 @@ class UserEntity {
   final String id;
 
   @override
+  bool operator ==(Object other) {
+    if (other is UserEntity) {
+      return id == other.id;
+    }
+    return super == other;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
   String toString() {
     return 'UserEntity{id: $id}';
   }

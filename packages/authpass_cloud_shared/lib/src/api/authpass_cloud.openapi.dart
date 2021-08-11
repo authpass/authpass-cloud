@@ -330,6 +330,7 @@ class FileInfo implements OpenApiContent {
       required this.name,
       required this.createdAt,
       required this.updatedAt,
+      required this.readOnly,
       required this.size});
 
   factory FileInfo.fromJson(Map<String, dynamic> jsonMap) =>
@@ -350,6 +351,9 @@ class FileInfo implements OpenApiContent {
   @_i1.JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
 
+  @_i1.JsonKey(name: 'readOnly')
+  final bool readOnly;
+
   @_i1.JsonKey(name: 'size')
   final int size;
 
@@ -369,6 +373,50 @@ class FileListResponse implements OpenApiContent {
   final List<FileInfo> files;
 
   Map<String, dynamic> toJson() => _$FileListResponseToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+/// Object wrapping a [fileToken].
+@_i1.JsonSerializable()
+class FileId implements OpenApiContent {
+  FileId({required this.fileToken});
+
+  factory FileId.fromJson(Map<String, dynamic> jsonMap) =>
+      _$FileIdFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'fileToken')
+  final String fileToken;
+
+  Map<String, dynamic> toJson() => _$FileIdToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class FileTokenInfo implements OpenApiContent {
+  FileTokenInfo(
+      {required this.fileToken,
+      required this.createdAt,
+      required this.label,
+      required this.readOnly});
+
+  factory FileTokenInfo.fromJson(Map<String, dynamic> jsonMap) =>
+      _$FileTokenInfoFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'fileToken')
+  final String fileToken;
+
+  @_i1.JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+
+  @_i1.JsonKey(name: 'label')
+  final String label;
+
+  @_i1.JsonKey(name: 'readOnly')
+  final bool readOnly;
+
+  Map<String, dynamic> toJson() => _$FileTokenInfoToJson(this);
   @override
   String toString() => toJson().toString();
 }
@@ -1610,6 +1658,63 @@ abstract class EmailReceivePostResponse extends OpenApiResponse
   }
 }
 
+class _FilecloudFileMetadataPostResponse200
+    extends FilecloudFileMetadataPostResponse
+    implements OpenApiResponseBodyJson {
+  /// Successful retrieving file metadata.
+  _FilecloudFileMetadataPostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final FileInfo body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class FilecloudFileMetadataPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<FileInfo> {
+  FilecloudFileMetadataPostResponse();
+
+  /// Successful retrieving file metadata.
+  factory FilecloudFileMetadataPostResponse.response200(FileInfo body) =>
+      _FilecloudFileMetadataPostResponse200.response200(body);
+
+  void map(
+      {required ResponseMap<_FilecloudFileMetadataPostResponse200> on200}) {
+    if (this is _FilecloudFileMetadataPostResponse200) {
+      on200((this as _FilecloudFileMetadataPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successful retrieving file metadata.
+  @override
+  FileInfo requireSuccess() {
+    if (this is _FilecloudFileMetadataPostResponse200) {
+      return (this as _FilecloudFileMetadataPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
 class _FilecloudFileRetrievePostResponse200
     extends FilecloudFileRetrievePostResponse
     implements OpenApiResponseBodyBinary {
@@ -1659,21 +1764,212 @@ abstract class FilecloudFileRetrievePostResponse extends OpenApiResponse
   }
 }
 
+class _FilecloudFileDeletePostResponse204
+    extends FilecloudFileDeletePostResponse {
+  /// Successfully deleted the file.
+  _FilecloudFileDeletePostResponse204.response204() : status = 204;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class FilecloudFileDeletePostResponse extends OpenApiResponse
+    implements HasSuccessResponse<void> {
+  FilecloudFileDeletePostResponse();
+
+  /// Successfully deleted the file.
+  factory FilecloudFileDeletePostResponse.response204() =>
+      _FilecloudFileDeletePostResponse204.response204();
+
+  void map({required ResponseMap<_FilecloudFileDeletePostResponse204> on204}) {
+    if (this is _FilecloudFileDeletePostResponse204) {
+      on204((this as _FilecloudFileDeletePostResponse204));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 204:  Successfully deleted the file.
+  @override
+  void requireSuccess() {
+    if (this is _FilecloudFileDeletePostResponse204) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _FilecloudFileTokenCreatePostResponse200
+    extends FilecloudFileTokenCreatePostResponse
+    implements OpenApiResponseBodyJson {
+  /// Successfully created token.
+  _FilecloudFileTokenCreatePostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final FileId body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class FilecloudFileTokenCreatePostResponse extends OpenApiResponse
+    implements HasSuccessResponse<FileId> {
+  FilecloudFileTokenCreatePostResponse();
+
+  /// Successfully created token.
+  factory FilecloudFileTokenCreatePostResponse.response200(FileId body) =>
+      _FilecloudFileTokenCreatePostResponse200.response200(body);
+
+  void map(
+      {required ResponseMap<_FilecloudFileTokenCreatePostResponse200> on200}) {
+    if (this is _FilecloudFileTokenCreatePostResponse200) {
+      on200((this as _FilecloudFileTokenCreatePostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully created token.
+  @override
+  FileId requireSuccess() {
+    if (this is _FilecloudFileTokenCreatePostResponse200) {
+      return (this as _FilecloudFileTokenCreatePostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
 @_i1.JsonSerializable()
-class FilecloudFileRetrievePostSchema implements OpenApiContent {
-  FilecloudFileRetrievePostSchema({required this.fileToken});
+class FilecloudFileTokenCreatePostSchema implements OpenApiContent {
+  FilecloudFileTokenCreatePostSchema(
+      {required this.fileToken,
+      required this.label,
+      this.userEmail,
+      this.readOnly = false});
 
-  factory FilecloudFileRetrievePostSchema.fromJson(
+  factory FilecloudFileTokenCreatePostSchema.fromJson(
           Map<String, dynamic> jsonMap) =>
-      _$FilecloudFileRetrievePostSchemaFromJson(jsonMap);
+      _$FilecloudFileTokenCreatePostSchemaFromJson(jsonMap);
 
+  /// The fileToken identifying the file to share
   @_i1.JsonKey(name: 'fileToken')
   final String fileToken;
 
+  /// Some label to help the user remember why they created the token.
+  @_i1.JsonKey(name: 'label')
+  final String label;
+
+  /// Email address for the user to create a token. If null, the token will not be bound to a specific user.
+  @_i1.JsonKey(name: 'userEmail')
+  final String? userEmail;
+
+  @_i1.JsonKey(name: 'readOnly')
+  final bool readOnly;
+
   Map<String, dynamic> toJson() =>
-      _$FilecloudFileRetrievePostSchemaToJson(this);
+      _$FilecloudFileTokenCreatePostSchemaToJson(this);
   @override
   String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
+  FilecloudFileTokenListPostResponseBody200({required this.tokens});
+
+  factory FilecloudFileTokenListPostResponseBody200.fromJson(
+          Map<String, dynamic> jsonMap) =>
+      _$FilecloudFileTokenListPostResponseBody200FromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'tokens')
+  final List<FileTokenInfo> tokens;
+
+  Map<String, dynamic> toJson() =>
+      _$FilecloudFileTokenListPostResponseBody200ToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+class _FilecloudFileTokenListPostResponse200
+    extends FilecloudFileTokenListPostResponse
+    implements OpenApiResponseBodyJson {
+  ///
+  _FilecloudFileTokenListPostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final FilecloudFileTokenListPostResponseBody200 body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class FilecloudFileTokenListPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<FilecloudFileTokenListPostResponseBody200> {
+  FilecloudFileTokenListPostResponse();
+
+  ///
+  factory FilecloudFileTokenListPostResponse.response200(
+          FilecloudFileTokenListPostResponseBody200 body) =>
+      _FilecloudFileTokenListPostResponse200.response200(body);
+
+  void map(
+      {required ResponseMap<_FilecloudFileTokenListPostResponse200> on200}) {
+    if (this is _FilecloudFileTokenListPostResponse200) {
+      on200((this as _FilecloudFileTokenListPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:
+  @override
+  FilecloudFileTokenListPostResponseBody200 requireSuccess() {
+    if (this is _FilecloudFileTokenListPostResponse200) {
+      return (this as _FilecloudFileTokenListPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
 }
 
 class _FilecloudFileGetResponse200 extends FilecloudFileGetResponse
@@ -2047,10 +2343,33 @@ abstract class AuthPassCloud implements ApiEndpoint {
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {required String xAuthpassToken});
 
+  /// Retrieve file meta data.
+  /// post: /filecloud/file/metadata
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileMetadataPostResponse> filecloudFileMetadataPost(
+      FileId body);
+
   /// Retrieve a previously created file.
   /// post: /filecloud/file/retrieve
+  /// [body]: Object wrapping a [fileToken].
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
-      FilecloudFileRetrievePostSchema body);
+      FileId body);
+
+  /// Deletes a file with the given fileToken
+  /// post: /filecloud/file/delete
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileDeletePostResponse> filecloudFileDeletePost(FileId body);
+
+  /// Create file tokens which can be used to share the file.
+  /// post: /filecloud/file/token/create
+  Future<FilecloudFileTokenCreatePostResponse> filecloudFileTokenCreatePost(
+      FilecloudFileTokenCreatePostSchema body);
+
+  /// List all tokens for a given file. Only available for the owner of the file.
+  /// post: /filecloud/file/token/list
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileTokenListPostResponse> filecloudFileTokenListPost(
+      FileId body);
 
   /// List available files for user
   /// get: /filecloud/file
@@ -2190,11 +2509,38 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   Future<EmailReceivePostResponse> emailReceivePost(String body,
       {required String xAuthpassToken});
 
+  /// Retrieve file meta data.
+  /// post: /filecloud/file/metadata
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileMetadataPostResponse> filecloudFileMetadataPost(
+      FileId body);
+
   /// Retrieve a previously created file.
   /// post: /filecloud/file/retrieve
   ///
+  /// [body]: Object wrapping a [fileToken].
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
-      FilecloudFileRetrievePostSchema body);
+      FileId body);
+
+  /// Deletes a file with the given fileToken
+  /// post: /filecloud/file/delete
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileDeletePostResponse> filecloudFileDeletePost(FileId body);
+
+  /// Create file tokens which can be used to share the file.
+  /// post: /filecloud/file/token/create
+  ///
+  Future<FilecloudFileTokenCreatePostResponse> filecloudFileTokenCreatePost(
+      FilecloudFileTokenCreatePostSchema body);
+
+  /// List all tokens for a given file. Only available for the owner of the file.
+  /// post: /filecloud/file/token/list
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  Future<FilecloudFileTokenListPostResponse> filecloudFileTokenListPost(
+      FileId body);
 
   /// List available files for user
   /// get: /filecloud/file
@@ -2592,12 +2938,34 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
     });
   }
 
+  /// Retrieve file meta data.
+  /// post: /filecloud/file/metadata
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  @override
+  Future<FilecloudFileMetadataPostResponse> filecloudFileMetadataPost(
+      FileId body) async {
+    final request = OpenApiClientRequest('post', '/filecloud/file/metadata', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudFileMetadataPostResponse200.response200(
+              FileInfo.fromJson(await response.responseBodyJson()))
+    });
+  }
+
   /// Retrieve a previously created file.
   /// post: /filecloud/file/retrieve
   ///
+  /// [body]: Object wrapping a [fileToken].
   @override
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
-      FilecloudFileRetrievePostSchema body) async {
+      FileId body) async {
     final request = OpenApiClientRequest('post', '/filecloud/file/retrieve', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
@@ -2609,6 +2977,69 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       '200': (OpenApiClientResponse response) async =>
           _FilecloudFileRetrievePostResponse200.response200(
               await response.responseBodyBytes())
+    });
+  }
+
+  /// Deletes a file with the given fileToken
+  /// post: /filecloud/file/delete
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  @override
+  Future<FilecloudFileDeletePostResponse> filecloudFileDeletePost(
+      FileId body) async {
+    final request = OpenApiClientRequest('post', '/filecloud/file/delete', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '204': (OpenApiClientResponse response) async =>
+          _FilecloudFileDeletePostResponse204.response204()
+    });
+  }
+
+  /// Create file tokens which can be used to share the file.
+  /// post: /filecloud/file/token/create
+  ///
+  @override
+  Future<FilecloudFileTokenCreatePostResponse> filecloudFileTokenCreatePost(
+      FilecloudFileTokenCreatePostSchema body) async {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/file/token/create', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudFileTokenCreatePostResponse200.response200(
+              FileId.fromJson(await response.responseBodyJson()))
+    });
+  }
+
+  /// List all tokens for a given file. Only available for the owner of the file.
+  /// post: /filecloud/file/token/list
+  ///
+  /// [body]: Object wrapping a [fileToken].
+  @override
+  Future<FilecloudFileTokenListPostResponse> filecloudFileTokenListPost(
+      FileId body) async {
+    final request = OpenApiClientRequest('post', '/filecloud/file/token/list', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudFileTokenListPostResponse200.response200(
+              FilecloudFileTokenListPostResponseBody200.fromJson(
+                  await response.responseBodyJson()))
     });
   }
 
@@ -2934,11 +3365,60 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Retrieve file meta data.
+  /// post: /filecloud/file/metadata
+  ///
+  OpenApiClientRequest filecloudFileMetadataPost() {
+    final request = OpenApiClientRequest('post', '/filecloud/file/metadata', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// Retrieve a previously created file.
   /// post: /filecloud/file/retrieve
   ///
   OpenApiClientRequest filecloudFileRetrievePost() {
     final request = OpenApiClientRequest('post', '/filecloud/file/retrieve', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
+  /// Deletes a file with the given fileToken
+  /// post: /filecloud/file/delete
+  ///
+  OpenApiClientRequest filecloudFileDeletePost() {
+    final request = OpenApiClientRequest('post', '/filecloud/file/delete', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
+  /// Create file tokens which can be used to share the file.
+  /// post: /filecloud/file/token/create
+  ///
+  OpenApiClientRequest filecloudFileTokenCreatePost() {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/file/token/create', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
+  /// List all tokens for a given file. Only available for the owner of the file.
+  /// post: /filecloud/file/token/list
+  ///
+  OpenApiClientRequest filecloudFileTokenListPost() {
+    final request = OpenApiClientRequest('post', '/filecloud/file/token/list', [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
       ])
@@ -3212,13 +3692,56 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   value: request.headerParameter('x-authpass-token'),
                   decode: (value) => paramToString(value))));
     }, security: []);
+    addRoute('/filecloud/file/metadata', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudFileMetadataPost(
+              FileId.fromJson(await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
     addRoute('/filecloud/file/retrieve', 'post',
         (OpenApiRequest request) async {
       return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileRetrievePost(
-              FilecloudFileRetrievePostSchema.fromJson(
+              FileId.fromJson(await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/file/delete', 'post', (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudFileDeletePost(
+              FileId.fromJson(await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/file/token/create', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudFileTokenCreatePost(
+              FilecloudFileTokenCreatePostSchema.fromJson(
                   await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/file/token/list', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudFileTokenListPost(
+              FileId.fromJson(await request.readJsonBody())));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
