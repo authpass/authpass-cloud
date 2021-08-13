@@ -12,13 +12,16 @@ enum TokenType {
 }
 
 int _tokenTypeByteLength(TokenType type) {
+  // since these are byte lengths, and we *always* use the base64 encoded
+  // version, make sure it is divisible by 3..
+  // (or we remove padding.. but that sounds redundant)
   switch (type) {
     case TokenType.emailConfirm:
-      return 32;
+      return 33;
     case TokenType.authToken:
-      return 512;
+      return 510;
     case TokenType.fileToken:
-      return 128;
+      return 63;
   }
   // throw StateError('Invalid token type $type.');
 }
@@ -43,7 +46,7 @@ class CryptoService {
     for (var i = 0; i < byteLength; i++) {
       list[i] = _random.nextInt(256);
     }
-    final token = base64.encode(list);
+    final token = base64Url.encode(list);
     assert(length == null || token.length == length);
     return token;
   }
