@@ -9,6 +9,10 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:openapi_base/openapi_base.dart';
 
+import 'package:logging/logging.dart';
+
+final _logger = Logger('filecloud_repository');
+
 class FileCloudRepository {
   FileCloudRepository({
     required this.db,
@@ -53,13 +57,22 @@ class FileCloudRepository {
     if (file == null) {
       return false;
     }
+    if (file.owner != user) {
+      _logger.warning(
+          'Somebody other than the owner wanted to delete a file. $fileToken');
+      return false;
+    }
     return await db.tables.fileCloud.deleteFile(db, fileId: file.fileId);
   }
 
-  Future<FileContent> retrieveFileContent({required String fileToken}) async {
+  Future<FileContent> retrieveFileContent({
+    required UserEntity? user,
+    required String fileToken,
+  }) async {
     final fc =
         await db.tables.fileCloud.selectFileContent(db, fileToken: fileToken);
-    if (fc == null) {
+    if (fc == null ||
+        (fc.tokenType == FileTokenType.creator && fc.owner != user)) {
       throw NotFoundException('Unable to find file with token $fileToken');
     }
     return fc;

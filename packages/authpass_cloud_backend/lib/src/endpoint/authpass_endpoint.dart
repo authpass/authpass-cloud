@@ -387,10 +387,11 @@ class AuthPassCloudImpl extends AuthPassCloud {
   @override
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
       FileId body) async {
-    final token = await _requireAuthToken();
-    assert(token.id.isNotEmpty);
-    final fc = await repository.fileCloud
-        .retrieveFileContent(fileToken: body.fileToken);
+    final token = await _optionalAuthToken();
+    final fc = await repository.fileCloud.retrieveFileContent(
+      user: token?.user,
+      fileToken: body.fileToken,
+    );
     return FilecloudFileRetrievePostResponse.response200(fc.body)
       ..headers.addAll({
         'etag': [fc.versionToken],

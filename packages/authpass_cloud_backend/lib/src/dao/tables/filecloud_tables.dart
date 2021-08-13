@@ -255,7 +255,8 @@ class FileCloudTable extends TableBase with TableConstants {
   Future<FileContent?> selectFileContent(DatabaseTransactionBase db,
       {required String fileToken}) async {
     return await db.query('''
-    SELECT f.$columnId, fc.$columnId, fc.$_columnBytes, ft.$_columnTokenType
+    SELECT f.$columnId, fc.$columnId, fc.$_columnBytes, ft.$_columnTokenType,
+      f.$columnUserId
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     INNER JOIN $TABLE_FILE_CONTENT fc ON fc.$columnId = f.$_columnLastContentId
@@ -265,7 +266,8 @@ class FileCloudTable extends TableBase with TableConstants {
       return FileContent(
         versionToken: row[1] as String,
         body: row[2] as Uint8List,
-        readOnly: tokenType.isReadOnly,
+        tokenType: tokenType,
+        owner: UserEntity(id: row[4] as String),
       );
     });
   }
@@ -410,12 +412,14 @@ class FileContent {
   FileContent({
     required this.versionToken,
     required this.body,
-    required this.readOnly,
+    required this.tokenType,
+    required this.owner,
   });
 
   final String versionToken;
   final Uint8List body;
-  final bool readOnly;
+  final FileTokenType tokenType;
+  final UserEntity owner;
 }
 
 class _FileDetails {
