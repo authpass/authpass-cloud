@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
-import 'package:postgres_utils/postgres_utils.dart';
-
 import 'package:logging/logging.dart';
+import 'package:postgres_utils/postgres_utils.dart';
 
 final _logger = Logger('test_utils');
 

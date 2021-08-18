@@ -738,19 +738,23 @@ class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse
       {'status': status, 'body': body, 'contentType': contentType};
 }
 
-class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse {
+class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse
+    implements OpenApiResponseBodyString {
   /// Invalid token or email address.
-  _EmailConfirmGetResponse400.response400() : status = 400;
+  _EmailConfirmGetResponse400.response400(this.body) : status = 400;
 
   @override
   final int status;
 
   @override
-  final OpenApiContentType? contentType = null;
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
   Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+      {'status': status, 'body': body, 'contentType': contentType};
 }
 
 abstract class EmailConfirmGetResponse extends OpenApiResponse
@@ -762,8 +766,8 @@ abstract class EmailConfirmGetResponse extends OpenApiResponse
       _EmailConfirmGetResponse200.response200(body);
 
   /// Invalid token or email address.
-  factory EmailConfirmGetResponse.response400() =>
-      _EmailConfirmGetResponse400.response400();
+  factory EmailConfirmGetResponse.response400(String body) =>
+      _EmailConfirmGetResponse400.response400(body);
 
   void map(
       {required ResponseMap<_EmailConfirmGetResponse200> on200,
@@ -2694,7 +2698,8 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
           _EmailConfirmGetResponse200.response200(
               await response.responseBodyString()),
       '400': (OpenApiClientResponse response) async =>
-          _EmailConfirmGetResponse400.response400()
+          _EmailConfirmGetResponse400.response400(
+              await response.responseBodyString())
     });
   }
 

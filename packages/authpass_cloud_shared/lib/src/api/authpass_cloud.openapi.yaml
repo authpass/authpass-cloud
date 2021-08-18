@@ -95,6 +95,10 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+          content:
+            text/html:
+              schema:
+                type: string
     post:
       summary: Confirm with recaptcha
       security: []

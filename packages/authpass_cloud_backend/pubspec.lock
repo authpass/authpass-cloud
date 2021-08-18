@@ -288,6 +288,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   freezed:
     dependency: "direct dev"
     description:
@@ -308,7 +315,7 @@ packages:
       name: frontend_server_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   glob:
     dependency: transitive
     description:
@@ -393,6 +400,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   logging:
     dependency: "direct main"
     description:
@@ -410,17 +424,17 @@ packages:
   mailer:
     dependency: "direct main"
     description:
-      path: "../../deps/mailer"
-      relative: true
-    source: path
-    version: "5.0.1"
+      name: mailer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.2"
   matcher:
     dependency: transitive
     description:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10"
+    version: "0.12.11"
   meta:
     dependency: "direct main"
     description:
@@ -462,7 +476,7 @@ packages:
       name: openapi_base
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.2+2"
   package_config:
     dependency: transitive
     description:
@@ -497,7 +511,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "3.3.1"
   pool:
     dependency: transitive
     description:
@@ -665,21 +679,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.17.10"
+    version: "1.17.11"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.3"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   time:
     dependency: transitive
     description:
@@ -756,7 +770,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.2"
+    version: "5.2.0"
   yaml:
     dependency: "direct main"
     description:

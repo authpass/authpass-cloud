@@ -44,12 +44,13 @@ dev_dependencies:
   build_runner: ^2.1.0
   freezed: ^0.14.3
   json_serializable: ^5.0.0
+  flutter_lints: ^1.0.4
 
 dependency_overrides:
 #  openapi_base:
 #    path: /Users/herbert/dev/openapi_dart/packages/openapi_base
-  mailer:
-    path: ../../deps/mailer
+#  mailer:
+#    path: ../../deps/mailer
 
 #dependency_overrides:
 #  openapi_base:

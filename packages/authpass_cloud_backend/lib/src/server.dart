@@ -12,6 +12,7 @@ import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_backend/src/util/cors_middleware.dart';
+import 'package:authpass_cloud_backend/src/util/exception_middleware.dart';
 import 'package:authpass_cloud_backend/src/util/header_middleware.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
@@ -76,7 +77,8 @@ class Server extends BackendServer {
                 'http://localhost',
               ]),
             ),
-          ),
+          )
+          .addMiddleware(handleOpenApiException(env)),
     );
     final process = await server.startServer(
       address: env.config.http.host,

@@ -83,7 +83,8 @@ class AuthPassCloudImpl extends AuthPassCloud {
   Future<EmailConfirmGetResponse> emailConfirmGet(
       {required String token}) async {
     if (!await repository.user.isValidEmailConfirmToken(token)) {
-      return EmailConfirmGetResponse.response400();
+      return EmailConfirmGetResponse.response400(
+          emailConfirmationTokenError(serviceProvider.env));
     }
     return EmailConfirmGetResponse.response200(
         emailConfirmationPage(serviceProvider.env, token));
