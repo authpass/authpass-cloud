@@ -19,7 +19,7 @@ void main() {
 
   const _fileName = 'foo.kdbx';
   final _content = utf8.encode('test') as Uint8List;
-  var now = DateTime(2020, 1, 1);
+  var now = DateTime.utc(2020, 1, 1);
 
   endpointTest('cleanup files', (endpoint) async {
     await withClock(Clock((() => now)), () async {
@@ -75,7 +75,7 @@ void main() {
         final stats =
             await endpoint.db.tables.fileCloud.countStats(endpoint.db);
         expect(stats.fileCount, 1);
-        expect(stats.fileContentCount, 23);
+        expect(stats.fileContentCount, 22);
       }
 
       // another 25 hours, and there should be no more first of hour versions.
@@ -85,7 +85,7 @@ void main() {
         final stats =
             await endpoint.db.tables.fileCloud.countStats(endpoint.db);
         expect(stats.fileCount, 1);
-        expect(stats.fileContentCount, 12);
+        expect(stats.fileContentCount, 10);
       }
 
       // another 5 years later, we should be down to a single version.
