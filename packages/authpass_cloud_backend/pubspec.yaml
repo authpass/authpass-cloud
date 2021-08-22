@@ -20,6 +20,7 @@ dependencies:
   mailer: ^5.0.1
   yaml: ^3.1.0
   enough_mail: ^1.0.0
+  neat_periodic_task: ^2.0.0
   smtpd:
     path: ../../deps/smtpd.dart
 

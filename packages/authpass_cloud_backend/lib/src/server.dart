@@ -17,6 +17,7 @@ import 'package:authpass_cloud_backend/src/util/header_middleware.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
+import 'package:neat_periodic_task/neat_periodic_task.dart';
 import 'package:openapi_base/openapi_base.dart';
 
 final _logger = Logger('server');
@@ -80,13 +81,30 @@ class Server extends BackendServer {
           )
           .addMiddleware(handleOpenApiException(env)),
     );
+    final scheduler = _prepareScheduler(serviceProvider)..start();
     final process = await server.startServer(
       address: env.config.http.host,
       port: env.config.http.port,
     );
     final exitCode = await process.exitCode;
     _logger.fine('exitCode from server: $exitCode');
+    await scheduler.stop();
+    _logger.fine('Stopped scheduler.');
   }
+
+  NeatPeriodicTaskScheduler _prepareScheduler(
+          ServiceProvider serviceProvider) =>
+      NeatPeriodicTaskScheduler(
+        name: 'fileCloudCleanup',
+        interval: const Duration(hours: 1),
+        timeout: const Duration(minutes: 10),
+        task: () async {
+          await serviceProvider.createDatabaseAccess().run((db) async {
+            _logger.fine('Running fileCloud cleanup.');
+            await db.tables.fileCloud.cleanup(db);
+          });
+        },
+      );
 }
 
 class RepositoryProviderImpl extends RepositoryProvider {
