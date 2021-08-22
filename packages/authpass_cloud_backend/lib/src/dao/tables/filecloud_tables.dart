@@ -434,7 +434,7 @@ class FileCloudTable extends TableBase with TableConstants {
         await (db.query('SELECT COUNT(*) FROM $TABLE_FILE_CONTENT')).single;
     return SystemStatusFileCloud(
       fileCount: f[0] as int,
-      fileTotalLength: f[1] as int,
+      fileTotalLength: f[1] as int? ?? 0,
       fileContentCount: fc[0] as int,
     );
   }
