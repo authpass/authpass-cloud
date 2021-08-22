@@ -78,13 +78,18 @@ class SystemStatusMailbox implements OpenApiContent {
 @_i1.JsonSerializable()
 class SystemStatusFileCloud implements OpenApiContent {
   SystemStatusFileCloud(
-      {required this.fileCount, required this.fileContentCount});
+      {required this.fileCount,
+      this.fileTotalLength,
+      required this.fileContentCount});
 
   factory SystemStatusFileCloud.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFileCloudFromJson(jsonMap);
 
   @_i1.JsonKey(name: 'fileCount')
   final int fileCount;
+
+  @_i1.JsonKey(name: 'fileTotalLength')
+  final int? fileTotalLength;
 
   @_i1.JsonKey(name: 'fileContentCount')
   final int fileContentCount;

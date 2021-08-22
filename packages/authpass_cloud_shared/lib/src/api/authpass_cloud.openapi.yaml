@@ -600,6 +600,7 @@ components:
     SystemStatusFileCloud:
       properties:
         fileCount: { type: integer }
+        fileTotalLength: { type: integer }
         fileContentCount: { type: integer }
       required: [fileCount, fileContentCount]
     UserInfo:

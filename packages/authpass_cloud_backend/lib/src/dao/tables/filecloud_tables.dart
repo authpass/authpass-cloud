@@ -424,11 +424,17 @@ class FileCloudTable extends TableBase with TableConstants {
   }
 
   Future<SystemStatusFileCloud> countStats(DatabaseTransactionBase db) async {
-    final f = await db.query('SELECT COUNT(*) FROM $TABLE_FILE').single;
+    final f = await db.query('''
+    SELECT COUNT(f.id), SUM(fc.$_columnLength) 
+    FROM $TABLE_FILE f 
+      INNER JOIN $TABLE_FILE_CONTENT fc 
+        ON f.$_columnLastContentId = fc.$columnId
+    ''').single;
     final fc =
         await (db.query('SELECT COUNT(*) FROM $TABLE_FILE_CONTENT')).single;
     return SystemStatusFileCloud(
       fileCount: f[0] as int,
+      fileTotalLength: f[1] as int,
       fileContentCount: fc[0] as int,
     );
   }
