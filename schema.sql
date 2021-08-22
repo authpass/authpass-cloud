@@ -152,7 +152,8 @@ CREATE TABLE public.filecloud_file (
     name character varying NOT NULL,
     last_content_id uuid NOT NULL,
     owner_token character varying NOT NULL,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    last_content_count integer NOT NULL
 );
 
 
@@ -169,11 +170,25 @@ CREATE TABLE public.filecloud_file_content (
     user_id uuid NOT NULL,
     bytes bytea NOT NULL,
     length integer NOT NULL,
-    version_significance public.version_significance
+    version_significance public.version_significance,
+    content_count integer NOT NULL
 );
 
 
 ALTER TABLE public.filecloud_file_content OWNER TO authpass;
+
+--
+-- Name: filecloud_log; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_log (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    log_body jsonb NOT NULL
+);
+
+
+ALTER TABLE public.filecloud_log OWNER TO authpass;
 
 --
 -- Name: filecloud_token; Type: TABLE; Schema: public; Owner: authpass
@@ -343,6 +358,14 @@ ALTER TABLE ONLY public.filecloud_file
 
 
 --
+-- Name: filecloud_log filecloud_log_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_log
+    ADD CONSTRAINT filecloud_log_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: filecloud_token filecloud_token_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
 --
 
@@ -404,6 +427,13 @@ ALTER TABLE ONLY public.website
 
 ALTER TABLE ONLY public.website
     ADD CONSTRAINT website_url_key UNIQUE (url);
+
+
+--
+-- Name: filecloud_log_created_at_idx; Type: INDEX; Schema: public; Owner: authpass
+--
+
+CREATE INDEX filecloud_log_created_at_idx ON public.filecloud_log USING btree (created_at);
 
 
 --
