@@ -11,7 +11,7 @@ dependencies:
   freezed_annotation: ^0.14.1
   json_annotation: ^4.0.1
   pedantic: ^1.11.0
-  postgres: ^2.3.0
+  postgres: ^2.4.1
   quiver: ^3.0.0
   args: ^2.0.0
   checked_yaml: ^2.0.1

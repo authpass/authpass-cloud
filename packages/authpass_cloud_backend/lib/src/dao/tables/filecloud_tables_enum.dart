@@ -19,7 +19,7 @@ final v11Values = <VersionSignificance>[
   VersionSignificance.firstOfYear,
 ];
 
-final _versionSignificance = EnumUtil(VersionSignificance.values);
+final versionSignificance = EnumUtil(VersionSignificance.values);
 
 extension VersionSignificanceExt on VersionSignificance {
   static VersionSignificance? forDates(DateTime before, DateTime after) {
@@ -45,7 +45,7 @@ extension VersionSignificanceExt on VersionSignificance {
     return null;
   }
 
-  String get name => _versionSignificance.enumToString(this);
+  String get name => versionSignificance.enumToString(this);
 }
 
 enum FileTokenType {

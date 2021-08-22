@@ -9,7 +9,7 @@ import 'package:authpass_cloud_backend/src/service/email_service.dart' as _i5;
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart'
     as _i6;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:openapi_base/src/openapi_base.dart' as _i2;
+import 'package:openapi_base/openapi_base.dart' as _i2;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: avoid_setters_without_getters

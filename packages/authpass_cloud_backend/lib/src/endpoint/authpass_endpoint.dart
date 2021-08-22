@@ -16,6 +16,7 @@ import 'package:authpass_cloud_backend/src/util/extension_methods.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:smtpd/smtpd.dart';
 
@@ -39,6 +40,7 @@ class AuthPassCloudImpl extends AuthPassCloud {
   final ServiceProvider serviceProvider;
   final OpenApiRequest request;
   final DatabaseTransaction db;
+  @visibleForTesting
   final RepositoryProvider repository;
 
   Env get _env => serviceProvider.env;

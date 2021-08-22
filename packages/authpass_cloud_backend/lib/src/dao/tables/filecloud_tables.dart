@@ -4,13 +4,18 @@ import 'dart:typed_data';
 import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables_enum.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
+import 'package:authpass_cloud_backend/src/util/extension_methods.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:openapi_base/openapi_base.dart';
 import 'package:postgres/postgres.dart';
 import 'package:postgres_utils/postgres_utils.dart';
+
+part 'filecloud_tables.freezed.dart';
+part 'filecloud_tables.g.dart';
 
 final _logger = Logger('filecloud_tables');
 
@@ -19,6 +24,7 @@ class FileCloudTable extends TableBase with TableConstants {
   static const TABLE_FILE = 'filecloud_file';
   static const TABLE_FILE_CONTENT = 'filecloud_file_content';
   static const TABLE_FILE_TOKEN = 'filecloud_token';
+  static const TABLE_LOG = 'filecloud_log';
 
   /// enum of [VersionSignificance].
   static const typeVersionSignificance = 'version_significance';
@@ -26,11 +32,17 @@ class FileCloudTable extends TableBase with TableConstants {
   static const columnUserId = UserTable.COLUMN_USER_ID;
   static const _columnName = 'name';
   static const _columnLastContentId = 'last_content_id';
+
+  /// a running counter how many content updates have been performed.
+  static const _columnLastContentCount = 'last_content_count';
   static const _lastContentIdFkConstraint = '${_columnLastContentId}_fkey';
   static const _columnFileId = 'file_id';
   static const _columnBytes = 'bytes';
   static const _columnLength = 'length';
   static const _columnSignificance = 'version_significance';
+
+  /// the revision number of this content. see also [_columnLastContentCount]
+  static const _columnContentCount = 'content_count';
   static const _columnDeletedAt = 'deleted_at';
   static const _columnTokenType = 'token_type';
   static const _columnLabel = 'label';
@@ -38,7 +50,7 @@ class FileCloudTable extends TableBase with TableConstants {
   /// the "main" token created for the owner of this file.
   static const _columnOwnerToken = 'owner_token';
   static const _columnOwnerTokenFkConstraint = '${_columnOwnerToken}_fkey';
-  // static const
+  static const _columnLogBody = 'log_body';
   static const _columnUpdatedAt = 'updated_at';
   String get specColumnUpdatedAtAt =>
       '$_columnUpdatedAt $typeTimestampNotNull ';
@@ -123,6 +135,30 @@ class FileCloudTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate15(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $TABLE_FILE ADD COLUMN $_columnLastContentCount INT NULL;
+    UPDATE $TABLE_FILE f SET $_columnLastContentCount = (
+      SELECT COUNT(fc.$columnId) FROM $TABLE_FILE_CONTENT fc WHERE fc.$_columnFileId = f.$columnId 
+    );
+    ALTER TABLE $TABLE_FILE ALTER COLUMN $_columnLastContentCount SET NOT NULL;
+    ALTER TABLE $TABLE_FILE_CONTENT ADD COLUMN $_columnContentCount INT NULL;
+    UPDATE $TABLE_FILE_CONTENT fc SET $_columnContentCount = (
+      SELECT COUNT(fc2.$columnId) FROM $TABLE_FILE_CONTENT fc2
+      WHERE fc2.$_columnFileId = fc.$_columnFileId
+        AND fc2.$columnCreatedAt <= fc.$columnCreatedAt
+    );
+    ALTER TABLE $TABLE_FILE_CONTENT ALTER COLUMN $_columnContentCount SET NOT NULL;
+    
+    CREATE TABLE $TABLE_LOG (
+      $specColumnIdPrimaryKey,
+      $specColumnCreatedAt,
+      $_columnLogBody JSONB NOT NULL
+    );
+    CREATE INDEX ON $TABLE_LOG ($columnCreatedAt);
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
@@ -137,18 +173,24 @@ class FileCloudTable extends TableBase with TableConstants {
     await db.execute('SET CONSTRAINTS $_lastContentIdFkConstraint DEFERRED');
     await db.execute('SET CONSTRAINTS $_columnOwnerTokenFkConstraint DEFERRED');
 
+    final now = clock.now().toUtc();
+
     await db.executeInsert(TABLE_FILE, {
       columnId: fileId,
       columnUserId: userEntity.id,
-      _columnUpdatedAt: clock.now().toUtc(),
+      columnCreatedAt: now,
+      _columnUpdatedAt: now,
       _columnName: name,
       _columnLastContentId: contentId,
       _columnOwnerToken: fileToken,
+      _columnLastContentCount: 1,
     });
     await db.executeInsert(TABLE_FILE_CONTENT, {
       columnId: contentId,
       _columnFileId: fileId,
+      columnCreatedAt: now,
       columnUserId: userEntity.id,
+      _columnContentCount: 1,
       _columnBytes:
           CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
       _columnLength: bytes.length,
@@ -202,7 +244,8 @@ class FileCloudTable extends TableBase with TableConstants {
     required Uint8List bytes,
   }) async {
     final details = await db.query('''
-    SELECT f.$columnId, f.$_columnLastContentId, f.$_columnUpdatedAt
+    SELECT f.$columnId, f.$_columnLastContentId, f.$_columnUpdatedAt, 
+    f.$_columnLastContentCount
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     WHERE ft.$_columnToken = @token
@@ -211,6 +254,7 @@ class FileCloudTable extends TableBase with TableConstants {
         fileId: row[0] as String,
         lastVersionToken: row[1] as String,
         lastVersionDate: row[2] as DateTime,
+        lastVersionCount: row[3] as int,
       );
     });
     if (details == null) {
@@ -221,12 +265,14 @@ class FileCloudTable extends TableBase with TableConstants {
     }
 
     final contentId = cryptoService.createSecureUuid();
+    final contentCount = details.lastVersionCount + 1;
     final now = clock.now().toUtc();
     await db.executeInsert(TABLE_FILE_CONTENT, {
       columnId: contentId,
       _columnFileId: details.fileId,
       columnUserId: userEntity.id,
       columnCreatedAt: now,
+      _columnContentCount: contentCount,
       _columnSignificance:
           VersionSignificanceExt.forDates(details.lastVersionDate, now)?.name,
       _columnBytes:
@@ -235,8 +281,9 @@ class FileCloudTable extends TableBase with TableConstants {
     });
     final rows = await db.executeUpdate(TABLE_FILE, set: {
       _columnLastContentId: contentId,
-      columnCreatedAt: now,
+      // columnCreatedAt: now,
       _columnUpdatedAt: now,
+      _columnLastContentCount: contentCount,
     }, where: {
       columnId: details.fileId,
       _columnLastContentId: details.lastVersionToken,
@@ -385,6 +432,98 @@ class FileCloudTable extends TableBase with TableConstants {
       fileContentCount: fc[0] as int,
     );
   }
+
+  @visibleForTesting
+  Future<List<FileContentDebug>> listFileContentDebug(
+      DatabaseTransactionBase db) async {
+    final query = await db.query('''
+        SELECT fc.$columnCreatedAt, fc.$_columnSignificance,
+          fc.$_columnContentCount
+        FROM $TABLE_FILE_CONTENT fc
+        ''');
+    return query
+        .map((e) => FileContentDebug(
+              createdAt: e[0] as DateTime,
+              versionSignificance:
+                  (e[1] as String?)?.let(versionSignificance.stringToEnum),
+              contentCount: e[2] as int,
+            ))
+        .toList(growable: false);
+  }
+
+  Future<List<CleanupStats>> cleanup(DatabaseTransactionBase db) async {
+    final cleanups = {
+      // cleanup firstOfHour when older than 24 hours
+      VersionSignificance.firstOfHour: const Duration(hours: 24),
+      VersionSignificance.firstOfDay: const Duration(days: 7),
+      VersionSignificance.firstOfWeek: const Duration(days: 21),
+      VersionSignificance.firstOfMonth: const Duration(days: 120),
+      VersionSignificance.firstOfYear: const Duration(days: 900),
+      VersionSignificance.firstVersion: const Duration(days: 1800),
+    };
+    final totalTime = Stopwatch()..start();
+    final singleStopwatch = Stopwatch()..start();
+    final ret = await (() async* {
+      for (final cleanup in cleanups.entries) {
+        singleStopwatch.reset();
+        final count = await _cleanup(db, cleanup.key, cleanup.value);
+        yield CleanupStats(
+          timeMs: singleStopwatch.elapsedMilliseconds,
+          count: count,
+          versionSignificance: cleanup.key,
+        );
+      }
+    })()
+        .toList();
+    final cleanupCount = ret.fold<int>(
+        0, (previousValue, element) => previousValue + element.count);
+    await _insertLogDebug(
+      db,
+      CleanupStatsLog(
+        timeMs: totalTime.elapsedMilliseconds,
+        cleanupCount: cleanupCount,
+        cleanupStats: ret,
+      ),
+    );
+    return ret;
+  }
+
+  Future<void> _insertLogDebug(
+      DatabaseTransactionBase db, DebugLogBody logBody) async {
+    await db.executeInsert(TABLE_LOG, {
+      columnId: cryptoService.createSecureUuid(),
+      columnCreatedAt: clock.now().toUtc(),
+      _columnLogBody:
+          CustomTypeBind(PostgreSQLDataType.jsonb, logBody.toJson()),
+    });
+  }
+
+  Future<int> _cleanup(DatabaseTransactionBase db,
+      VersionSignificance significance, Duration duration) async {
+    return await db.execute('''
+    DELETE FROM $TABLE_FILE_CONTENT  fc
+    WHERE ( 
+      fc.$_columnSignificance IS NULL 
+      OR fc.$_columnSignificance <= @significance
+    ) AND fc.$columnCreatedAt < @until
+    AND NOT EXISTS (SELECT FROM $TABLE_FILE f WHERE f.$_columnLastContentId = fc.$columnId)
+    ''', values: {
+      'significance': significance.name,
+      'until': clock.now().toUtc().subtract(duration),
+    });
+  }
+}
+
+@freezed
+class CleanupStats with _$CleanupStats {
+  const factory CleanupStats({
+    required int timeMs,
+    required int count,
+    required VersionSignificance versionSignificance,
+  }) = _CleanupStats;
+
+  factory CleanupStats.fromJson(Map<String, dynamic> json) =>
+      _$CleanupStatsFromJson(json);
 }
 
 class FileInfoDto {
@@ -427,10 +566,12 @@ class _FileDetails {
     required this.fileId,
     required this.lastVersionToken,
     required this.lastVersionDate,
+    required this.lastVersionCount,
   });
   final String fileId;
   final String lastVersionToken;
   final DateTime lastVersionDate;
+  final int lastVersionCount;
 }
 
 class FileUpdated {
@@ -438,4 +579,36 @@ class FileUpdated {
 
   final String versionToken;
   final String fileToken;
+}
+
+@visibleForTesting
+@freezed
+class FileContentDebug with _$FileContentDebug {
+  const factory FileContentDebug({
+    required DateTime createdAt,
+    required VersionSignificance? versionSignificance,
+    required int contentCount,
+  }) = _FileContentDebug;
+}
+
+abstract class DebugLogBody {
+  String get type;
+  Map<String, dynamic> toJson();
+}
+
+@freezed
+class CleanupStatsLog with _$CleanupStatsLog implements DebugLogBody {
+  const factory CleanupStatsLog({
+    required int timeMs,
+    required int cleanupCount,
+    required List<CleanupStats> cleanupStats,
+  }) = _CleanupStatsLog;
+  const CleanupStatsLog._();
+
+  factory CleanupStatsLog.fromJson(Map<String, dynamic> json) =>
+      _$CleanupStatsLogFromJson(json);
+
+  @JsonKey()
+  @override
+  String get type => 'cleanupStats';
 }
