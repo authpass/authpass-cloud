@@ -506,17 +506,21 @@ class FileCloudTable extends TableBase with TableConstants {
 
   Future<int> _cleanup(DatabaseTransactionBase db,
       VersionSignificance significance, Duration duration) async {
-    return await db.execute('''
+    return await db.execute(
+      '''
     DELETE FROM $TABLE_FILE_CONTENT  fc
     WHERE ( 
       fc.$_columnSignificance IS NULL 
       OR fc.$_columnSignificance <= @significance
     ) AND fc.$columnCreatedAt < @until
     AND NOT EXISTS (SELECT FROM $TABLE_FILE f WHERE f.$_columnLastContentId = fc.$columnId)
-    ''', values: {
-      'significance': significance.name,
-      'until': clock.now().toUtc().subtract(duration),
-    });
+    ''',
+      values: {
+        'significance': significance.name,
+        'until': clock.now().toUtc().subtract(duration),
+      },
+      timeoutInSeconds: 600,
+    );
   }
 }
 
