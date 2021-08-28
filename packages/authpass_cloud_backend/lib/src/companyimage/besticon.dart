@@ -249,7 +249,8 @@ class BestIcon {
     final response = await Response.fromStream(await _client.send(req));
     final location = response.headers[HttpHeaders.locationHeader];
     if (location != null) {
-      return await _requestGet(Uri.parse(location), count: count + 1);
+      final locationUri = uri.resolve(location);
+      return await _requestGet(locationUri, count: count + 1);
     }
 
     _requireSuccess(response);
@@ -291,8 +292,10 @@ class BestIcon {
     final images = (await Future.wait(imageLinks.map((imageLink) async {
       try {
         final response = await _client.get(imageLink.uri);
-        _requireSuccess(response);
-        final contentType = response.headers[HttpHeaders.contentTypeHeader]!;
+        _requireSuccess(response, acceptOnly: HttpStatus.ok);
+        final contentType = ArgumentError.checkNotNull(
+            response.headers[HttpHeaders.contentTypeHeader],
+            HttpHeaders.contentTypeHeader);
         final ct = ContentType.parse(contentType);
         final imageBytes = response.bodyBytes;
         final decoded = _decodeImageAndReEncode(imageBytes);
@@ -326,7 +329,8 @@ class BestIcon {
         }
         return null;
       } catch (e, stackTrace) {
-        _logger.severe('Error while fetching image.', e, stackTrace);
+        _logger.severe(
+            'Error while fetching image. ${imageLink.uri}', e, stackTrace);
         return null;
       }
     })))
@@ -386,8 +390,11 @@ class BestIcon {
             .toList());
   }
 
-  void _requireSuccess(Response response) {
+  void _requireSuccess(Response response, {int? acceptOnly}) {
     if (response.statusCode < 200 || response.statusCode > 299) {
+      throw ResponseException(response: response);
+    }
+    if (acceptOnly != null && response.statusCode != acceptOnly) {
       throw ResponseException(response: response);
     }
   }
