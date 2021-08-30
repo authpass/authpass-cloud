@@ -41,6 +41,8 @@ class FileCloudTable extends TableBase with TableConstants {
   static const _columnLength = 'length';
   static const _columnSignificance = 'version_significance';
 
+  static const _columnLastAccessAt = 'last_access_at';
+
   /// the revision number of this content. see also [_columnLastContentCount]
   static const _columnContentCount = 'content_count';
   static const _columnDeletedAt = 'deleted_at';
@@ -159,6 +161,14 @@ class FileCloudTable extends TableBase with TableConstants {
     ''');
   }
 
+  Future<void> migrate16(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $TABLE_FILE ADD COLUMN $_columnLastAccessAt $typeTimestamp NULL;
+    UPDATE $TABLE_FILE SET $_columnLastAccessAt = $_columnUpdatedAt;
+    ALTER TABLE $TABLE_FILE ALTER COLUMN $_columnLastAccessAt SET NOT NULL;
+    ''');
+  }
+
   Future<FileUpdated> insertFile(
     DatabaseTransactionBase db, {
     required UserEntity userEntity,
@@ -180,6 +190,7 @@ class FileCloudTable extends TableBase with TableConstants {
       columnUserId: userEntity.id,
       columnCreatedAt: now,
       _columnUpdatedAt: now,
+      _columnLastAccessAt: now,
       _columnName: name,
       _columnLastContentId: contentId,
       _columnOwnerToken: fileToken,
@@ -301,9 +312,9 @@ class FileCloudTable extends TableBase with TableConstants {
 
   Future<FileContent?> selectFileContent(DatabaseTransactionBase db,
       {required String fileToken}) async {
-    return await db.query('''
+    final fc = await db.query('''
     SELECT f.$columnId, fc.$columnId, fc.$_columnBytes, ft.$_columnTokenType,
-      f.$columnUserId
+      f.$columnUserId, f.$_columnLastAccessAt
     FROM $TABLE_FILE_TOKEN ft 
     INNER JOIN $TABLE_FILE f ON ft.$_columnFileId = f.$columnId
     INNER JOIN $TABLE_FILE_CONTENT fc ON fc.$columnId = f.$_columnLastContentId
@@ -311,12 +322,25 @@ class FileCloudTable extends TableBase with TableConstants {
     ''', values: {'token': fileToken}).singleOrNull((row) async {
       final tokenType = fileTokenTypeUtil.stringToEnum(row[3] as String);
       return FileContent(
+        id: row[0] as String,
         versionToken: row[1] as String,
         body: row[2] as Uint8List,
         tokenType: tokenType,
         owner: UserEntity(id: row[4] as String),
+        lastAccessAt: row[5] as DateTime,
       );
     });
+    if (fc != null) {
+      final now = clock.now().toUtc();
+      if (now.difference(fc.lastAccessAt).inHours > 1) {
+        await db.executeUpdate(
+          TABLE_FILE,
+          set: {_columnLastAccessAt: now},
+          where: {columnId: fc.id},
+        );
+      }
+    }
+    return fc;
   }
 
   Future<FileInfoDto?> getFile(
@@ -432,10 +456,23 @@ class FileCloudTable extends TableBase with TableConstants {
     ''').single;
     final fc =
         await (db.query('SELECT COUNT(*) FROM $TABLE_FILE_CONTENT')).single;
+    final yesterday = clock.now().toUtc().subtract(const Duration(hours: 24));
+    final dayBefore = yesterday.subtract(const Duration(hours: 24));
+    final lastAccess = await (db.query(
+      '''SELECT COUNT(*) FROM $TABLE_FILE 
+          WHERE $_columnLastAccessAt > @yesterday
+            AND $columnCreatedAt < @dayBefore
+      ''',
+      values: {
+        'yesterday': yesterday,
+        'dayBefore': dayBefore,
+      },
+    )).single;
     return SystemStatusFileCloud(
       fileCount: f[0] as int,
       fileTotalLength: f[1] as int? ?? 0,
       fileContentCount: fc[0] as int,
+      countRecentlyAccessed: lastAccess[0] as int,
     );
   }
 
@@ -559,16 +596,20 @@ class FileTokenDto {
 
 class FileContent {
   FileContent({
+    required this.id,
     required this.versionToken,
     required this.body,
     required this.tokenType,
     required this.owner,
+    required this.lastAccessAt,
   });
 
+  final String id;
   final String versionToken;
   final Uint8List body;
   final FileTokenType tokenType;
   final UserEntity owner;
+  final DateTime lastAccessAt;
 }
 
 class _FileDetails {

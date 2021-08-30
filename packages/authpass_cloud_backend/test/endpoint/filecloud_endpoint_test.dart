@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
 import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
@@ -123,6 +124,50 @@ void main() {
       final response = await endpoint
           .filecloudFileRetrievePost(FileId(fileToken: result.fileToken));
       expect(response.headers['etag']?.first, result.versionToken);
+    });
+    endpointTest('Update lastAccessAt', (endpoint) async {
+      DateTime now = DateTime.utc(2020, 1, 1);
+      await withClock(Clock(() => now), () async {
+        await EndpointTestUtil.createUserConfirmed(endpoint);
+        final result = await endpoint
+            .filecloudFilePost(_content, fileName: _fileName)
+            .requireSuccess();
+        expect(result.versionToken, isNotEmpty);
+        expect(result.fileToken, isNotEmpty);
+
+        now = now.add(const Duration(minutes: 5));
+
+        Future<FileContent> _load() async {
+          final fc = await endpoint.db.tables.fileCloud
+              .selectFileContent(endpoint.db, fileToken: result.fileToken);
+          if (fc == null) {
+            fail('fc must not be null');
+          }
+          return fc;
+        }
+
+        Future<SystemStatusFileCloud> stats() async {
+          return await endpoint.db.tables.fileCloud.countStats(endpoint.db);
+        }
+
+        // should still be the old value.
+        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await stats()).countRecentlyAccessed, 0);
+        now = now.add(const Duration(hours: 48));
+        expect((await stats()).countRecentlyAccessed, 0);
+        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await _load()).lastAccessAt, now);
+
+        expect((await stats()).countRecentlyAccessed, 1);
+        now = now.add(const Duration(days: 2));
+        expect((await stats()).countRecentlyAccessed, 0);
+        await _load();
+        expect((await stats()).countRecentlyAccessed, 1);
+        now = now.add(const Duration(days: 2));
+        expect((await stats()).countRecentlyAccessed, 0);
+      });
     });
     endpointTest('list files', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);

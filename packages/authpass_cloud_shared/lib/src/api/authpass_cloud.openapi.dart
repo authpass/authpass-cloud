@@ -79,8 +79,9 @@ class SystemStatusMailbox implements OpenApiContent {
 class SystemStatusFileCloud implements OpenApiContent {
   SystemStatusFileCloud(
       {required this.fileCount,
-      this.fileTotalLength,
-      required this.fileContentCount});
+      required this.fileTotalLength,
+      required this.fileContentCount,
+      required this.countRecentlyAccessed});
 
   factory SystemStatusFileCloud.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFileCloudFromJson(jsonMap);
@@ -89,10 +90,14 @@ class SystemStatusFileCloud implements OpenApiContent {
   final int fileCount;
 
   @_i1.JsonKey(name: 'fileTotalLength')
-  final int? fileTotalLength;
+  final int fileTotalLength;
 
   @_i1.JsonKey(name: 'fileContentCount')
   final int fileContentCount;
+
+  /// Number of files accessed in the last 24 hours, but are older than 48 hours.
+  @_i1.JsonKey(name: 'countRecentlyAccessed')
+  final int countRecentlyAccessed;
 
   Map<String, dynamic> toJson() => _$SystemStatusFileCloudToJson(this);
   @override

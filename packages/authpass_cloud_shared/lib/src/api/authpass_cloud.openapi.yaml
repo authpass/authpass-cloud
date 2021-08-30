@@ -602,7 +602,10 @@ components:
         fileCount: { type: integer }
         fileTotalLength: { type: integer }
         fileContentCount: { type: integer }
-      required: [fileCount, fileContentCount]
+        countRecentlyAccessed:
+          description: Number of files accessed in the last 24 hours, but are older than 48 hours.
+          type: integer
+      required: [fileCount, fileContentCount, fileTotalLength, countRecentlyAccessed]
     UserInfo:
       required: [emails]
       properties:
