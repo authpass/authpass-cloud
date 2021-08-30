@@ -153,7 +153,8 @@ CREATE TABLE public.filecloud_file (
     last_content_id uuid NOT NULL,
     owner_token character varying NOT NULL,
     deleted_at timestamp without time zone,
-    last_content_count integer NOT NULL
+    last_content_count integer NOT NULL,
+    last_access_at timestamp without time zone NOT NULL
 );
 
 
