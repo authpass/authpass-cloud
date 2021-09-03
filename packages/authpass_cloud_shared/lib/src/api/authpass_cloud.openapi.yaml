@@ -605,7 +605,10 @@ components:
         countRecentlyAccessed:
           description: Number of files accessed in the last 24 hours, but are older than 48 hours.
           type: integer
-      required: [fileCount, fileContentCount, fileTotalLength, countRecentlyAccessed]
+        countWeekAccessed:
+          description: Number of files older than 14 days, accessed within the last 7 days.
+          type: integer
+      required: [fileCount, fileContentCount, fileTotalLength, countRecentlyAccessed, countWeekAccessed]
     UserInfo:
       required: [emails]
       properties:

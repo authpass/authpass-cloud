@@ -55,6 +55,7 @@ SystemStatusFileCloud _$SystemStatusFileCloudFromJson(
       fileTotalLength: json['fileTotalLength'] as int,
       fileContentCount: json['fileContentCount'] as int,
       countRecentlyAccessed: json['countRecentlyAccessed'] as int,
+      countWeekAccessed: json['countWeekAccessed'] as int,
     );
 
 Map<String, dynamic> _$SystemStatusFileCloudToJson(
@@ -64,6 +65,7 @@ Map<String, dynamic> _$SystemStatusFileCloudToJson(
       'fileTotalLength': instance.fileTotalLength,
       'fileContentCount': instance.fileContentCount,
       'countRecentlyAccessed': instance.countRecentlyAccessed,
+      'countWeekAccessed': instance.countWeekAccessed,
     };
 
 SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) => SystemStatus(

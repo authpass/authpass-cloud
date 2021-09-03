@@ -456,23 +456,38 @@ class FileCloudTable extends TableBase with TableConstants {
     ''').single;
     final fc =
         await (db.query('SELECT COUNT(*) FROM $TABLE_FILE_CONTENT')).single;
-    final yesterday = clock.now().toUtc().subtract(const Duration(hours: 24));
+    final now = clock.now().toUtc();
+    final yesterday = now.subtract(const Duration(hours: 24));
     final dayBefore = yesterday.subtract(const Duration(hours: 24));
-    final lastAccess = await (db.query(
-      '''SELECT COUNT(*) FROM $TABLE_FILE 
-          WHERE $_columnLastAccessAt > @yesterday
-            AND $columnCreatedAt < @dayBefore
+    Future<int> countLastAccessFiles({
+      required DateTime minAge,
+      required DateTime lastAccessSince,
+    }) async {
+      final lastAccess = await (db.query(
+        '''SELECT COUNT(*) FROM $TABLE_FILE 
+          WHERE $_columnLastAccessAt > @lastAccessSince
+            AND $columnCreatedAt < @minAge
       ''',
-      values: {
-        'yesterday': yesterday,
-        'dayBefore': dayBefore,
-      },
-    )).single;
+        values: {
+          'lastAccessSince': lastAccessSince,
+          'minAge': minAge,
+        },
+      )).single;
+      return lastAccess[0] as int;
+    }
+
     return SystemStatusFileCloud(
       fileCount: f[0] as int,
       fileTotalLength: f[1] as int? ?? 0,
       fileContentCount: fc[0] as int,
-      countRecentlyAccessed: lastAccess[0] as int,
+      countRecentlyAccessed: await countLastAccessFiles(
+        minAge: dayBefore,
+        lastAccessSince: yesterday,
+      ),
+      countWeekAccessed: await countLastAccessFiles(
+        minAge: now.subtract(const Duration(days: 14)),
+        lastAccessSince: now.subtract(const Duration(days: 7)),
+      ),
     );
   }
 
