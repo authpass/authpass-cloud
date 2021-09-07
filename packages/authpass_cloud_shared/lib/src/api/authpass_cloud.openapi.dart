@@ -81,6 +81,9 @@ class SystemStatusFileCloud implements OpenApiContent {
       {required this.fileCount,
       required this.fileTotalLength,
       required this.fileContentCount,
+      required this.attachmentLength,
+      required this.attachmentCount,
+      required this.attachmentUntouchedMonth,
       required this.countRecentlyAccessed,
       required this.countWeekAccessed});
 
@@ -95,6 +98,15 @@ class SystemStatusFileCloud implements OpenApiContent {
 
   @_i1.JsonKey(name: 'fileContentCount')
   final int fileContentCount;
+
+  @_i1.JsonKey(name: 'attachmentLength')
+  final int attachmentLength;
+
+  @_i1.JsonKey(name: 'attachmentCount')
+  final int attachmentCount;
+
+  @_i1.JsonKey(name: 'attachmentUntouchedMonth')
+  final int attachmentUntouchedMonth;
 
   /// Number of files accessed in the last 24 hours, but are older than 48 hours.
   @_i1.JsonKey(name: 'countRecentlyAccessed')
@@ -392,6 +404,22 @@ class FileListResponse implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
+/// Object wrapping a [attachmentToken].
+@_i1.JsonSerializable()
+class AttachmentId implements OpenApiContent {
+  AttachmentId({required this.attachmentToken});
+
+  factory AttachmentId.fromJson(Map<String, dynamic> jsonMap) =>
+      _$AttachmentIdFromJson(jsonMap);
+
+  @_i1.JsonKey(name: 'attachmentToken')
+  final String attachmentToken;
+
+  Map<String, dynamic> toJson() => _$AttachmentIdToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
 /// Object wrapping a [fileToken].
 @_i1.JsonSerializable()
 class FileId implements OpenApiContent {
@@ -404,6 +432,25 @@ class FileId implements OpenApiContent {
   final String fileToken;
 
   Map<String, dynamic> toJson() => _$FileIdToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+@_i1.JsonSerializable()
+class AttachmentTouch implements OpenApiContent {
+  AttachmentTouch({required this.file, required this.attachmentTokens});
+
+  factory AttachmentTouch.fromJson(Map<String, dynamic> jsonMap) =>
+      _$AttachmentTouchFromJson(jsonMap);
+
+  /// Object wrapping a [fileToken].
+  @_i1.JsonKey(name: 'file')
+  final FileId file;
+
+  @_i1.JsonKey(name: 'attachmentTokens')
+  final List<String> attachmentTokens;
+
+  Map<String, dynamic> toJson() => _$AttachmentTouchToJson(this);
   @override
   String toString() => toJson().toString();
 }
@@ -2222,6 +2269,220 @@ abstract class FilecloudFilePostResponse extends OpenApiResponse
   }
 }
 
+@_i1.JsonSerializable()
+class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
+  FilecloudAttachmentPostResponseBody200({required this.attachmentToken});
+
+  factory FilecloudAttachmentPostResponseBody200.fromJson(
+          Map<String, dynamic> jsonMap) =>
+      _$FilecloudAttachmentPostResponseBody200FromJson(jsonMap);
+
+  /// Unique token to reference the newly created file.
+  @_i1.JsonKey(name: 'attachmentToken')
+  final String attachmentToken;
+
+  Map<String, dynamic> toJson() =>
+      _$FilecloudAttachmentPostResponseBody200ToJson(this);
+  @override
+  String toString() => toJson().toString();
+}
+
+class _FilecloudAttachmentPostResponse200
+    extends FilecloudAttachmentPostResponse implements OpenApiResponseBodyJson {
+  /// successfully created attachment.
+  _FilecloudAttachmentPostResponse200.response200(this.body)
+      : status = 200,
+        bodyJson = body.toJson();
+
+  @override
+  final int status;
+
+  final FilecloudAttachmentPostResponseBody200 body;
+
+  @override
+  final Map<String, dynamic> bodyJson;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/json');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'bodyJson': bodyJson,
+        'contentType': contentType
+      };
+}
+
+abstract class FilecloudAttachmentPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<FilecloudAttachmentPostResponseBody200> {
+  FilecloudAttachmentPostResponse();
+
+  /// successfully created attachment.
+  factory FilecloudAttachmentPostResponse.response200(
+          FilecloudAttachmentPostResponseBody200 body) =>
+      _FilecloudAttachmentPostResponse200.response200(body);
+
+  void map({required ResponseMap<_FilecloudAttachmentPostResponse200> on200}) {
+    if (this is _FilecloudAttachmentPostResponse200) {
+      on200((this as _FilecloudAttachmentPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  successfully created attachment.
+  @override
+  FilecloudAttachmentPostResponseBody200 requireSuccess() {
+    if (this is _FilecloudAttachmentPostResponse200) {
+      return (this as _FilecloudAttachmentPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _FilecloudAttachmentTouchPostResponse200
+    extends FilecloudAttachmentTouchPostResponse {
+  /// Successfully touched all attachments.
+  _FilecloudAttachmentTouchPostResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class FilecloudAttachmentTouchPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<void> {
+  FilecloudAttachmentTouchPostResponse();
+
+  /// Successfully touched all attachments.
+  factory FilecloudAttachmentTouchPostResponse.response200() =>
+      _FilecloudAttachmentTouchPostResponse200.response200();
+
+  void map(
+      {required ResponseMap<_FilecloudAttachmentTouchPostResponse200> on200}) {
+    if (this is _FilecloudAttachmentTouchPostResponse200) {
+      on200((this as _FilecloudAttachmentTouchPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully touched all attachments.
+  @override
+  void requireSuccess() {
+    if (this is _FilecloudAttachmentTouchPostResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _FilecloudAttachmentUnlinkPostResponse200
+    extends FilecloudAttachmentUnlinkPostResponse {
+  /// Successfully removed association.
+  _FilecloudAttachmentUnlinkPostResponse200.response200() : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() =>
+      {'status': status, 'contentType': contentType};
+}
+
+abstract class FilecloudAttachmentUnlinkPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<void> {
+  FilecloudAttachmentUnlinkPostResponse();
+
+  /// Successfully removed association.
+  factory FilecloudAttachmentUnlinkPostResponse.response200() =>
+      _FilecloudAttachmentUnlinkPostResponse200.response200();
+
+  void map(
+      {required ResponseMap<_FilecloudAttachmentUnlinkPostResponse200> on200}) {
+    if (this is _FilecloudAttachmentUnlinkPostResponse200) {
+      on200((this as _FilecloudAttachmentUnlinkPostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  Successfully removed association.
+  @override
+  void requireSuccess() {
+    if (this is _FilecloudAttachmentUnlinkPostResponse200) {
+      return;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _FilecloudAttachmentRetrievePostResponse200
+    extends FilecloudAttachmentRetrievePostResponse
+    implements OpenApiResponseBodyBinary {
+  /// The requested file
+  _FilecloudAttachmentRetrievePostResponse200.response200(this.body)
+      : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final _i2.Uint8List body;
+
+  @override
+  final OpenApiContentType contentType =
+      OpenApiContentType.parse('application/octet-set');
+
+  @override
+  Map<String, Object?> propertiesToString() =>
+      {'status': status, 'body': body, 'contentType': contentType};
+}
+
+abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
+    implements HasSuccessResponse<_i2.Uint8List> {
+  FilecloudAttachmentRetrievePostResponse();
+
+  /// The requested file
+  factory FilecloudAttachmentRetrievePostResponse.response200(
+          _i2.Uint8List body) =>
+      _FilecloudAttachmentRetrievePostResponse200.response200(body);
+
+  void map(
+      {required ResponseMap<_FilecloudAttachmentRetrievePostResponse200>
+          on200}) {
+    if (this is _FilecloudAttachmentRetrievePostResponse200) {
+      on200((this as _FilecloudAttachmentRetrievePostResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  The requested file
+  @override
+  _i2.Uint8List requireSuccess() {
+    if (this is _FilecloudAttachmentRetrievePostResponse200) {
+      return (this as _FilecloudAttachmentRetrievePostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
 class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
     implements OpenApiResponseBodyBinary {
   /// Image
@@ -2427,6 +2688,29 @@ abstract class AuthPassCloud implements ApiEndpoint {
   Future<FilecloudFilePostResponse> filecloudFilePost(_i2.Uint8List body,
       {required String fileName});
 
+  /// Create attachment
+  /// post: /filecloud/attachment
+  Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
+      _i2.Uint8List body,
+      {required String fileName,
+      required String fileToken});
+
+  /// Touches an attachment that it is still in use for the given file.
+  /// post: /filecloud/attachment/touch
+  Future<FilecloudAttachmentTouchPostResponse> filecloudAttachmentTouchPost(
+      AttachmentTouch body);
+
+  /// Release a attachment - used when an attachment is removed from a file.
+  /// post: /filecloud/attachment/unlink
+  Future<FilecloudAttachmentUnlinkPostResponse> filecloudAttachmentUnlinkPost(
+      AttachmentTouch body);
+
+  /// Retrieve an attachment.
+  /// post: /filecloud/attachment/retrieve
+  /// [body]: Object wrapping a [attachmentToken].
+  Future<FilecloudAttachmentRetrievePostResponse>
+      filecloudAttachmentRetrievePost(AttachmentId body);
+
   /// Load the best image for the given website.
   /// get: /website/image
   Future<WebsiteImageGetResponse> websiteImageGet({required String url});
@@ -2600,6 +2884,33 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   ///
   Future<FilecloudFilePostResponse> filecloudFilePost(_i2.Uint8List body,
       {required String fileName});
+
+  /// Create attachment
+  /// post: /filecloud/attachment
+  ///
+  Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
+      _i2.Uint8List body,
+      {required String fileName,
+      required String fileToken});
+
+  /// Touches an attachment that it is still in use for the given file.
+  /// post: /filecloud/attachment/touch
+  ///
+  Future<FilecloudAttachmentTouchPostResponse> filecloudAttachmentTouchPost(
+      AttachmentTouch body);
+
+  /// Release a attachment - used when an attachment is removed from a file.
+  /// post: /filecloud/attachment/unlink
+  ///
+  Future<FilecloudAttachmentUnlinkPostResponse> filecloudAttachmentUnlinkPost(
+      AttachmentTouch body);
+
+  /// Retrieve an attachment.
+  /// post: /filecloud/attachment/retrieve
+  ///
+  /// [body]: Object wrapping a [attachmentToken].
+  Future<FilecloudAttachmentRetrievePostResponse>
+      filecloudAttachmentRetrievePost(AttachmentId body);
 
   /// Load the best image for the given website.
   /// get: /website/image
@@ -3150,6 +3461,93 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
     });
   }
 
+  /// Create attachment
+  /// post: /filecloud/attachment
+  ///
+  @override
+  Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
+      _i2.Uint8List body,
+      {required String fileName,
+      required String fileToken}) async {
+    final request = OpenApiClientRequest('post', '/filecloud/attachment', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addHeaderParameter('fileName', encodeString(fileName));
+    request.addHeaderParameter('fileToken', encodeString(fileToken));
+    request.setHeader('content-type', 'application/octet-stream');
+    request.setBody(OpenApiClientRequestBodyBinary(body));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudAttachmentPostResponse200.response200(
+              FilecloudAttachmentPostResponseBody200.fromJson(
+                  await response.responseBodyJson()))
+    });
+  }
+
+  /// Touches an attachment that it is still in use for the given file.
+  /// post: /filecloud/attachment/touch
+  ///
+  @override
+  Future<FilecloudAttachmentTouchPostResponse> filecloudAttachmentTouchPost(
+      AttachmentTouch body) async {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/touch', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudAttachmentTouchPostResponse200.response200()
+    });
+  }
+
+  /// Release a attachment - used when an attachment is removed from a file.
+  /// post: /filecloud/attachment/unlink
+  ///
+  @override
+  Future<FilecloudAttachmentUnlinkPostResponse> filecloudAttachmentUnlinkPost(
+      AttachmentTouch body) async {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/unlink', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudAttachmentUnlinkPostResponse200.response200()
+    });
+  }
+
+  /// Retrieve an attachment.
+  /// post: /filecloud/attachment/retrieve
+  ///
+  /// [body]: Object wrapping a [attachmentToken].
+  @override
+  Future<FilecloudAttachmentRetrievePostResponse>
+      filecloudAttachmentRetrievePost(AttachmentId body) async {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/retrieve', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.setHeader('content-type', 'application/json');
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(request, {
+      '200': (OpenApiClientResponse response) async =>
+          _FilecloudAttachmentRetrievePostResponse200.response200(
+              await response.responseBodyBytes())
+    });
+  }
+
   /// Load the best image for the given website.
   /// get: /website/image
   ///
@@ -3511,6 +3909,60 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Create attachment
+  /// post: /filecloud/attachment
+  ///
+  OpenApiClientRequest filecloudAttachmentPost(
+      {required String fileName, required String fileToken}) {
+    final request = OpenApiClientRequest('post', '/filecloud/attachment', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    request.addHeaderParameter('fileName', encodeString(fileName));
+    request.addHeaderParameter('fileToken', encodeString(fileToken));
+    return request;
+  }
+
+  /// Touches an attachment that it is still in use for the given file.
+  /// post: /filecloud/attachment/touch
+  ///
+  OpenApiClientRequest filecloudAttachmentTouchPost() {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/touch', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
+  /// Release a attachment - used when an attachment is removed from a file.
+  /// post: /filecloud/attachment/unlink
+  ///
+  OpenApiClientRequest filecloudAttachmentUnlinkPost() {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/unlink', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
+  /// Retrieve an attachment.
+  /// post: /filecloud/attachment/retrieve
+  ///
+  OpenApiClientRequest filecloudAttachmentRetrievePost() {
+    final request =
+        OpenApiClientRequest('post', '/filecloud/attachment/retrieve', [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    return request;
+  }
+
   /// Load the best image for the given website.
   /// get: /website/image
   ///
@@ -3827,6 +4279,57 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
                   name: 'fileName',
                   value: request.headerParameter('fileName'),
                   decode: (value) => paramToString(value))));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/attachment', 'post', (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudAttachmentPost(
+              await request.readBodyBytes(),
+              fileName: paramRequired(
+                  name: 'fileName',
+                  value: request.headerParameter('fileName'),
+                  decode: (value) => paramToString(value)),
+              fileToken: paramRequired(
+                  name: 'fileToken',
+                  value: request.headerParameter('fileToken'),
+                  decode: (value) => paramToString(value))));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/attachment/touch', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudAttachmentTouchPost(
+              AttachmentTouch.fromJson(await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/attachment/unlink', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudAttachmentUnlinkPost(
+              AttachmentTouch.fromJson(await request.readJsonBody())));
+    }, security: [
+      SecurityRequirement(schemes: [
+        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
+      ])
+    ]);
+    addRoute('/filecloud/attachment/retrieve', 'post',
+        (OpenApiRequest request) async {
+      return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudAttachmentRetrievePost(
+              AttachmentId.fromJson(await request.readJsonBody())));
     }, security: [
       SecurityRequirement(schemes: [
         SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])

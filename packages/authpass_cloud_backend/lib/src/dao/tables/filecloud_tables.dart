@@ -25,6 +25,8 @@ class FileCloudTable extends TableBase with TableConstants {
   static const TABLE_FILE_CONTENT = 'filecloud_file_content';
   static const TABLE_FILE_TOKEN = 'filecloud_token';
   static const TABLE_LOG = 'filecloud_log';
+  static const TABLE_ATTACHMENT = 'filecloud_attachment';
+  static const TABLE_ATTACHMENT_TOUCH = 'filecloud_attachment_touch';
 
   /// enum of [VersionSignificance].
   static const typeVersionSignificance = 'version_significance';
@@ -54,9 +56,11 @@ class FileCloudTable extends TableBase with TableConstants {
   static const _columnOwnerTokenFkConstraint = '${_columnOwnerToken}_fkey';
   static const _columnLogBody = 'log_body';
   static const _columnUpdatedAt = 'updated_at';
-  String get specColumnUpdatedAtAt =>
-      '$_columnUpdatedAt $typeTimestampNotNull ';
+  String get specColumnUpdatedAt => '$_columnUpdatedAt $typeTimestampNotNull ';
   static const _columnToken = 'token';
+  static const _columnAttachmentId = 'attachment_id';
+  static const _columnTouchAt = 'touch_at';
+  static const _columnUnlinkAt = 'unlink_at';
 
   final CryptoService cryptoService;
 
@@ -72,7 +76,7 @@ class FileCloudTable extends TableBase with TableConstants {
     CREATE TABLE $TABLE_FILE (
       $specColumnIdPrimaryKey,
       $specColumnCreatedAt,
-      $specColumnUpdatedAtAt,
+      $specColumnUpdatedAt,
       $columnUserId uuid not null 
         REFERENCES ${UserTable.TABLE_USER} ($columnId),
       $_columnName VARCHAR not null,
@@ -167,6 +171,117 @@ class FileCloudTable extends TableBase with TableConstants {
     UPDATE $TABLE_FILE SET $_columnLastAccessAt = $_columnUpdatedAt;
     ALTER TABLE $TABLE_FILE ALTER COLUMN $_columnLastAccessAt SET NOT NULL;
     ''');
+  }
+
+  Future<void> migrate17(DatabaseTransactionBase db) async {
+    await db.execute('''
+    CREATE TABLE $TABLE_ATTACHMENT (
+      $specColumnIdPrimaryKey,
+      $specColumnCreatedAt,
+      $specColumnUpdatedAt,
+      $columnUserId uuid not null 
+        REFERENCES ${UserTable.TABLE_USER} ($columnId),
+      $_columnName VARCHAR not null,
+      $_columnBytes bytea not null,
+      $_columnLength int not null
+    );
+    
+    CREATE TABLE $TABLE_ATTACHMENT_TOUCH (
+      $_columnAttachmentId uuid not null 
+        references $TABLE_ATTACHMENT ($columnId),
+      $columnUserId uuid not null 
+        REFERENCES ${UserTable.TABLE_USER} ($columnId),
+      $_columnFileId uuid not null
+        REFERENCES $TABLE_FILE ($columnId),
+      $_columnTouchAt $typeTimestampNotNull,
+      $_columnUnlinkAt $typeTimestamp,
+
+      PRIMARY KEY ($_columnAttachmentId, $columnUserId, $_columnFileId)
+    );
+    ''');
+  }
+
+  Future<String> insertAttachment(
+    DatabaseTransactionBase db, {
+    required UserEntity userEntity,
+    required String fileId,
+    required String name,
+    required Uint8List bytes,
+  }) async {
+    final now = clock.now().toUtc();
+    final attachmentId = cryptoService.createSecureUuid();
+    await db.executeInsert(TABLE_ATTACHMENT, {
+      columnId: attachmentId,
+      columnUserId: userEntity.id,
+      columnCreatedAt: now,
+      _columnUpdatedAt: now,
+      _columnName: name,
+      _columnBytes:
+          CustomBind("decode(@$_columnBytes, 'base64')", base64.encode(bytes)),
+      _columnLength: bytes.length,
+    });
+    await db.executeInsert(TABLE_ATTACHMENT_TOUCH, {
+      _columnAttachmentId: attachmentId,
+      columnUserId: userEntity.id,
+      _columnFileId: fileId,
+      _columnTouchAt: now,
+    });
+    return attachmentId;
+  }
+
+  Future<void> touchAttachment(
+    DatabaseTransactionBase db, {
+    required UserEntity userEntity,
+    required String fileId,
+    required List<String> attachmentIds,
+  }) async {
+    final now = clock.now().toUtc();
+    for (final attachmentId in attachmentIds) {
+      await db.executeInsert(
+        TABLE_ATTACHMENT_TOUCH,
+        {
+          _columnAttachmentId: attachmentId,
+          columnUserId: userEntity.id,
+          _columnFileId: fileId,
+          _columnTouchAt: now,
+        },
+        onConflict: OnConflictActionDoUpdate(
+            indexColumns: [_columnAttachmentId, columnUserId, _columnFileId]),
+      );
+    }
+  }
+
+  Future<void> unlinkAttachment(
+    DatabaseTransactionBase db, {
+    required UserEntity userEntity,
+    required String fileId,
+    required List<String> attachmentIds,
+  }) async {
+    final now = clock.now().toUtc();
+    for (final attachmentId in attachmentIds) {
+      await db.executeInsert(
+        TABLE_ATTACHMENT_TOUCH,
+        {
+          _columnAttachmentId: attachmentId,
+          columnUserId: userEntity.id,
+          _columnFileId: fileId,
+          _columnUnlinkAt: now,
+        },
+        onConflict: OnConflictActionDoUpdate(
+            indexColumns: [_columnAttachmentId, columnUserId, _columnFileId]),
+      );
+    }
+  }
+
+  Future<Uint8List?> loadAttachment(
+    DatabaseTransactionBase db, {
+    required String attachmentId,
+  }) async {
+    return await db.query('''
+    SELECT $_columnBytes FROM $TABLE_ATTACHMENT WHERE $columnId = @attachmentId
+    ''', values: {
+      'attachmentId': attachmentId
+    }).singleOrNull((row) => row[0] as Uint8List);
   }
 
   Future<FileUpdated> insertFile(
@@ -476,6 +591,28 @@ class FileCloudTable extends TableBase with TableConstants {
       return lastAccess[0] as int;
     }
 
+    final attachments = await db.query('''
+    SELECT COUNT($columnId), SUM($_columnLength) FROM $TABLE_ATTACHMENT
+    ''').single;
+
+    // final untouched = await db.query('''
+    // SELECT COUNT(
+    //   SELECT $_columnFileId, MAX($_columnTouchAt) FROM $TABLE_ATTACHMENT_TOUCH
+    //   GROUP BY $_columnFileId
+    //   < @lastMonth
+    // ''', values: {
+    //       'lastMonth': clock.now().toUtc().subtract(const Duration(days: 31)),
+    //     }).singleOrNull((row) => [row[0] as int]) ??
+    //     [0];
+    final untouched = await db.query('''
+    SELECT COUNT(distinct a.$columnId) FROM $TABLE_ATTACHMENT a
+    WHERE NOT EXISTS (SELECT id FROM $TABLE_ATTACHMENT_TOUCH t
+    WHERE t.$_columnAttachmentId = a.$columnId AND t.$_columnTouchAt > @lastMonth)
+    ''', values: {
+          'lastMonth': clock.now().toUtc().subtract(const Duration(days: 31)),
+        }).singleOrNull((row) => [row[0] as int]) ??
+        [0];
+
     return SystemStatusFileCloud(
       fileCount: f[0] as int,
       fileTotalLength: f[1] as int? ?? 0,
@@ -488,6 +625,9 @@ class FileCloudTable extends TableBase with TableConstants {
         minAge: now.subtract(const Duration(days: 14)),
         lastAccessSince: now.subtract(const Duration(days: 7)),
       ),
+      attachmentCount: attachments[0] as int,
+      attachmentLength: attachments[1] as int,
+      attachmentUntouchedMonth: untouched[0],
     );
   }
 

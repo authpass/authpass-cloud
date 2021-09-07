@@ -125,4 +125,69 @@ class FileCloudRepository {
         .map((e) => e.fileTokenInfo)
         .toList();
   }
+
+  Future<String> createAttachment(
+    UserEntity user, {
+    required Uint8List bytes,
+    required String fileName,
+    required String fileToken,
+  }) async {
+    final file =
+        await db.tables.fileCloud.getFile(db, user, fileToken: fileToken);
+    if (file == null) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    return await db.tables.fileCloud.insertAttachment(
+      db,
+      userEntity: user,
+      fileId: file.fileId,
+      name: fileName,
+      bytes: bytes,
+    );
+  }
+
+  Future<void> touchAttachment(
+    UserEntity user, {
+    required String fileToken,
+    required List<String> attachmentIds,
+  }) async {
+    final file =
+        await db.tables.fileCloud.getFile(db, null, fileToken: fileToken);
+    if (file == null) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    await db.tables.fileCloud.touchAttachment(
+      db,
+      userEntity: user,
+      fileId: file.fileId,
+      attachmentIds: attachmentIds,
+    );
+  }
+
+  Future<void> unlinkAttachment(
+    UserEntity user, {
+    required String fileToken,
+    required List<String> attachmentIds,
+  }) async {
+    final file =
+        await db.tables.fileCloud.getFile(db, null, fileToken: fileToken);
+    if (file == null) {
+      throw NotFoundException('Unable to find file with token $fileToken');
+    }
+    await db.tables.fileCloud.unlinkAttachment(
+      db,
+      userEntity: user,
+      fileId: file.fileId,
+      attachmentIds: attachmentIds,
+    );
+  }
+
+  Future<Uint8List> retrieveAttachmentContent(String attachmentId) async {
+    final data = await db.tables.fileCloud
+        .loadAttachment(db, attachmentId: attachmentId);
+    if (data == null) {
+      throw NotFoundException('Unable to find attachment with $attachmentId');
+    }
+    return data;
+  }
 }

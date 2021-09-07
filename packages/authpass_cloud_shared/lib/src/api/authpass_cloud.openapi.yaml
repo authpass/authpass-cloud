@@ -546,6 +546,84 @@ paths:
                     description: 'Token identifieing the version of this file. Must be used for updating the file.'
         '409':
           description: 'conflict: versionToken was not the latest version.'
+  /filecloud/attachment:
+    post:
+      summary: Create attachment
+      parameters:
+        - name: fileName
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: fileToken
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: 'successfully created attachment.'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [attachmentToken]
+                properties:
+                  attachmentToken:
+                    type: string
+                    description: 'Unique token to reference the newly created file.'
+  /filecloud/attachment/touch:
+    post:
+      summary: Touches an attachment that it is still in use for the given file.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentTouch'
+      responses:
+        '200':
+          description: 'Successfully touched all attachments.'
+  /filecloud/attachment/unlink:
+    post:
+      summary: Release a attachment - used when an attachment is removed from a file.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentTouch'
+      responses:
+        '200':
+          description: 'Successfully removed association.'
+  /filecloud/attachment/retrieve:
+    post:
+      summary: Retrieve an attachment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentId'
+      responses:
+        '200':
+          description: 'The requested file'
+          headers:
+            etag:
+              required: true
+              schema:
+                type: string
+          content:
+            application/octet-set:
+              schema:
+                type: string
+                format: binary
   /website/image:
     get:
       summary: Load the best image for the given website.
@@ -602,13 +680,16 @@ components:
         fileCount: { type: integer }
         fileTotalLength: { type: integer }
         fileContentCount: { type: integer }
+        attachmentLength: { type: integer }
+        attachmentCount: { type: integer }
+        attachmentUntouchedMonth: { type: integer }
         countRecentlyAccessed:
           description: Number of files accessed in the last 24 hours, but are older than 48 hours.
           type: integer
         countWeekAccessed:
           description: Number of files older than 14 days, accessed within the last 7 days.
           type: integer
-      required: [fileCount, fileContentCount, fileTotalLength, countRecentlyAccessed, countWeekAccessed]
+      required: [fileCount, fileContentCount, fileTotalLength, countRecentlyAccessed, countWeekAccessed, attachmentCount, attachmentLength, attachmentUntouchedMonth]
     UserInfo:
       required: [emails]
       properties:
@@ -722,6 +803,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FileInfo'
+    AttachmentId:
+      description: Object wrapping a [attachmentToken].
+      type: object
+      required: [attachmentToken]
+      properties:
+        attachmentToken:
+          type: string
+    AttachmentTouch:
+      type: object
+      required: [file, attachmentTokens]
+      properties:
+        file:
+          $ref: '#/components/schemas/FileId'
+        attachmentTokens:
+          type: array
+          items:
+            type: string
     FileId:
       description: Object wrapping a [fileToken].
       type: object

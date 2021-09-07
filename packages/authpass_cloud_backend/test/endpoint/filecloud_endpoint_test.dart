@@ -228,4 +228,63 @@ void main() {
       expect(metadata.readOnly, true);
     });
   });
+  group('attachments', () {
+    final attachmentContent = utf8.encode('foo') as Uint8List;
+    final attachmentContent2 = utf8.encode('foo') as Uint8List;
+    endpointTest('create tokens', (endpoint) async {
+      var fakeDate = DateTime.utc(2020);
+      final clock = Clock(() => fakeDate);
+      await withClock(clock, () async {
+        await EndpointTestUtil.createUserConfirmed(endpoint);
+        final result = await endpoint
+            .filecloudFilePost(_content, fileName: _fileName)
+            .requireSuccess();
+        expect(result.versionToken, isNotEmpty);
+        expect(result.fileToken, isNotEmpty);
+
+        final a = await endpoint
+            .filecloudAttachmentPost(attachmentContent,
+                fileName: 'foo.bar', fileToken: result.fileToken)
+            .requireSuccess();
+        expect(a.attachmentToken, isNotEmpty);
+        final a2 = await endpoint
+            .filecloudAttachmentPost(attachmentContent2,
+                fileName: 'foo.bar', fileToken: result.fileToken)
+            .requireSuccess();
+        expect(a2.attachmentToken, isNotEmpty);
+        expect(a.attachmentToken, isNot(a2.attachmentToken));
+
+        final body = await endpoint
+            .filecloudAttachmentRetrievePost(
+                AttachmentId(attachmentToken: a.attachmentToken))
+            .requireSuccess();
+        expect(body, attachmentContent);
+
+        final fileCloud = endpoint.db.tables.fileCloud;
+        {
+          final stats = await fileCloud.countStats(endpoint.db);
+          expect(stats.attachmentCount, 2);
+          expect(stats.attachmentLength,
+              attachmentContent.length + attachmentContent2.length);
+          expect(stats.attachmentUntouchedMonth, 0);
+        }
+
+        fakeDate = fakeDate.add(const Duration(days: 120));
+        {
+          final stats = await fileCloud.countStats(endpoint.db);
+          expect(stats.attachmentUntouchedMonth, 2);
+        }
+
+        await endpoint
+            .filecloudAttachmentTouchPost(AttachmentTouch(
+                file: FileId(fileToken: result.fileToken),
+                attachmentTokens: [a.attachmentToken]))
+            .requireSuccess();
+        {
+          final stats = await fileCloud.countStats(endpoint.db);
+          expect(stats.attachmentUntouchedMonth, 1);
+        }
+      });
+    });
+  });
 }

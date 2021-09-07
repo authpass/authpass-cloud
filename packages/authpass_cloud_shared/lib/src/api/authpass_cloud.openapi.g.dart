@@ -54,6 +54,9 @@ SystemStatusFileCloud _$SystemStatusFileCloudFromJson(
       fileCount: json['fileCount'] as int,
       fileTotalLength: json['fileTotalLength'] as int,
       fileContentCount: json['fileContentCount'] as int,
+      attachmentLength: json['attachmentLength'] as int,
+      attachmentCount: json['attachmentCount'] as int,
+      attachmentUntouchedMonth: json['attachmentUntouchedMonth'] as int,
       countRecentlyAccessed: json['countRecentlyAccessed'] as int,
       countWeekAccessed: json['countWeekAccessed'] as int,
     );
@@ -64,6 +67,9 @@ Map<String, dynamic> _$SystemStatusFileCloudToJson(
       'fileCount': instance.fileCount,
       'fileTotalLength': instance.fileTotalLength,
       'fileContentCount': instance.fileContentCount,
+      'attachmentLength': instance.attachmentLength,
+      'attachmentCount': instance.attachmentCount,
+      'attachmentUntouchedMonth': instance.attachmentUntouchedMonth,
       'countRecentlyAccessed': instance.countRecentlyAccessed,
       'countWeekAccessed': instance.countWeekAccessed,
     };
@@ -246,12 +252,35 @@ Map<String, dynamic> _$FileListResponseToJson(FileListResponse instance) =>
       'files': instance.files,
     };
 
+AttachmentId _$AttachmentIdFromJson(Map<String, dynamic> json) => AttachmentId(
+      attachmentToken: json['attachmentToken'] as String,
+    );
+
+Map<String, dynamic> _$AttachmentIdToJson(AttachmentId instance) =>
+    <String, dynamic>{
+      'attachmentToken': instance.attachmentToken,
+    };
+
 FileId _$FileIdFromJson(Map<String, dynamic> json) => FileId(
       fileToken: json['fileToken'] as String,
     );
 
 Map<String, dynamic> _$FileIdToJson(FileId instance) => <String, dynamic>{
       'fileToken': instance.fileToken,
+    };
+
+AttachmentTouch _$AttachmentTouchFromJson(Map<String, dynamic> json) =>
+    AttachmentTouch(
+      file: FileId.fromJson(json['file'] as Map<String, dynamic>),
+      attachmentTokens: (json['attachmentTokens'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+    );
+
+Map<String, dynamic> _$AttachmentTouchToJson(AttachmentTouch instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+      'attachmentTokens': instance.attachmentTokens,
     };
 
 FileTokenInfo _$FileTokenInfoFromJson(Map<String, dynamic> json) =>
@@ -506,4 +535,17 @@ Map<String, dynamic> _$FilecloudFilePostResponseBody200ToJson(
     <String, dynamic>{
       'fileToken': instance.fileToken,
       'versionToken': instance.versionToken,
+    };
+
+FilecloudAttachmentPostResponseBody200
+    _$FilecloudAttachmentPostResponseBody200FromJson(
+            Map<String, dynamic> json) =>
+        FilecloudAttachmentPostResponseBody200(
+          attachmentToken: json['attachmentToken'] as String,
+        );
+
+Map<String, dynamic> _$FilecloudAttachmentPostResponseBody200ToJson(
+        FilecloudAttachmentPostResponseBody200 instance) =>
+    <String, dynamic>{
+      'attachmentToken': instance.attachmentToken,
     };

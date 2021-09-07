@@ -456,6 +456,57 @@ class AuthPassCloudImpl extends AuthPassCloud {
         .getFileDetails(token?.user, fileToken: body.fileToken);
     return FilecloudFileMetadataPostResponse.response200(details);
   }
+
+  @override
+  Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
+    Uint8List body, {
+    required String fileName,
+    required String fileToken,
+  }) async {
+    final token = await _requireAuthToken();
+    final attachment = await repository.fileCloud.createAttachment(
+      token.user,
+      bytes: body,
+      fileName: fileName,
+      fileToken: fileToken,
+    );
+    return FilecloudAttachmentPostResponse.response200(
+        FilecloudAttachmentPostResponseBody200(attachmentToken: attachment));
+  }
+
+  @override
+  Future<FilecloudAttachmentRetrievePostResponse>
+      filecloudAttachmentRetrievePost(AttachmentId body) async {
+    // ignore: unused_local_variable
+    final token = await _requireAuthToken();
+    final bytes = await repository.fileCloud
+        .retrieveAttachmentContent(body.attachmentToken);
+    return FilecloudAttachmentRetrievePostResponse.response200(bytes);
+  }
+
+  @override
+  Future<FilecloudAttachmentTouchPostResponse> filecloudAttachmentTouchPost(
+      AttachmentTouch body) async {
+    final token = await _requireAuthToken();
+    await repository.fileCloud.touchAttachment(
+      token.user,
+      fileToken: body.file.fileToken,
+      attachmentIds: body.attachmentTokens,
+    );
+    return FilecloudAttachmentTouchPostResponse.response200();
+  }
+
+  @override
+  Future<FilecloudAttachmentUnlinkPostResponse> filecloudAttachmentUnlinkPost(
+      AttachmentTouch body) async {
+    final token = await _requireAuthToken();
+    await repository.fileCloud.unlinkAttachment(
+      token.user,
+      fileToken: body.file.fileToken,
+      attachmentIds: body.attachmentTokens,
+    );
+    return FilecloudAttachmentUnlinkPostResponse.response200();
+  }
 }
 
 class PageToken {
