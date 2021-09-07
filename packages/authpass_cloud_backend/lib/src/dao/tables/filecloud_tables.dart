@@ -610,7 +610,7 @@ class FileCloudTable extends TableBase with TableConstants {
     WHERE t.$_columnAttachmentId = a.$columnId AND t.$_columnTouchAt > @lastMonth)
     ''', values: {
           'lastMonth': clock.now().toUtc().subtract(const Duration(days: 31)),
-        }).singleOrNull((row) => [row[0] as int]) ??
+        }).singleOrNull((row) => [row[0] as int? ?? 0]) ??
         [0];
 
     return SystemStatusFileCloud(
@@ -625,8 +625,8 @@ class FileCloudTable extends TableBase with TableConstants {
         minAge: now.subtract(const Duration(days: 14)),
         lastAccessSince: now.subtract(const Duration(days: 7)),
       ),
-      attachmentCount: attachments[0] as int,
-      attachmentLength: attachments[1] as int,
+      attachmentCount: attachments[0] as int? ?? 0,
+      attachmentLength: attachments[1] as int? ?? 0,
       attachmentUntouchedMonth: untouched[0],
     );
   }
