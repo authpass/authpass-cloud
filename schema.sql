@@ -141,6 +141,38 @@ CREATE TABLE public.email_message (
 ALTER TABLE public.email_message OWNER TO authpass;
 
 --
+-- Name: filecloud_attachment; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_attachment (
+    id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    user_id uuid NOT NULL,
+    name character varying NOT NULL,
+    bytes bytea NOT NULL,
+    length integer NOT NULL
+);
+
+
+ALTER TABLE public.filecloud_attachment OWNER TO authpass;
+
+--
+-- Name: filecloud_attachment_touch; Type: TABLE; Schema: public; Owner: authpass
+--
+
+CREATE TABLE public.filecloud_attachment_touch (
+    attachment_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    file_id uuid NOT NULL,
+    touch_at timestamp without time zone NOT NULL,
+    unlink_at timestamp without time zone
+);
+
+
+ALTER TABLE public.filecloud_attachment_touch OWNER TO authpass;
+
+--
 -- Name: filecloud_file; Type: TABLE; Schema: public; Owner: authpass
 --
 
@@ -343,6 +375,22 @@ ALTER TABLE ONLY public.email_message
 
 
 --
+-- Name: filecloud_attachment filecloud_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment
+    ADD CONSTRAINT filecloud_attachment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: filecloud_attachment_touch filecloud_attachment_touch_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment_touch
+    ADD CONSTRAINT filecloud_attachment_touch_pkey PRIMARY KEY (attachment_id, user_id, file_id);
+
+
+--
 -- Name: filecloud_file_content filecloud_file_content_pkey; Type: CONSTRAINT; Schema: public; Owner: authpass
 --
 
@@ -473,6 +521,38 @@ ALTER TABLE ONLY public.email_mailbox
 
 ALTER TABLE ONLY public.email_message
     ADD CONSTRAINT email_message_mailbox_id_fkey FOREIGN KEY (mailbox_id) REFERENCES public.email_mailbox(id);
+
+
+--
+-- Name: filecloud_attachment_touch filecloud_attachment_touch_attachment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment_touch
+    ADD CONSTRAINT filecloud_attachment_touch_attachment_id_fkey FOREIGN KEY (attachment_id) REFERENCES public.filecloud_attachment(id);
+
+
+--
+-- Name: filecloud_attachment_touch filecloud_attachment_touch_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment_touch
+    ADD CONSTRAINT filecloud_attachment_touch_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.filecloud_file(id);
+
+
+--
+-- Name: filecloud_attachment_touch filecloud_attachment_touch_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment_touch
+    ADD CONSTRAINT filecloud_attachment_touch_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: filecloud_attachment filecloud_attachment_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: authpass
+--
+
+ALTER TABLE ONLY public.filecloud_attachment
+    ADD CONSTRAINT filecloud_attachment_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
 
 
 --
