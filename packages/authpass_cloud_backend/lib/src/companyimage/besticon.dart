@@ -12,6 +12,8 @@ import 'package:logging/logging.dart';
 
 final _logger = Logger('besticon');
 
+const _maxImageFileSize = 10 * 1024 * 1024;
+
 class ImageInfo {
   ImageInfo({
     required this.uri,
@@ -298,6 +300,12 @@ class BestIcon {
             HttpHeaders.contentTypeHeader);
         final ct = ContentType.parse(contentType);
         final imageBytes = response.bodyBytes;
+        if (imageBytes.lengthInBytes > _maxImageFileSize) {
+          _logger.warning(
+              'Image too large. (${imageBytes.lengthInBytes / 1024 / 1024} MB, '
+              'ignoring ${imageLink.uri}.');
+          return null;
+        }
         final decoded = _decodeImageAndReEncode(imageBytes);
         final decodedImage = decoded?.image;
         if (decoded == null || decodedImage == null) {
