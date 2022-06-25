@@ -26,4 +26,11 @@ void main() {
     _logger.info('images: \n${images.images.toDebugString()}');
     expect(images.images, isNotEmpty);
   });
+  test('www.macquarie.com.au', () async {
+    final bi = BestIcon();
+    final images =
+        await bi.fetchImages(Uri.parse('https://www.macquarie.com.au'));
+    _logger.info('images: \n${images.images.toDebugString()}');
+    expect(images.images, isNotEmpty);
+  });
 }
