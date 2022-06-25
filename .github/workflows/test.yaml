@@ -39,7 +39,7 @@ jobs:
     #     echo "::set-output name=buildnumber::$buildnumber"
     - uses: dart-lang/setup-dart@v1
       with:
-        sdk: 2.13.4
+        sdk: 2.17.5
     - run: cd packages/authpass_cloud_backend && dart pub get && dart run --enable-asserts bin/authpass_backend.dart setupdb
       env:
         DBCONFIG: '{"host": "postgres"}'
