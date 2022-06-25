@@ -4,14 +4,15 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  openapi_base: ^1.0.1
+  openapi_base: ">=1.0.1 <2.0.0"
+  json_annotation: ^4.5.0
 
 dev_dependencies:
   openapi_code_builder:
     path: ../../deps/openapi_dart/packages/openapi_code_builder
-  build_runner: ^2.0.6
-  json_serializable: ^5.0.0
-  pedantic: ^1.11.1
+  build_runner: ^2.1.11
+  json_serializable: ^6.2.0
+  lints: ^2.0.0
 #
 #dependency_overrides:
 #  open_api_forked:

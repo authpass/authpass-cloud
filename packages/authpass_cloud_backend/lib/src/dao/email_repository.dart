@@ -32,8 +32,8 @@ class EmailRepository {
           'We do not allow more than 1000 mailboxes per user right now.');
     }
 
-    const _MAX_RETRY = 10;
-    for (var i = 0; i < _MAX_RETRY; i++) {
+    const MAX_RETRY = 10;
+    for (var i = 0; i < MAX_RETRY; i++) {
       if (i > 1) {
         _logger.shout('We had more than two collisions while trying '
             'to generate email address.');
@@ -59,7 +59,7 @@ class EmailRepository {
         return address;
       }
     }
-    throw StateError('Unable to find unique address after $_MAX_RETRY tries.');
+    throw StateError('Unable to find unique address after $MAX_RETRY tries.');
   }
 
   /// return false if mailbox can't be found (or the given user is not owner)

@@ -121,7 +121,7 @@ class ResponseException implements Exception {
   final Response response;
 
   String debugString() {
-    return toString() + '\n' + response.body;
+    return '${toString()}\n${response.body}';
   }
 
   @override

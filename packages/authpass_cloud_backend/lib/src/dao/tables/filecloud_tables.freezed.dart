@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'filecloud_tables.dart';
@@ -11,34 +12,11 @@ part of 'filecloud_tables.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 CleanupStats _$CleanupStatsFromJson(Map<String, dynamic> json) {
   return _CleanupStats.fromJson(json);
 }
-
-/// @nodoc
-class _$CleanupStatsTearOff {
-  const _$CleanupStatsTearOff();
-
-  _CleanupStats call(
-      {required int timeMs,
-      required int count,
-      required VersionSignificance versionSignificance}) {
-    return _CleanupStats(
-      timeMs: timeMs,
-      count: count,
-      versionSignificance: versionSignificance,
-    );
-  }
-
-  CleanupStats fromJson(Map<String, Object> json) {
-    return CleanupStats.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $CleanupStats = _$CleanupStatsTearOff();
 
 /// @nodoc
 mixin _$CleanupStats {
@@ -93,24 +71,25 @@ class _$CleanupStatsCopyWithImpl<$Res> implements $CleanupStatsCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$CleanupStatsCopyWith<$Res>
+abstract class _$$_CleanupStatsCopyWith<$Res>
     implements $CleanupStatsCopyWith<$Res> {
-  factory _$CleanupStatsCopyWith(
-          _CleanupStats value, $Res Function(_CleanupStats) then) =
-      __$CleanupStatsCopyWithImpl<$Res>;
+  factory _$$_CleanupStatsCopyWith(
+          _$_CleanupStats value, $Res Function(_$_CleanupStats) then) =
+      __$$_CleanupStatsCopyWithImpl<$Res>;
   @override
   $Res call({int timeMs, int count, VersionSignificance versionSignificance});
 }
 
 /// @nodoc
-class __$CleanupStatsCopyWithImpl<$Res> extends _$CleanupStatsCopyWithImpl<$Res>
-    implements _$CleanupStatsCopyWith<$Res> {
-  __$CleanupStatsCopyWithImpl(
-      _CleanupStats _value, $Res Function(_CleanupStats) _then)
-      : super(_value, (v) => _then(v as _CleanupStats));
+class __$$_CleanupStatsCopyWithImpl<$Res>
+    extends _$CleanupStatsCopyWithImpl<$Res>
+    implements _$$_CleanupStatsCopyWith<$Res> {
+  __$$_CleanupStatsCopyWithImpl(
+      _$_CleanupStats _value, $Res Function(_$_CleanupStats) _then)
+      : super(_value, (v) => _then(v as _$_CleanupStats));
 
   @override
-  _CleanupStats get _value => super._value as _CleanupStats;
+  _$_CleanupStats get _value => super._value as _$_CleanupStats;
 
   @override
   $Res call({
@@ -118,7 +97,7 @@ class __$CleanupStatsCopyWithImpl<$Res> extends _$CleanupStatsCopyWithImpl<$Res>
     Object? count = freezed,
     Object? versionSignificance = freezed,
   }) {
-    return _then(_CleanupStats(
+    return _then(_$_CleanupStats(
       timeMs: timeMs == freezed
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
@@ -161,27 +140,26 @@ class _$_CleanupStats implements _CleanupStats {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _CleanupStats &&
-            (identical(other.timeMs, timeMs) ||
-                const DeepCollectionEquality().equals(other.timeMs, timeMs)) &&
-            (identical(other.count, count) ||
-                const DeepCollectionEquality().equals(other.count, count)) &&
-            (identical(other.versionSignificance, versionSignificance) ||
-                const DeepCollectionEquality()
-                    .equals(other.versionSignificance, versionSignificance)));
+        (other.runtimeType == runtimeType &&
+            other is _$_CleanupStats &&
+            const DeepCollectionEquality().equals(other.timeMs, timeMs) &&
+            const DeepCollectionEquality().equals(other.count, count) &&
+            const DeepCollectionEquality()
+                .equals(other.versionSignificance, versionSignificance));
   }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(timeMs) ^
-      const DeepCollectionEquality().hash(count) ^
-      const DeepCollectionEquality().hash(versionSignificance);
 
   @JsonKey(ignore: true)
   @override
-  _$CleanupStatsCopyWith<_CleanupStats> get copyWith =>
-      __$CleanupStatsCopyWithImpl<_CleanupStats>(this, _$identity);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(timeMs),
+      const DeepCollectionEquality().hash(count),
+      const DeepCollectionEquality().hash(versionSignificance));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_CleanupStatsCopyWith<_$_CleanupStats> get copyWith =>
+      __$$_CleanupStatsCopyWithImpl<_$_CleanupStats>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -191,9 +169,10 @@ class _$_CleanupStats implements _CleanupStats {
 
 abstract class _CleanupStats implements CleanupStats {
   const factory _CleanupStats(
-      {required int timeMs,
-      required int count,
-      required VersionSignificance versionSignificance}) = _$_CleanupStats;
+          {required final int timeMs,
+          required final int count,
+          required final VersionSignificance versionSignificance}) =
+      _$_CleanupStats;
 
   factory _CleanupStats.fromJson(Map<String, dynamic> json) =
       _$_CleanupStats.fromJson;
@@ -207,28 +186,9 @@ abstract class _CleanupStats implements CleanupStats {
       throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$CleanupStatsCopyWith<_CleanupStats> get copyWith =>
+  _$$_CleanupStatsCopyWith<_$_CleanupStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
-
-/// @nodoc
-class _$FileContentDebugTearOff {
-  const _$FileContentDebugTearOff();
-
-  _FileContentDebug call(
-      {required DateTime createdAt,
-      required VersionSignificance? versionSignificance,
-      required int contentCount}) {
-    return _FileContentDebug(
-      createdAt: createdAt,
-      versionSignificance: versionSignificance,
-      contentCount: contentCount,
-    );
-  }
-}
-
-/// @nodoc
-const $FileContentDebug = _$FileContentDebugTearOff();
 
 /// @nodoc
 mixin _$FileContentDebug {
@@ -286,11 +246,11 @@ class _$FileContentDebugCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$FileContentDebugCopyWith<$Res>
+abstract class _$$_FileContentDebugCopyWith<$Res>
     implements $FileContentDebugCopyWith<$Res> {
-  factory _$FileContentDebugCopyWith(
-          _FileContentDebug value, $Res Function(_FileContentDebug) then) =
-      __$FileContentDebugCopyWithImpl<$Res>;
+  factory _$$_FileContentDebugCopyWith(
+          _$_FileContentDebug value, $Res Function(_$_FileContentDebug) then) =
+      __$$_FileContentDebugCopyWithImpl<$Res>;
   @override
   $Res call(
       {DateTime createdAt,
@@ -299,15 +259,15 @@ abstract class _$FileContentDebugCopyWith<$Res>
 }
 
 /// @nodoc
-class __$FileContentDebugCopyWithImpl<$Res>
+class __$$_FileContentDebugCopyWithImpl<$Res>
     extends _$FileContentDebugCopyWithImpl<$Res>
-    implements _$FileContentDebugCopyWith<$Res> {
-  __$FileContentDebugCopyWithImpl(
-      _FileContentDebug _value, $Res Function(_FileContentDebug) _then)
-      : super(_value, (v) => _then(v as _FileContentDebug));
+    implements _$$_FileContentDebugCopyWith<$Res> {
+  __$$_FileContentDebugCopyWithImpl(
+      _$_FileContentDebug _value, $Res Function(_$_FileContentDebug) _then)
+      : super(_value, (v) => _then(v as _$_FileContentDebug));
 
   @override
-  _FileContentDebug get _value => super._value as _FileContentDebug;
+  _$_FileContentDebug get _value => super._value as _$_FileContentDebug;
 
   @override
   $Res call({
@@ -315,7 +275,7 @@ class __$FileContentDebugCopyWithImpl<$Res>
     Object? versionSignificance = freezed,
     Object? contentCount = freezed,
   }) {
-    return _then(_FileContentDebug(
+    return _then(_$_FileContentDebug(
       createdAt: createdAt == freezed
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -355,36 +315,33 @@ class _$_FileContentDebug implements _FileContentDebug {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _FileContentDebug &&
-            (identical(other.createdAt, createdAt) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdAt, createdAt)) &&
-            (identical(other.versionSignificance, versionSignificance) ||
-                const DeepCollectionEquality()
-                    .equals(other.versionSignificance, versionSignificance)) &&
-            (identical(other.contentCount, contentCount) ||
-                const DeepCollectionEquality()
-                    .equals(other.contentCount, contentCount)));
+        (other.runtimeType == runtimeType &&
+            other is _$_FileContentDebug &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality()
+                .equals(other.versionSignificance, versionSignificance) &&
+            const DeepCollectionEquality()
+                .equals(other.contentCount, contentCount));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(createdAt) ^
-      const DeepCollectionEquality().hash(versionSignificance) ^
-      const DeepCollectionEquality().hash(contentCount);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(versionSignificance),
+      const DeepCollectionEquality().hash(contentCount));
 
   @JsonKey(ignore: true)
   @override
-  _$FileContentDebugCopyWith<_FileContentDebug> get copyWith =>
-      __$FileContentDebugCopyWithImpl<_FileContentDebug>(this, _$identity);
+  _$$_FileContentDebugCopyWith<_$_FileContentDebug> get copyWith =>
+      __$$_FileContentDebugCopyWithImpl<_$_FileContentDebug>(this, _$identity);
 }
 
 abstract class _FileContentDebug implements FileContentDebug {
   const factory _FileContentDebug(
-      {required DateTime createdAt,
-      required VersionSignificance? versionSignificance,
-      required int contentCount}) = _$_FileContentDebug;
+      {required final DateTime createdAt,
+      required final VersionSignificance? versionSignificance,
+      required final int contentCount}) = _$_FileContentDebug;
 
   @override
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -395,36 +352,13 @@ abstract class _FileContentDebug implements FileContentDebug {
   int get contentCount => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$FileContentDebugCopyWith<_FileContentDebug> get copyWith =>
+  _$$_FileContentDebugCopyWith<_$_FileContentDebug> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 CleanupStatsLog _$CleanupStatsLogFromJson(Map<String, dynamic> json) {
   return _CleanupStatsLog.fromJson(json);
 }
-
-/// @nodoc
-class _$CleanupStatsLogTearOff {
-  const _$CleanupStatsLogTearOff();
-
-  _CleanupStatsLog call(
-      {required int timeMs,
-      required int cleanupCount,
-      required List<CleanupStats> cleanupStats}) {
-    return _CleanupStatsLog(
-      timeMs: timeMs,
-      cleanupCount: cleanupCount,
-      cleanupStats: cleanupStats,
-    );
-  }
-
-  CleanupStatsLog fromJson(Map<String, Object> json) {
-    return CleanupStatsLog.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $CleanupStatsLog = _$CleanupStatsLogTearOff();
 
 /// @nodoc
 mixin _$CleanupStatsLog {
@@ -479,25 +413,25 @@ class _$CleanupStatsLogCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$CleanupStatsLogCopyWith<$Res>
+abstract class _$$_CleanupStatsLogCopyWith<$Res>
     implements $CleanupStatsLogCopyWith<$Res> {
-  factory _$CleanupStatsLogCopyWith(
-          _CleanupStatsLog value, $Res Function(_CleanupStatsLog) then) =
-      __$CleanupStatsLogCopyWithImpl<$Res>;
+  factory _$$_CleanupStatsLogCopyWith(
+          _$_CleanupStatsLog value, $Res Function(_$_CleanupStatsLog) then) =
+      __$$_CleanupStatsLogCopyWithImpl<$Res>;
   @override
   $Res call({int timeMs, int cleanupCount, List<CleanupStats> cleanupStats});
 }
 
 /// @nodoc
-class __$CleanupStatsLogCopyWithImpl<$Res>
+class __$$_CleanupStatsLogCopyWithImpl<$Res>
     extends _$CleanupStatsLogCopyWithImpl<$Res>
-    implements _$CleanupStatsLogCopyWith<$Res> {
-  __$CleanupStatsLogCopyWithImpl(
-      _CleanupStatsLog _value, $Res Function(_CleanupStatsLog) _then)
-      : super(_value, (v) => _then(v as _CleanupStatsLog));
+    implements _$$_CleanupStatsLogCopyWith<$Res> {
+  __$$_CleanupStatsLogCopyWithImpl(
+      _$_CleanupStatsLog _value, $Res Function(_$_CleanupStatsLog) _then)
+      : super(_value, (v) => _then(v as _$_CleanupStatsLog));
 
   @override
-  _CleanupStatsLog get _value => super._value as _CleanupStatsLog;
+  _$_CleanupStatsLog get _value => super._value as _$_CleanupStatsLog;
 
   @override
   $Res call({
@@ -505,7 +439,7 @@ class __$CleanupStatsLogCopyWithImpl<$Res>
     Object? cleanupCount = freezed,
     Object? cleanupStats = freezed,
   }) {
-    return _then(_CleanupStatsLog(
+    return _then(_$_CleanupStatsLog(
       timeMs: timeMs == freezed
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
@@ -515,7 +449,7 @@ class __$CleanupStatsLogCopyWithImpl<$Res>
           : cleanupCount // ignore: cast_nullable_to_non_nullable
               as int,
       cleanupStats: cleanupStats == freezed
-          ? _value.cleanupStats
+          ? _value._cleanupStats
           : cleanupStats // ignore: cast_nullable_to_non_nullable
               as List<CleanupStats>,
     ));
@@ -528,8 +462,9 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
   const _$_CleanupStatsLog(
       {required this.timeMs,
       required this.cleanupCount,
-      required this.cleanupStats})
-      : super._();
+      required final List<CleanupStats> cleanupStats})
+      : _cleanupStats = cleanupStats,
+        super._();
 
   factory _$_CleanupStatsLog.fromJson(Map<String, dynamic> json) =>
       _$$_CleanupStatsLogFromJson(json);
@@ -538,8 +473,12 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
   final int timeMs;
   @override
   final int cleanupCount;
+  final List<CleanupStats> _cleanupStats;
   @override
-  final List<CleanupStats> cleanupStats;
+  List<CleanupStats> get cleanupStats {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_cleanupStats);
+  }
 
   @override
   String toString() {
@@ -549,28 +488,27 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _CleanupStatsLog &&
-            (identical(other.timeMs, timeMs) ||
-                const DeepCollectionEquality().equals(other.timeMs, timeMs)) &&
-            (identical(other.cleanupCount, cleanupCount) ||
-                const DeepCollectionEquality()
-                    .equals(other.cleanupCount, cleanupCount)) &&
-            (identical(other.cleanupStats, cleanupStats) ||
-                const DeepCollectionEquality()
-                    .equals(other.cleanupStats, cleanupStats)));
+        (other.runtimeType == runtimeType &&
+            other is _$_CleanupStatsLog &&
+            const DeepCollectionEquality().equals(other.timeMs, timeMs) &&
+            const DeepCollectionEquality()
+                .equals(other.cleanupCount, cleanupCount) &&
+            const DeepCollectionEquality()
+                .equals(other._cleanupStats, _cleanupStats));
   }
-
-  @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(timeMs) ^
-      const DeepCollectionEquality().hash(cleanupCount) ^
-      const DeepCollectionEquality().hash(cleanupStats);
 
   @JsonKey(ignore: true)
   @override
-  _$CleanupStatsLogCopyWith<_CleanupStatsLog> get copyWith =>
-      __$CleanupStatsLogCopyWithImpl<_CleanupStatsLog>(this, _$identity);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(timeMs),
+      const DeepCollectionEquality().hash(cleanupCount),
+      const DeepCollectionEquality().hash(_cleanupStats));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_CleanupStatsLogCopyWith<_$_CleanupStatsLog> get copyWith =>
+      __$$_CleanupStatsLogCopyWithImpl<_$_CleanupStatsLog>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -580,9 +518,9 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
 
 abstract class _CleanupStatsLog extends CleanupStatsLog {
   const factory _CleanupStatsLog(
-      {required int timeMs,
-      required int cleanupCount,
-      required List<CleanupStats> cleanupStats}) = _$_CleanupStatsLog;
+      {required final int timeMs,
+      required final int cleanupCount,
+      required final List<CleanupStats> cleanupStats}) = _$_CleanupStatsLog;
   const _CleanupStatsLog._() : super._();
 
   factory _CleanupStatsLog.fromJson(Map<String, dynamic> json) =
@@ -596,6 +534,6 @@ abstract class _CleanupStatsLog extends CleanupStatsLog {
   List<CleanupStats> get cleanupStats => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$CleanupStatsLogCopyWith<_CleanupStatsLog> get copyWith =>
+  _$$_CleanupStatsLogCopyWith<_$_CleanupStatsLog> get copyWith =>
       throw _privateConstructorUsedError;
 }

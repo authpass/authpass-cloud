@@ -5,12 +5,14 @@ import 'package:authpass_cloud_backend/src/dao/database_access.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/website_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_backend/src/util/private_ip.dart';
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 
 final _logger = Logger('website_repository');
 
 class WebsiteRepository {
   WebsiteRepository(this.db, this.cryptoService);
+
   final DatabaseTransaction db;
   final CryptoService cryptoService;
 
@@ -31,14 +33,16 @@ class WebsiteRepository {
       return image;
     }
 
-    {
-      final cachedWebsite = await db.tables.website.findWebsite(db, uri);
-      if (cachedWebsite != null) {
-        // TODO occasionally refresh the website.
-        _logger.finest(
-            'Recorded website without image. $uri ${cachedWebsite.errorCode}');
+    final cachedWebsite = await db.tables.website.findWebsite(db, uri);
+    if (cachedWebsite != null) {
+      // TODO occasionally refresh the website.
+      _logger.finest(
+          'Recorded website without image. $uri ${cachedWebsite.errorCode}');
+      final cacheAge = clock.now().difference(cachedWebsite.updatedAt);
+      if (cacheAge.inDays < 7) {
         return null;
       }
+      _logger.fine('cached more than 7 days ago. refreshing.');
     }
 
     final bi = BestIcon();
@@ -53,15 +57,24 @@ class WebsiteRepository {
       } else {
         errorCode = 'e: ${e.toString()}';
       }
-      await db.tables.website.insertWebsite(
-        db,
-        WebsiteEntity(
-          id: cryptoService.createSecureUuid(),
-          url: uri.toString(),
-          urlCanonical: uri.toString(),
-        ),
-        errorCode: errorCode,
-      );
+      if (cachedWebsite == null) {
+        await db.tables.website.insertWebsite(
+          db,
+          WebsiteEntity(
+            id: cryptoService.createSecureUuid(),
+            url: uri.toString(),
+            urlCanonical: uri.toString(),
+          ),
+          errorCode: errorCode,
+        );
+      } else {
+        await db.tables.website.updateWebsite(
+          db,
+          websiteId: cachedWebsite.id,
+          bestImageId: null,
+          errorCode: errorCode,
+        );
+      }
       return null;
     }
     final images = imagesResult.images;
@@ -69,15 +82,26 @@ class WebsiteRepository {
     _logger.finer('found images for ${imagesResult.urlCanonical}: \n'
         '${images.toDebugString()}');
     final website = WebsiteEntity(
-      id: cryptoService.createSecureUuid(),
+      id: cachedWebsite?.id ?? cryptoService.createSecureUuid(),
       url: uri.toString(),
       urlCanonical: imagesResult.urlCanonical.toString(),
     );
     if (images.isEmpty) {
-      await db.tables.website.insertWebsite(db, website, errorCode: 'empty');
+      if (cachedWebsite == null) {
+        await db.tables.website.insertWebsite(db, website, errorCode: 'empty');
+      } else {
+        await db.tables.website.updateWebsite(
+          db,
+          websiteId: cachedWebsite.id,
+          bestImageId: null,
+          errorCode: 'empty',
+        );
+      }
       return null;
     }
-    await db.tables.website.insertWebsite(db, website);
+    if (cachedWebsite == null) {
+      await db.tables.website.insertWebsite(db, website);
+    }
     String? bestImageId;
     for (final image in images) {
       final imageId =

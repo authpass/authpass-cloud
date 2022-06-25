@@ -100,6 +100,14 @@ class WebsiteTable extends TableBase with TableConstants {
     });
   }
 
+  // Future<void> updateWebsite(
+  //     DatabaseTransaction db, WebsiteEntity entity, {String? errorCode}
+  //     ) async {
+  //   await db.executeUpdate(_TABLE_WEBSITE, set: {
+  //
+  //   }, where: {});
+  // }
+
   Future<WebsiteInfoDto?> findWebsite(
       DatabaseTransactionBase db, Uri uri) async {
     return await db.query('''

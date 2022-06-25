@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: prefer_initializing_formals
+// ignore_for_file: prefer_initializing_formals, no_leading_underscores_for_library_prefixes, library_private_types_in_public_api
 
-import 'dart:typed_data' as _i2;
+import 'dart:typed_data' as _i1;
 
-import 'package:json_annotation/json_annotation.dart' as _i1;
+import 'package:json_annotation/json_annotation.dart';
 import 'package:openapi_base/openapi_base.dart';
 part 'authpass_cloud.openapi.g.dart';
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class SystemStatusUser implements OpenApiContent {
   SystemStatusUser(
       {required this.emailConfirmed,
@@ -18,13 +18,13 @@ class SystemStatusUser implements OpenApiContent {
   factory SystemStatusUser.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusUserFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'emailConfirmed')
+  @JsonKey(name: 'emailConfirmed')
   final int emailConfirmed;
 
-  @_i1.JsonKey(name: 'userConfirmed')
+  @JsonKey(name: 'userConfirmed')
   final int userConfirmed;
 
-  @_i1.JsonKey(name: 'emailUnconfirmed')
+  @JsonKey(name: 'emailUnconfirmed')
   final int emailUnconfirmed;
 
   Map<String, dynamic> toJson() => _$SystemStatusUserToJson(this);
@@ -32,7 +32,7 @@ class SystemStatusUser implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class SystemStatusWebsite implements OpenApiContent {
   SystemStatusWebsite(
       {required this.websiteCount, required this.urlCanonicalCount});
@@ -40,10 +40,10 @@ class SystemStatusWebsite implements OpenApiContent {
   factory SystemStatusWebsite.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusWebsiteFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'websiteCount')
+  @JsonKey(name: 'websiteCount')
   final int websiteCount;
 
-  @_i1.JsonKey(name: 'urlCanonicalCount')
+  @JsonKey(name: 'urlCanonicalCount')
   final int urlCanonicalCount;
 
   Map<String, dynamic> toJson() => _$SystemStatusWebsiteToJson(this);
@@ -51,7 +51,7 @@ class SystemStatusWebsite implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class SystemStatusMailbox implements OpenApiContent {
   SystemStatusMailbox(
       {required this.mailboxCount,
@@ -61,13 +61,13 @@ class SystemStatusMailbox implements OpenApiContent {
   factory SystemStatusMailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusMailboxFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'mailboxCount')
+  @JsonKey(name: 'mailboxCount')
   final int mailboxCount;
 
-  @_i1.JsonKey(name: 'messageCount')
+  @JsonKey(name: 'messageCount')
   final int messageCount;
 
-  @_i1.JsonKey(name: 'messageReadCount')
+  @JsonKey(name: 'messageReadCount')
   final int messageReadCount;
 
   Map<String, dynamic> toJson() => _$SystemStatusMailboxToJson(this);
@@ -75,7 +75,7 @@ class SystemStatusMailbox implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class SystemStatusFileCloud implements OpenApiContent {
   SystemStatusFileCloud(
       {required this.fileCount,
@@ -90,30 +90,30 @@ class SystemStatusFileCloud implements OpenApiContent {
   factory SystemStatusFileCloud.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFileCloudFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'fileCount')
+  @JsonKey(name: 'fileCount')
   final int fileCount;
 
-  @_i1.JsonKey(name: 'fileTotalLength')
+  @JsonKey(name: 'fileTotalLength')
   final int fileTotalLength;
 
-  @_i1.JsonKey(name: 'fileContentCount')
+  @JsonKey(name: 'fileContentCount')
   final int fileContentCount;
 
-  @_i1.JsonKey(name: 'attachmentLength')
+  @JsonKey(name: 'attachmentLength')
   final int attachmentLength;
 
-  @_i1.JsonKey(name: 'attachmentCount')
+  @JsonKey(name: 'attachmentCount')
   final int attachmentCount;
 
-  @_i1.JsonKey(name: 'attachmentUntouchedMonth')
+  @JsonKey(name: 'attachmentUntouchedMonth')
   final int attachmentUntouchedMonth;
 
   /// Number of files accessed in the last 24 hours, but are older than 48 hours.
-  @_i1.JsonKey(name: 'countRecentlyAccessed')
+  @JsonKey(name: 'countRecentlyAccessed')
   final int countRecentlyAccessed;
 
   /// Number of files older than 14 days, accessed within the last 7 days.
-  @_i1.JsonKey(name: 'countWeekAccessed')
+  @JsonKey(name: 'countWeekAccessed')
   final int countWeekAccessed;
 
   Map<String, dynamic> toJson() => _$SystemStatusFileCloudToJson(this);
@@ -121,7 +121,7 @@ class SystemStatusFileCloud implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class SystemStatus implements OpenApiContent {
   SystemStatus(
       {required this.user,
@@ -133,19 +133,19 @@ class SystemStatus implements OpenApiContent {
   factory SystemStatus.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'user')
+  @JsonKey(name: 'user')
   final SystemStatusUser user;
 
-  @_i1.JsonKey(name: 'website')
+  @JsonKey(name: 'website')
   final SystemStatusWebsite website;
 
-  @_i1.JsonKey(name: 'mailbox')
+  @JsonKey(name: 'mailbox')
   final SystemStatusMailbox mailbox;
 
-  @_i1.JsonKey(name: 'fileCloud')
+  @JsonKey(name: 'fileCloud')
   final SystemStatusFileCloud fileCloud;
 
-  @_i1.JsonKey(name: 'queryTime')
+  @JsonKey(name: 'queryTime')
   final int queryTime;
 
   Map<String, dynamic> toJson() => _$SystemStatusToJson(this);
@@ -153,17 +153,17 @@ class SystemStatus implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class UserEmail implements OpenApiContent {
   UserEmail({required this.address, required this.confirmedAt});
 
   factory UserEmail.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserEmailFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'address')
+  @JsonKey(name: 'address')
   final String address;
 
-  @_i1.JsonKey(name: 'confirmedAt')
+  @JsonKey(name: 'confirmedAt')
   final DateTime confirmedAt;
 
   Map<String, dynamic> toJson() => _$UserEmailToJson(this);
@@ -171,14 +171,14 @@ class UserEmail implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class UserInfo implements OpenApiContent {
   UserInfo({required this.emails});
 
   factory UserInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserInfoFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'emails')
+  @JsonKey(name: 'emails')
   final List<UserEmail> emails;
 
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);
@@ -186,7 +186,7 @@ class UserInfo implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class RegisterRequest implements OpenApiContent {
   RegisterRequest({required this.email});
 
@@ -194,7 +194,7 @@ class RegisterRequest implements OpenApiContent {
       _$RegisterRequestFromJson(jsonMap);
 
   /// Email address for the current user.
-  @_i1.JsonKey(name: 'email')
+  @JsonKey(name: 'email')
   final String email;
 
   Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
@@ -203,9 +203,9 @@ class RegisterRequest implements OpenApiContent {
 }
 
 enum RegisterResponseStatus {
-  @_i1.JsonValue('created')
+  @JsonValue('created')
   created,
-  @_i1.JsonValue('confirmed')
+  @JsonValue('confirmed')
   confirmed,
 }
 
@@ -220,7 +220,7 @@ extension RegisterResponseStatusExt on RegisterResponseStatus {
   String get name => toString().substring(23);
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class RegisterResponse implements OpenApiContent {
   RegisterResponse(
       {required this.userUuid, required this.authToken, required this.status});
@@ -229,15 +229,15 @@ class RegisterResponse implements OpenApiContent {
       _$RegisterResponseFromJson(jsonMap);
 
   /// Uuid of the newly registered user.
-  @_i1.JsonKey(name: 'userUuid')
+  @JsonKey(name: 'userUuid')
   final String userUuid;
 
   /// Auth token which can be used for authentication, once email is confirmed.
-  @_i1.JsonKey(name: 'authToken')
+  @JsonKey(name: 'authToken')
   final String authToken;
 
   /// Status of the user and auth token (created or confirmed).
-  @_i1.JsonKey(name: 'status')
+  @JsonKey(name: 'status')
   final RegisterResponseStatus status;
 
   Map<String, dynamic> toJson() => _$RegisterResponseToJson(this);
@@ -245,7 +245,7 @@ class RegisterResponse implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class Page implements OpenApiContent {
   Page({this.nextPageToken, this.sinceToken});
 
@@ -253,11 +253,11 @@ class Page implements OpenApiContent {
       _$PageFromJson(jsonMap);
 
   /// Token for the next page, might be null if there are no more pages.
-  @_i1.JsonKey(name: 'nextPageToken')
+  @JsonKey(name: 'nextPageToken')
   final String? nextPageToken;
 
   /// Once everything is synced, this token can be used for subsequent syncs.
-  @_i1.JsonKey(name: 'sinceToken')
+  @JsonKey(name: 'sinceToken')
   final String? sinceToken;
 
   Map<String, dynamic> toJson() => _$PageToJson(this);
@@ -265,7 +265,7 @@ class Page implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class EmailMessage implements OpenApiContent {
   EmailMessage(
       {required this.id,
@@ -279,29 +279,29 @@ class EmailMessage implements OpenApiContent {
   factory EmailMessage.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailMessageFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   @ApiUuidJsonConverter()
   final ApiUuid id;
 
-  @_i1.JsonKey(name: 'subject')
+  @JsonKey(name: 'subject')
   final String subject;
 
-  @_i1.JsonKey(name: 'sender')
+  @JsonKey(name: 'sender')
   final String sender;
 
-  @_i1.JsonKey(name: 'mailboxEntryUuid')
+  @JsonKey(name: 'mailboxEntryUuid')
   @ApiUuidJsonConverter()
   final ApiUuid mailboxEntryUuid;
 
-  @_i1.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
   /// Body size in bytes.
-  @_i1.JsonKey(name: 'size')
+  @JsonKey(name: 'size')
   final int size;
 
   /// true if this mail was marked as read.
-  @_i1.JsonKey(name: 'isRead')
+  @JsonKey(name: 'isRead')
   final bool isRead;
 
   Map<String, dynamic> toJson() => _$EmailMessageToJson(this);
@@ -309,7 +309,7 @@ class EmailMessage implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class Mailbox implements OpenApiContent {
   Mailbox(
       {required this.id,
@@ -322,26 +322,26 @@ class Mailbox implements OpenApiContent {
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'id')
+  @JsonKey(name: 'id')
   @ApiUuidJsonConverter()
   final ApiUuid id;
 
   /// Unique email address (a@example.com)
-  @_i1.JsonKey(name: 'address')
+  @JsonKey(name: 'address')
   final String address;
 
   /// Label as given during create. (Can be empty string)
-  @_i1.JsonKey(name: 'label')
+  @JsonKey(name: 'label')
   final String label;
 
   /// Entry uuid given during create. (Can be empty string)
-  @_i1.JsonKey(name: 'entryUuid')
+  @JsonKey(name: 'entryUuid')
   final String entryUuid;
 
-  @_i1.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
-  @_i1.JsonKey(name: 'isDisabled')
+  @JsonKey(name: 'isDisabled')
   final bool isDisabled;
 
   Map<String, dynamic> toJson() => _$MailboxToJson(this);
@@ -349,7 +349,7 @@ class Mailbox implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FileInfo implements OpenApiContent {
   FileInfo(
       {required this.fileToken,
@@ -363,25 +363,25 @@ class FileInfo implements OpenApiContent {
   factory FileInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileInfoFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'fileToken')
+  @JsonKey(name: 'fileToken')
   final String fileToken;
 
-  @_i1.JsonKey(name: 'versionToken')
+  @JsonKey(name: 'versionToken')
   final String versionToken;
 
-  @_i1.JsonKey(name: 'name')
+  @JsonKey(name: 'name')
   final String name;
 
-  @_i1.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
-  @_i1.JsonKey(name: 'updatedAt')
+  @JsonKey(name: 'updatedAt')
   final DateTime updatedAt;
 
-  @_i1.JsonKey(name: 'readOnly')
+  @JsonKey(name: 'readOnly')
   final bool readOnly;
 
-  @_i1.JsonKey(name: 'size')
+  @JsonKey(name: 'size')
   final int size;
 
   Map<String, dynamic> toJson() => _$FileInfoToJson(this);
@@ -389,14 +389,14 @@ class FileInfo implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FileListResponse implements OpenApiContent {
   FileListResponse({required this.files});
 
   factory FileListResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileListResponseFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'files')
+  @JsonKey(name: 'files')
   final List<FileInfo> files;
 
   Map<String, dynamic> toJson() => _$FileListResponseToJson(this);
@@ -405,14 +405,14 @@ class FileListResponse implements OpenApiContent {
 }
 
 /// Object wrapping a [attachmentToken].
-@_i1.JsonSerializable()
+@JsonSerializable()
 class AttachmentId implements OpenApiContent {
   AttachmentId({required this.attachmentToken});
 
   factory AttachmentId.fromJson(Map<String, dynamic> jsonMap) =>
       _$AttachmentIdFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'attachmentToken')
+  @JsonKey(name: 'attachmentToken')
   final String attachmentToken;
 
   Map<String, dynamic> toJson() => _$AttachmentIdToJson(this);
@@ -421,14 +421,14 @@ class AttachmentId implements OpenApiContent {
 }
 
 /// Object wrapping a [fileToken].
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FileId implements OpenApiContent {
   FileId({required this.fileToken});
 
   factory FileId.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileIdFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'fileToken')
+  @JsonKey(name: 'fileToken')
   final String fileToken;
 
   Map<String, dynamic> toJson() => _$FileIdToJson(this);
@@ -436,7 +436,7 @@ class FileId implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class AttachmentTouch implements OpenApiContent {
   AttachmentTouch({required this.file, required this.attachmentTokens});
 
@@ -444,10 +444,10 @@ class AttachmentTouch implements OpenApiContent {
       _$AttachmentTouchFromJson(jsonMap);
 
   /// Object wrapping a [fileToken].
-  @_i1.JsonKey(name: 'file')
+  @JsonKey(name: 'file')
   final FileId file;
 
-  @_i1.JsonKey(name: 'attachmentTokens')
+  @JsonKey(name: 'attachmentTokens')
   final List<String> attachmentTokens;
 
   Map<String, dynamic> toJson() => _$AttachmentTouchToJson(this);
@@ -455,7 +455,7 @@ class AttachmentTouch implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FileTokenInfo implements OpenApiContent {
   FileTokenInfo(
       {required this.fileToken,
@@ -466,16 +466,16 @@ class FileTokenInfo implements OpenApiContent {
   factory FileTokenInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileTokenInfoFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'fileToken')
+  @JsonKey(name: 'fileToken')
   final String fileToken;
 
-  @_i1.JsonKey(name: 'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime createdAt;
 
-  @_i1.JsonKey(name: 'label')
+  @JsonKey(name: 'label')
   final String label;
 
-  @_i1.JsonKey(name: 'readOnly')
+  @JsonKey(name: 'readOnly')
   final bool readOnly;
 
   Map<String, dynamic> toJson() => _$FileTokenInfoToJson(this);
@@ -690,9 +690,9 @@ abstract class UserRegisterPostResponse extends OpenApiResponse
 }
 
 enum EmailStatusGetResponseBody200Status {
-  @_i1.JsonValue('created')
+  @JsonValue('created')
   created,
-  @_i1.JsonValue('confirmed')
+  @JsonValue('confirmed')
   confirmed,
 }
 
@@ -709,7 +709,7 @@ extension EmailStatusGetResponseBody200StatusExt
   String get name => toString().substring(36);
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class EmailStatusGetResponseBody200 implements OpenApiContent {
   EmailStatusGetResponseBody200({this.status});
 
@@ -717,7 +717,7 @@ class EmailStatusGetResponseBody200 implements OpenApiContent {
           Map<String, dynamic> jsonMap) =>
       _$EmailStatusGetResponseBody200FromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'status')
+  @JsonKey(name: 'status')
   final EmailStatusGetResponseBody200Status? status;
 
   Map<String, dynamic> toJson() => _$EmailStatusGetResponseBody200ToJson(this);
@@ -923,7 +923,7 @@ abstract class EmailConfirmPostResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class EmailConfirmPostSchema implements OpenApiContent {
   EmailConfirmPostSchema(
       {required this.token, required this.gRecaptchaResponse});
@@ -931,10 +931,10 @@ class EmailConfirmPostSchema implements OpenApiContent {
   factory EmailConfirmPostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailConfirmPostSchemaFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'token')
+  @JsonKey(name: 'token')
   final String token;
 
-  @_i1.JsonKey(name: 'g-recaptcha-response')
+  @JsonKey(name: 'g-recaptcha-response')
   final String gRecaptchaResponse;
 
   Map<String, dynamic> toJson() => _$EmailConfirmPostSchemaToJson(this);
@@ -942,14 +942,14 @@ class EmailConfirmPostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class StatusGetResponseBody200Mail implements OpenApiContent {
   StatusGetResponseBody200Mail({required this.messagesUnread});
 
   factory StatusGetResponseBody200Mail.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200MailFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'messagesUnread')
+  @JsonKey(name: 'messagesUnread')
   final int messagesUnread;
 
   Map<String, dynamic> toJson() => _$StatusGetResponseBody200MailToJson(this);
@@ -957,14 +957,14 @@ class StatusGetResponseBody200Mail implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class StatusGetResponseBody200 implements OpenApiContent {
   StatusGetResponseBody200({required this.mail});
 
   factory StatusGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200FromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'mail')
+  @JsonKey(name: 'mail')
   final StatusGetResponseBody200Mail mail;
 
   Map<String, dynamic> toJson() => _$StatusGetResponseBody200ToJson(this);
@@ -1027,14 +1027,14 @@ abstract class StatusGetResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxGetResponseBody200 implements OpenApiContent {
   MailboxGetResponseBody200({this.data});
 
   factory MailboxGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxGetResponseBody200FromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'data')
+  @JsonKey(name: 'data')
   final List<Mailbox>? data;
 
   Map<String, dynamic> toJson() => _$MailboxGetResponseBody200ToJson(this);
@@ -1097,7 +1097,7 @@ abstract class MailboxGetResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxCreatePostResponseBody200 implements OpenApiContent {
   MailboxCreatePostResponseBody200({this.address});
 
@@ -1106,7 +1106,7 @@ class MailboxCreatePostResponseBody200 implements OpenApiContent {
       _$MailboxCreatePostResponseBody200FromJson(jsonMap);
 
   /// The address of the new mailbox.
-  @_i1.JsonKey(name: 'address')
+  @JsonKey(name: 'address')
   final String? address;
 
   Map<String, dynamic> toJson() =>
@@ -1171,7 +1171,7 @@ abstract class MailboxCreatePostResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxCreatePostSchema implements OpenApiContent {
   MailboxCreatePostSchema({required this.label, required this.entryUuid});
 
@@ -1179,11 +1179,11 @@ class MailboxCreatePostSchema implements OpenApiContent {
       _$MailboxCreatePostSchemaFromJson(jsonMap);
 
   /// label for this mailbox, can be an empty string.
-  @_i1.JsonKey(name: 'label')
+  @JsonKey(name: 'label')
   final String label;
 
   /// Client provided entry uuid to match with password entry, can be an empty string.
-  @_i1.JsonKey(name: 'entryUuid')
+  @JsonKey(name: 'entryUuid')
   final String entryUuid;
 
   Map<String, dynamic> toJson() => _$MailboxCreatePostSchemaToJson(this);
@@ -1191,7 +1191,7 @@ class MailboxCreatePostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxListGetResponseBody200 implements OpenApiContent {
   MailboxListGetResponseBody200({required this.page, required this.data});
 
@@ -1199,10 +1199,10 @@ class MailboxListGetResponseBody200 implements OpenApiContent {
           Map<String, dynamic> jsonMap) =>
       _$MailboxListGetResponseBody200FromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'page')
+  @JsonKey(name: 'page')
   final Page page;
 
-  @_i1.JsonKey(name: 'data')
+  @JsonKey(name: 'data')
   final List<EmailMessage> data;
 
   Map<String, dynamic> toJson() => _$MailboxListGetResponseBody200ToJson(this);
@@ -1309,9 +1309,9 @@ abstract class MailMassupdatePostResponse extends OpenApiResponse
 }
 
 enum MailMassupdatePostSchemaFilter {
-  @_i1.JsonValue('messageIds')
+  @JsonValue('messageIds')
   messageIds,
-  @_i1.JsonValue('all')
+  @JsonValue('all')
   all,
 }
 
@@ -1327,7 +1327,7 @@ extension MailMassupdatePostSchemaFilterExt on MailMassupdatePostSchemaFilter {
   String get name => toString().substring(31);
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailMassupdatePostSchema implements OpenApiContent {
   MailMassupdatePostSchema(
       {required this.filter, this.messageIds, this.isRead});
@@ -1335,14 +1335,14 @@ class MailMassupdatePostSchema implements OpenApiContent {
   factory MailMassupdatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailMassupdatePostSchemaFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'filter')
+  @JsonKey(name: 'filter')
   final MailMassupdatePostSchemaFilter filter;
 
   /// Only used if filter=messageIds
-  @_i1.JsonKey(name: 'messageIds')
+  @JsonKey(name: 'messageIds')
   final List<String>? messageIds;
 
-  @_i1.JsonKey(name: 'isRead')
+  @JsonKey(name: 'isRead')
   final bool? isRead;
 
   Map<String, dynamic> toJson() => _$MailMassupdatePostSchemaToJson(this);
@@ -1392,7 +1392,7 @@ abstract class MailboxUpdateResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxUpdateSchema implements OpenApiContent {
   MailboxUpdateSchema(
       {this.label,
@@ -1404,19 +1404,19 @@ class MailboxUpdateSchema implements OpenApiContent {
   factory MailboxUpdateSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxUpdateSchemaFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'label')
+  @JsonKey(name: 'label')
   final String? label;
 
-  @_i1.JsonKey(name: 'entryUuid')
+  @JsonKey(name: 'entryUuid')
   final String? entryUuid;
 
-  @_i1.JsonKey(name: 'isDeleted')
+  @JsonKey(name: 'isDeleted')
   final bool? isDeleted;
 
-  @_i1.JsonKey(name: 'isDisabled')
+  @JsonKey(name: 'isDisabled')
   final bool? isDisabled;
 
-  @_i1.JsonKey(name: 'isHidden')
+  @JsonKey(name: 'isHidden')
   final bool? isHidden;
 
   Map<String, dynamic> toJson() => _$MailboxUpdateSchemaToJson(this);
@@ -1554,14 +1554,14 @@ abstract class MailboxMessageForwardResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class MailboxMessageForwardSchema implements OpenApiContent {
   MailboxMessageForwardSchema({this.email});
 
   factory MailboxMessageForwardSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxMessageForwardSchemaFromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'email')
+  @JsonKey(name: 'email')
   final String? email;
 
   Map<String, dynamic> toJson() => _$MailboxMessageForwardSchemaToJson(this);
@@ -1791,7 +1791,7 @@ class _FilecloudFileRetrievePostResponse200
   final int status;
 
   @override
-  final _i2.Uint8List body;
+  final _i1.Uint8List body;
 
   @override
   final OpenApiContentType contentType =
@@ -1803,11 +1803,11 @@ class _FilecloudFileRetrievePostResponse200
 }
 
 abstract class FilecloudFileRetrievePostResponse extends OpenApiResponse
-    implements HasSuccessResponse<_i2.Uint8List> {
+    implements HasSuccessResponse<_i1.Uint8List> {
   FilecloudFileRetrievePostResponse();
 
   /// The requested file
-  factory FilecloudFileRetrievePostResponse.response200(_i2.Uint8List body) =>
+  factory FilecloudFileRetrievePostResponse.response200(_i1.Uint8List body) =>
       _FilecloudFileRetrievePostResponse200.response200(body);
 
   void map(
@@ -1821,7 +1821,7 @@ abstract class FilecloudFileRetrievePostResponse extends OpenApiResponse
 
   /// status 200:  The requested file
   @override
-  _i2.Uint8List requireSuccess() {
+  _i1.Uint8List requireSuccess() {
     if (this is _FilecloudFileRetrievePostResponse200) {
       return (this as _FilecloudFileRetrievePostResponse200).body;
     } else {
@@ -1930,7 +1930,7 @@ abstract class FilecloudFileTokenCreatePostResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FilecloudFileTokenCreatePostSchema implements OpenApiContent {
   FilecloudFileTokenCreatePostSchema(
       {required this.fileToken,
@@ -1943,18 +1943,18 @@ class FilecloudFileTokenCreatePostSchema implements OpenApiContent {
       _$FilecloudFileTokenCreatePostSchemaFromJson(jsonMap);
 
   /// The fileToken identifying the file to share
-  @_i1.JsonKey(name: 'fileToken')
+  @JsonKey(name: 'fileToken')
   final String fileToken;
 
   /// Some label to help the user remember why they created the token.
-  @_i1.JsonKey(name: 'label')
+  @JsonKey(name: 'label')
   final String label;
 
   /// Email address for the user to create a token. If null, the token will not be bound to a specific user.
-  @_i1.JsonKey(name: 'userEmail')
+  @JsonKey(name: 'userEmail')
   final String? userEmail;
 
-  @_i1.JsonKey(name: 'readOnly')
+  @JsonKey(name: 'readOnly')
   final bool readOnly;
 
   Map<String, dynamic> toJson() =>
@@ -1963,7 +1963,7 @@ class FilecloudFileTokenCreatePostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
   FilecloudFileTokenListPostResponseBody200({required this.tokens});
 
@@ -1971,7 +1971,7 @@ class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
           Map<String, dynamic> jsonMap) =>
       _$FilecloudFileTokenListPostResponseBody200FromJson(jsonMap);
 
-  @_i1.JsonKey(name: 'tokens')
+  @JsonKey(name: 'tokens')
   final List<FileTokenInfo> tokens;
 
   Map<String, dynamic> toJson() =>
@@ -2093,7 +2093,7 @@ abstract class FilecloudFileGetResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FilecloudFilePutResponseBody200 implements OpenApiContent {
   FilecloudFilePutResponseBody200({required this.versionToken});
 
@@ -2102,7 +2102,7 @@ class FilecloudFilePutResponseBody200 implements OpenApiContent {
       _$FilecloudFilePutResponseBody200FromJson(jsonMap);
 
   /// Token identifieing the version of this file. Must be used for updating the file.
-  @_i1.JsonKey(name: 'versionToken')
+  @JsonKey(name: 'versionToken')
   final String versionToken;
 
   Map<String, dynamic> toJson() =>
@@ -2190,7 +2190,7 @@ abstract class FilecloudFilePutResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FilecloudFilePostResponseBody200 implements OpenApiContent {
   FilecloudFilePostResponseBody200(
       {required this.fileToken, required this.versionToken});
@@ -2200,11 +2200,11 @@ class FilecloudFilePostResponseBody200 implements OpenApiContent {
       _$FilecloudFilePostResponseBody200FromJson(jsonMap);
 
   /// Unique token to reference the newly created file.
-  @_i1.JsonKey(name: 'fileToken')
+  @JsonKey(name: 'fileToken')
   final String fileToken;
 
   /// Token identifieing the version of this file. Must be used for updating the file.
-  @_i1.JsonKey(name: 'versionToken')
+  @JsonKey(name: 'versionToken')
   final String versionToken;
 
   Map<String, dynamic> toJson() =>
@@ -2269,7 +2269,7 @@ abstract class FilecloudFilePostResponse extends OpenApiResponse
   }
 }
 
-@_i1.JsonSerializable()
+@JsonSerializable()
 class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
   FilecloudAttachmentPostResponseBody200({required this.attachmentToken});
 
@@ -2278,7 +2278,7 @@ class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
       _$FilecloudAttachmentPostResponseBody200FromJson(jsonMap);
 
   /// Unique token to reference the newly created file.
-  @_i1.JsonKey(name: 'attachmentToken')
+  @JsonKey(name: 'attachmentToken')
   final String attachmentToken;
 
   Map<String, dynamic> toJson() =>
@@ -2442,7 +2442,7 @@ class _FilecloudAttachmentRetrievePostResponse200
   final int status;
 
   @override
-  final _i2.Uint8List body;
+  final _i1.Uint8List body;
 
   @override
   final OpenApiContentType contentType =
@@ -2454,12 +2454,12 @@ class _FilecloudAttachmentRetrievePostResponse200
 }
 
 abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
-    implements HasSuccessResponse<_i2.Uint8List> {
+    implements HasSuccessResponse<_i1.Uint8List> {
   FilecloudAttachmentRetrievePostResponse();
 
   /// The requested file
   factory FilecloudAttachmentRetrievePostResponse.response200(
-          _i2.Uint8List body) =>
+          _i1.Uint8List body) =>
       _FilecloudAttachmentRetrievePostResponse200.response200(body);
 
   void map(
@@ -2474,7 +2474,7 @@ abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
 
   /// status 200:  The requested file
   @override
-  _i2.Uint8List requireSuccess() {
+  _i1.Uint8List requireSuccess() {
     if (this is _FilecloudAttachmentRetrievePostResponse200) {
       return (this as _FilecloudAttachmentRetrievePostResponse200).body;
     } else {
@@ -2493,7 +2493,7 @@ class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
   final int status;
 
   @override
-  final _i2.Uint8List body;
+  final _i1.Uint8List body;
 
   @override
   final OpenApiContentType contentType;
@@ -2519,12 +2519,12 @@ class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
 }
 
 abstract class WebsiteImageGetResponse extends OpenApiResponse
-    implements HasSuccessResponse<_i2.Uint8List> {
+    implements HasSuccessResponse<_i1.Uint8List> {
   WebsiteImageGetResponse();
 
   /// Image
   factory WebsiteImageGetResponse.response200(
-          OpenApiContentType contentType, _i2.Uint8List body) =>
+          OpenApiContentType contentType, _i1.Uint8List body) =>
       _WebsiteImageGetResponse200.response200(contentType, body);
 
   /// No image found for this url.
@@ -2545,7 +2545,7 @@ abstract class WebsiteImageGetResponse extends OpenApiResponse
 
   /// status 200:  Image
   @override
-  _i2.Uint8List requireSuccess() {
+  _i1.Uint8List requireSuccess() {
     if (this is _WebsiteImageGetResponse200) {
       return (this as _WebsiteImageGetResponse200).body;
     } else {
@@ -2680,18 +2680,18 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
   /// Update file
   /// put: /filecloud/file
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i2.Uint8List body,
+  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
       {required String fileToken, required String versionToken});
 
   /// Create new file
   /// post: /filecloud/file
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i2.Uint8List body,
+  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
       {required String fileName});
 
   /// Create attachment
   /// post: /filecloud/attachment
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i2.Uint8List body,
+      _i1.Uint8List body,
       {required String fileName,
       required String fileToken});
 
@@ -2876,20 +2876,20 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// Update file
   /// put: /filecloud/file
   ///
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i2.Uint8List body,
+  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
       {required String fileToken, required String versionToken});
 
   /// Create new file
   /// post: /filecloud/file
   ///
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i2.Uint8List body,
+  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
       {required String fileName});
 
   /// Create attachment
   /// post: /filecloud/attachment
   ///
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i2.Uint8List body,
+      _i1.Uint8List body,
       {required String fileName,
       required String fileToken});
 
@@ -3418,7 +3418,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// put: /filecloud/file
   ///
   @override
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i2.Uint8List body,
+  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
       {required String fileToken, required String versionToken}) async {
     final request = OpenApiClientRequest('put', '/filecloud/file', [
       SecurityRequirement(schemes: [
@@ -3443,7 +3443,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// post: /filecloud/file
   ///
   @override
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i2.Uint8List body,
+  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
       {required String fileName}) async {
     final request = OpenApiClientRequest('post', '/filecloud/file', [
       SecurityRequirement(schemes: [
@@ -3466,7 +3466,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i2.Uint8List body,
+      _i1.Uint8List body,
       {required String fileName,
       required String fileToken}) async {
     final request = OpenApiClientRequest('post', '/filecloud/attachment', [

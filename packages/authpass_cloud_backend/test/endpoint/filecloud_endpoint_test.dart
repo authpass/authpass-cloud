@@ -8,8 +8,6 @@ import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:mockito/mockito.dart';
 import 'package:openapi_base/openapi_base.dart';
-import 'package:test/expect.dart';
-import 'package:test/scaffolding.dart';
 import 'package:test/test.dart';
 
 import 'endpoint_test.dart';
@@ -20,21 +18,21 @@ void main() {
   PrintAppender.setupLogging();
   _logger.fine('starting tests...');
 
-  const _fileName = 'foo.kdbx';
-  final _content = utf8.encode('test') as Uint8List;
-  final _content2 = utf8.encode('test2') as Uint8List;
-  final _content3 = utf8.encode('test3') as Uint8List;
+  const fileName = 'foo.kdbx';
+  final content = utf8.encode('test') as Uint8List;
+  final content2 = utf8.encode('test2') as Uint8List;
+  final content3 = utf8.encode('test3') as Uint8List;
 
   group('filecloud file test', () {
     endpointTest('fail anonymous', (endpoint) async {
       when(endpoint.request.headerParameter('Authorization')).thenReturn([]);
-      final result = endpoint.filecloudFilePost(_content, fileName: _fileName);
+      final result = endpoint.filecloudFilePost(content, fileName: fileName);
       expect(result, throwsA(isA<UnauthorizedException>()));
     });
     endpointTest('create file', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -45,16 +43,16 @@ void main() {
       await withClock(clock, () async {
         await EndpointTestUtil.createUserConfirmed(endpoint);
         final created = await endpoint
-            .filecloudFilePost(_content, fileName: _fileName)
+            .filecloudFilePost(content, fileName: fileName)
             .requireSuccess();
         final response = await endpoint
-            .filecloudFilePut(_content2,
+            .filecloudFilePut(content2,
                 fileToken: created.fileToken,
                 versionToken: created.versionToken)
             .requireSuccess();
         fakeDate = fakeDate.add(const Duration(days: 14));
         final response2 = await endpoint
-            .filecloudFilePut(_content3,
+            .filecloudFilePut(content3,
                 fileToken: created.fileToken,
                 versionToken: response.versionToken)
             .requireSuccess();
@@ -63,18 +61,18 @@ void main() {
         final getResponse = await endpoint
             .filecloudFileRetrievePost(FileId(fileToken: created.fileToken))
             .requireSuccess();
-        expect(getResponse, _content3);
+        expect(getResponse, content3);
       });
     });
     endpointTest('update conflict', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final created = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       try {
         // ignore: unused_local_variable
         final response = await endpoint
-            .filecloudFilePut(_content,
+            .filecloudFilePut(content,
                 fileToken: created.fileToken, versionToken: 'wrong')
             .requireSuccess();
         fail('Did not throw conflict.');
@@ -85,7 +83,7 @@ void main() {
     endpointTest('Delete file', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -116,7 +114,7 @@ void main() {
     endpointTest('Load file', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -130,7 +128,7 @@ void main() {
       await withClock(Clock(() => now), () async {
         await EndpointTestUtil.createUserConfirmed(endpoint);
         final result = await endpoint
-            .filecloudFilePost(_content, fileName: _fileName)
+            .filecloudFilePost(content, fileName: fileName)
             .requireSuccess();
         expect(result.versionToken, isNotEmpty);
         expect(result.fileToken, isNotEmpty);
@@ -172,7 +170,7 @@ void main() {
     endpointTest('list files', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -186,21 +184,21 @@ void main() {
       expect(list2.files, hasLength(0));
 
       final result2 = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       final list3 = await endpoint.filecloudFileGet().requireSuccess();
       expect(list3.files, hasLength(1));
       final f = list3.files.single;
       expect(f.fileToken, result2.fileToken);
       expect(f.versionToken, result2.versionToken);
-      expect(f.size, _content.length);
+      expect(f.size, content.length);
     });
   });
   group('file cloud share', () {
     endpointTest('create tokens', (endpoint) async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -237,7 +235,7 @@ void main() {
       await withClock(clock, () async {
         await EndpointTestUtil.createUserConfirmed(endpoint);
         final result = await endpoint
-            .filecloudFilePost(_content, fileName: _fileName)
+            .filecloudFilePost(content, fileName: fileName)
             .requireSuccess();
         expect(result.versionToken, isNotEmpty);
         expect(result.fileToken, isNotEmpty);

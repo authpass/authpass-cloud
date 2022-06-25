@@ -1,30 +1,31 @@
 name: authpass_cloud_backend
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
-  meta: ^1.3.0
-  uuid: ^3.0.1
-  logging: ^1.0.0
+  meta: ^1.8.0
+  uuid: ^3.0.6
+  logging: ^1.0.2
   logging_appenders: ^1.0.0
-  freezed_annotation: ^0.14.1
-  json_annotation: ^4.0.1
-  pedantic: ^1.11.0
-  postgres: ^2.4.1
-  quiver: ^3.0.0
-  args: ^2.0.0
+  freezed_annotation: ^2.0.3
+  json_annotation: ^4.5.0
+  postgres: ^2.4.5
+  collection: ^1.16.0
+  quiver: ^3.1.0
+  args: ^2.3.1
   checked_yaml: ^2.0.1
-  http: ^0.13.1
-  clock: ^1.1.0
-  mailer: ^5.0.1
-  yaml: ^3.1.0
-  enough_mail: ^1.0.0
+  http: ^0.13.4
+  clock: ^1.1.1
+  mailer: ^5.1.1
+  yaml: ^3.1.1
+  enough_mail: ^2.1.1
   neat_periodic_task: ^2.0.0
   smtpd:
     path: ../../deps/smtpd.dart
 
-  openapi_base: ^1.0.2
+  shelf: ^1.3.1
+  openapi_base: ^1.0.2+2
   authpass_cloud_shared:
     path: ../authpass_cloud_shared
   postgres_utils:
@@ -32,20 +33,20 @@ dependencies:
 
   # besticon
   html: ^0.15.0
-  dartx: ^0.7.0
-  image: ^3.0.2
+  dartx: ^1.1.0
+  image: ^3.2.0
 #  image:
 #    git:
 #      url: https://github.com/authpass/image.git
 #      ref: 04bed8d246ef90e3d4f49b12f9df2066f5df7a22
 
 dev_dependencies:
-  test: ^1.17.10
-  mockito: ^5.0.13
-  build_runner: ^2.1.0
-  freezed: ^0.14.3
-  json_serializable: ^5.0.0
-  flutter_lints: ^1.0.4
+  test: ^1.21.3
+  mockito: ^5.2.0
+  build_runner: ^2.1.11
+  freezed: ^2.0.3+1
+  json_serializable: ^6.2.0
+  flutter_lints: ^2.0.1
 
 dependency_overrides:
 #  openapi_base:

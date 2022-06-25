@@ -17,15 +17,15 @@ void main() {
   PrintAppender.setupLogging();
   _logger.fine('starting tests...');
 
-  const _fileName = 'foo.kdbx';
-  final _content = utf8.encode('test') as Uint8List;
+  const fileName = 'foo.kdbx';
+  final content = utf8.encode('test') as Uint8List;
   var now = DateTime.utc(2020, 1, 1);
 
   endpointTest('cleanup files', (endpoint) async {
     await withClock(Clock((() => now)), () async {
       await EndpointTestUtil.createUserConfirmed(endpoint);
       final result = await endpoint
-          .filecloudFilePost(_content, fileName: _fileName)
+          .filecloudFilePost(content, fileName: fileName)
           .requireSuccess();
       expect(result.versionToken, isNotEmpty);
       expect(result.fileToken, isNotEmpty);
@@ -34,7 +34,7 @@ void main() {
       Future<void> putFileVersion() async {
         final v = await endpoint
             .filecloudFilePut(
-              _content,
+              content,
               fileToken: result.fileToken,
               versionToken: lastResponse?.versionToken ?? result.versionToken,
             )

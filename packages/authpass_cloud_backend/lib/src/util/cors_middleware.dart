@@ -44,7 +44,7 @@ Middleware corsHeaders({
   List<String>? exposeHeaders,
   OriginChecker originChecker = allowAll,
 }) {
-  final _defaultHeadersMap = {
+  final defaultHeadersMap = {
     // ACCESS_CONTROL_ALLOW_ORIGIN: '*',
     ACCESS_CONTROL_EXPOSE_HEADERS: [...?exposeHeaders].join(','),
     ACCESS_CONTROL_ALLOW_CREDENTIALS: 'true',
@@ -53,8 +53,8 @@ Middleware corsHeaders({
     ACCESS_CONTROL_ALLOW_METHODS: _defaultMethodsList.join(','),
     ACCESS_CONTROL_MAX_AGE: '86400',
   };
-  final _defaultHeaders =
-      _defaultHeadersMap.map((key, value) => MapEntry(key, [value]));
+  final defaultHeaders =
+      defaultHeadersMap.map((key, value) => MapEntry(key, [value]));
 
   return (Handler handler) {
     return (Request request) async {
@@ -62,18 +62,18 @@ Middleware corsHeaders({
       if (origin == null || !originChecker(origin)) {
         return handler(request);
       }
-      final _headers = <String, List<String>>{
-        ..._defaultHeaders,
+      final fullHeaders = <String, List<String>>{
+        ...defaultHeaders,
         ...?headers,
         ACCESS_CONTROL_ALLOW_ORIGIN: [origin],
       };
 
       if (request.method == 'OPTIONS') {
-        return Response.ok(null, headers: _headers);
+        return Response.ok(null, headers: fullHeaders);
       }
 
       final response = await handler(request);
-      return response.change(headers: {...response.headersAll, ..._headers});
+      return response.change(headers: {...response.headersAll, ...fullHeaders});
     };
   };
   // return createMiddleware(
