@@ -135,7 +135,7 @@ Map<String, dynamic> _$RegisterResponseToJson(RegisterResponse instance) =>
     <String, dynamic>{
       'userUuid': instance.userUuid,
       'authToken': instance.authToken,
-      'status': _$RegisterResponseStatusEnumMap[instance.status],
+      'status': _$RegisterResponseStatusEnumMap[instance.status]!,
     };
 
 const _$RegisterResponseStatusEnumMap = {
@@ -148,10 +148,19 @@ Page _$PageFromJson(Map<String, dynamic> json) => Page(
       sinceToken: json['sinceToken'] as String?,
     );
 
-Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
-      'nextPageToken': instance.nextPageToken,
-      'sinceToken': instance.sinceToken,
-    };
+Map<String, dynamic> _$PageToJson(Page instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('nextPageToken', instance.nextPageToken);
+  writeNotNull('sinceToken', instance.sinceToken);
+  return val;
+}
 
 EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) => EmailMessage(
       id: const ApiUuidJsonConverter().fromJson(json['id'] as String),
@@ -281,10 +290,19 @@ EmailStatusGetResponseBody200 _$EmailStatusGetResponseBody200FromJson(
     );
 
 Map<String, dynamic> _$EmailStatusGetResponseBody200ToJson(
-        EmailStatusGetResponseBody200 instance) =>
-    <String, dynamic>{
-      'status': _$EmailStatusGetResponseBody200StatusEnumMap[instance.status],
-    };
+    EmailStatusGetResponseBody200 instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'status', _$EmailStatusGetResponseBody200StatusEnumMap[instance.status]);
+  return val;
+}
 
 const _$EmailStatusGetResponseBody200StatusEnumMap = {
   EmailStatusGetResponseBody200Status.created: 'created',
@@ -300,6 +318,32 @@ EmailConfirmPostSchema _$EmailConfirmPostSchemaFromJson(
 
 Map<String, dynamic> _$EmailConfirmPostSchemaToJson(
         EmailConfirmPostSchema instance) =>
+    <String, dynamic>{
+      'token': instance.token,
+      'g-recaptcha-response': instance.gRecaptchaResponse,
+    };
+
+UserDeletePostSchema _$UserDeletePostSchemaFromJson(
+        Map<String, dynamic> json) =>
+    UserDeletePostSchema(
+      email: json['email'] as String,
+    );
+
+Map<String, dynamic> _$UserDeletePostSchemaToJson(
+        UserDeletePostSchema instance) =>
+    <String, dynamic>{
+      'email': instance.email,
+    };
+
+UserDeleteConfirmPostSchema _$UserDeleteConfirmPostSchemaFromJson(
+        Map<String, dynamic> json) =>
+    UserDeleteConfirmPostSchema(
+      token: json['token'] as String,
+      gRecaptchaResponse: json['g-recaptcha-response'] as String,
+    );
+
+Map<String, dynamic> _$UserDeleteConfirmPostSchemaToJson(
+        UserDeleteConfirmPostSchema instance) =>
     <String, dynamic>{
       'token': instance.token,
       'g-recaptcha-response': instance.gRecaptchaResponse,
@@ -339,10 +383,18 @@ MailboxGetResponseBody200 _$MailboxGetResponseBody200FromJson(
     );
 
 Map<String, dynamic> _$MailboxGetResponseBody200ToJson(
-        MailboxGetResponseBody200 instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-    };
+    MailboxGetResponseBody200 instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('data', instance.data);
+  return val;
+}
 
 MailboxCreatePostResponseBody200 _$MailboxCreatePostResponseBody200FromJson(
         Map<String, dynamic> json) =>
@@ -351,10 +403,18 @@ MailboxCreatePostResponseBody200 _$MailboxCreatePostResponseBody200FromJson(
     );
 
 Map<String, dynamic> _$MailboxCreatePostResponseBody200ToJson(
-        MailboxCreatePostResponseBody200 instance) =>
-    <String, dynamic>{
-      'address': instance.address,
-    };
+    MailboxCreatePostResponseBody200 instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('address', instance.address);
+  return val;
+}
 
 MailboxCreatePostSchema _$MailboxCreatePostSchemaFromJson(
         Map<String, dynamic> json) =>
@@ -398,12 +458,21 @@ MailMassupdatePostSchema _$MailMassupdatePostSchemaFromJson(
     );
 
 Map<String, dynamic> _$MailMassupdatePostSchemaToJson(
-        MailMassupdatePostSchema instance) =>
-    <String, dynamic>{
-      'filter': _$MailMassupdatePostSchemaFilterEnumMap[instance.filter],
-      'messageIds': instance.messageIds,
-      'isRead': instance.isRead,
-    };
+    MailMassupdatePostSchema instance) {
+  final val = <String, dynamic>{
+    'filter': _$MailMassupdatePostSchemaFilterEnumMap[instance.filter]!,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('messageIds', instance.messageIds);
+  writeNotNull('isRead', instance.isRead);
+  return val;
+}
 
 const _$MailMassupdatePostSchemaFilterEnumMap = {
   MailMassupdatePostSchemaFilter.messageIds: 'messageIds',
@@ -419,15 +488,22 @@ MailboxUpdateSchema _$MailboxUpdateSchemaFromJson(Map<String, dynamic> json) =>
       isHidden: json['isHidden'] as bool?,
     );
 
-Map<String, dynamic> _$MailboxUpdateSchemaToJson(
-        MailboxUpdateSchema instance) =>
-    <String, dynamic>{
-      'label': instance.label,
-      'entryUuid': instance.entryUuid,
-      'isDeleted': instance.isDeleted,
-      'isDisabled': instance.isDisabled,
-      'isHidden': instance.isHidden,
-    };
+Map<String, dynamic> _$MailboxUpdateSchemaToJson(MailboxUpdateSchema instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('label', instance.label);
+  writeNotNull('entryUuid', instance.entryUuid);
+  writeNotNull('isDeleted', instance.isDeleted);
+  writeNotNull('isDisabled', instance.isDisabled);
+  writeNotNull('isHidden', instance.isHidden);
+  return val;
+}
 
 MailboxMessageForwardSchema _$MailboxMessageForwardSchemaFromJson(
         Map<String, dynamic> json) =>
@@ -436,10 +512,18 @@ MailboxMessageForwardSchema _$MailboxMessageForwardSchemaFromJson(
     );
 
 Map<String, dynamic> _$MailboxMessageForwardSchemaToJson(
-        MailboxMessageForwardSchema instance) =>
-    <String, dynamic>{
-      'email': instance.email,
-    };
+    MailboxMessageForwardSchema instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('email', instance.email);
+  return val;
+}
 
 FilecloudFileTokenCreatePostSchema _$FilecloudFileTokenCreatePostSchemaFromJson(
         Map<String, dynamic> json) =>
@@ -451,13 +535,22 @@ FilecloudFileTokenCreatePostSchema _$FilecloudFileTokenCreatePostSchemaFromJson(
     );
 
 Map<String, dynamic> _$FilecloudFileTokenCreatePostSchemaToJson(
-        FilecloudFileTokenCreatePostSchema instance) =>
-    <String, dynamic>{
-      'fileToken': instance.fileToken,
-      'label': instance.label,
-      'userEmail': instance.userEmail,
-      'readOnly': instance.readOnly,
-    };
+    FilecloudFileTokenCreatePostSchema instance) {
+  final val = <String, dynamic>{
+    'fileToken': instance.fileToken,
+    'label': instance.label,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('userEmail', instance.userEmail);
+  val['readOnly'] = instance.readOnly;
+  return val;
+}
 
 FilecloudFileTokenListPostResponseBody200
     _$FilecloudFileTokenListPostResponseBody200FromJson(

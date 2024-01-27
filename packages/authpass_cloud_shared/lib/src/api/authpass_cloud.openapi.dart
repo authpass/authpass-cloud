@@ -2,191 +2,290 @@
 
 // ignore_for_file: prefer_initializing_formals, no_leading_underscores_for_library_prefixes, library_private_types_in_public_api
 
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:typed_data' as _i1;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:openapi_base/openapi_base.dart';
+
 part 'authpass_cloud.openapi.g.dart';
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class SystemStatusUser implements OpenApiContent {
-  SystemStatusUser(
-      {required this.emailConfirmed,
-      required this.userConfirmed,
-      required this.emailUnconfirmed});
+  SystemStatusUser({
+    required this.emailConfirmed,
+    required this.userConfirmed,
+    required this.emailUnconfirmed,
+  });
 
   factory SystemStatusUser.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusUserFromJson(jsonMap);
 
-  @JsonKey(name: 'emailConfirmed')
+  @JsonKey(
+    name: 'emailConfirmed',
+    includeIfNull: false,
+  )
   final int emailConfirmed;
 
-  @JsonKey(name: 'userConfirmed')
+  @JsonKey(
+    name: 'userConfirmed',
+    includeIfNull: false,
+  )
   final int userConfirmed;
 
-  @JsonKey(name: 'emailUnconfirmed')
+  @JsonKey(
+    name: 'emailUnconfirmed',
+    includeIfNull: false,
+  )
   final int emailUnconfirmed;
 
   Map<String, dynamic> toJson() => _$SystemStatusUserToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class SystemStatusWebsite implements OpenApiContent {
-  SystemStatusWebsite(
-      {required this.websiteCount, required this.urlCanonicalCount});
+  SystemStatusWebsite({
+    required this.websiteCount,
+    required this.urlCanonicalCount,
+  });
 
   factory SystemStatusWebsite.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusWebsiteFromJson(jsonMap);
 
-  @JsonKey(name: 'websiteCount')
+  @JsonKey(
+    name: 'websiteCount',
+    includeIfNull: false,
+  )
   final int websiteCount;
 
-  @JsonKey(name: 'urlCanonicalCount')
+  @JsonKey(
+    name: 'urlCanonicalCount',
+    includeIfNull: false,
+  )
   final int urlCanonicalCount;
 
   Map<String, dynamic> toJson() => _$SystemStatusWebsiteToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class SystemStatusMailbox implements OpenApiContent {
-  SystemStatusMailbox(
-      {required this.mailboxCount,
-      required this.messageCount,
-      required this.messageReadCount});
+  SystemStatusMailbox({
+    required this.mailboxCount,
+    required this.messageCount,
+    required this.messageReadCount,
+  });
 
   factory SystemStatusMailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusMailboxFromJson(jsonMap);
 
-  @JsonKey(name: 'mailboxCount')
+  @JsonKey(
+    name: 'mailboxCount',
+    includeIfNull: false,
+  )
   final int mailboxCount;
 
-  @JsonKey(name: 'messageCount')
+  @JsonKey(
+    name: 'messageCount',
+    includeIfNull: false,
+  )
   final int messageCount;
 
-  @JsonKey(name: 'messageReadCount')
+  @JsonKey(
+    name: 'messageReadCount',
+    includeIfNull: false,
+  )
   final int messageReadCount;
 
   Map<String, dynamic> toJson() => _$SystemStatusMailboxToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class SystemStatusFileCloud implements OpenApiContent {
-  SystemStatusFileCloud(
-      {required this.fileCount,
-      required this.fileTotalLength,
-      required this.fileContentCount,
-      required this.attachmentLength,
-      required this.attachmentCount,
-      required this.attachmentUntouchedMonth,
-      required this.countRecentlyAccessed,
-      required this.countWeekAccessed});
+  SystemStatusFileCloud({
+    required this.fileCount,
+    required this.fileTotalLength,
+    required this.fileContentCount,
+    required this.attachmentLength,
+    required this.attachmentCount,
+    required this.attachmentUntouchedMonth,
+    required this.countRecentlyAccessed,
+    required this.countWeekAccessed,
+  });
 
   factory SystemStatusFileCloud.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFileCloudFromJson(jsonMap);
 
-  @JsonKey(name: 'fileCount')
+  @JsonKey(
+    name: 'fileCount',
+    includeIfNull: false,
+  )
   final int fileCount;
 
-  @JsonKey(name: 'fileTotalLength')
+  @JsonKey(
+    name: 'fileTotalLength',
+    includeIfNull: false,
+  )
   final int fileTotalLength;
 
-  @JsonKey(name: 'fileContentCount')
+  @JsonKey(
+    name: 'fileContentCount',
+    includeIfNull: false,
+  )
   final int fileContentCount;
 
-  @JsonKey(name: 'attachmentLength')
+  @JsonKey(
+    name: 'attachmentLength',
+    includeIfNull: false,
+  )
   final int attachmentLength;
 
-  @JsonKey(name: 'attachmentCount')
+  @JsonKey(
+    name: 'attachmentCount',
+    includeIfNull: false,
+  )
   final int attachmentCount;
 
-  @JsonKey(name: 'attachmentUntouchedMonth')
+  @JsonKey(
+    name: 'attachmentUntouchedMonth',
+    includeIfNull: false,
+  )
   final int attachmentUntouchedMonth;
 
   /// Number of files accessed in the last 24 hours, but are older than 48 hours.
-  @JsonKey(name: 'countRecentlyAccessed')
+  @JsonKey(
+    name: 'countRecentlyAccessed',
+    includeIfNull: false,
+  )
   final int countRecentlyAccessed;
 
   /// Number of files older than 14 days, accessed within the last 7 days.
-  @JsonKey(name: 'countWeekAccessed')
+  @JsonKey(
+    name: 'countWeekAccessed',
+    includeIfNull: false,
+  )
   final int countWeekAccessed;
 
   Map<String, dynamic> toJson() => _$SystemStatusFileCloudToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class SystemStatus implements OpenApiContent {
-  SystemStatus(
-      {required this.user,
-      required this.website,
-      required this.mailbox,
-      required this.fileCloud,
-      required this.queryTime});
+  SystemStatus({
+    required this.user,
+    required this.website,
+    required this.mailbox,
+    required this.fileCloud,
+    required this.queryTime,
+  });
 
   factory SystemStatus.fromJson(Map<String, dynamic> jsonMap) =>
       _$SystemStatusFromJson(jsonMap);
 
-  @JsonKey(name: 'user')
+  @JsonKey(
+    name: 'user',
+    includeIfNull: false,
+  )
   final SystemStatusUser user;
 
-  @JsonKey(name: 'website')
+  @JsonKey(
+    name: 'website',
+    includeIfNull: false,
+  )
   final SystemStatusWebsite website;
 
-  @JsonKey(name: 'mailbox')
+  @JsonKey(
+    name: 'mailbox',
+    includeIfNull: false,
+  )
   final SystemStatusMailbox mailbox;
 
-  @JsonKey(name: 'fileCloud')
+  @JsonKey(
+    name: 'fileCloud',
+    includeIfNull: false,
+  )
   final SystemStatusFileCloud fileCloud;
 
-  @JsonKey(name: 'queryTime')
+  @JsonKey(
+    name: 'queryTime',
+    includeIfNull: false,
+  )
   final int queryTime;
 
   Map<String, dynamic> toJson() => _$SystemStatusToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class UserEmail implements OpenApiContent {
-  UserEmail({required this.address, required this.confirmedAt});
+  UserEmail({
+    required this.address,
+    required this.confirmedAt,
+  });
 
   factory UserEmail.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserEmailFromJson(jsonMap);
 
-  @JsonKey(name: 'address')
+  @JsonKey(
+    name: 'address',
+    includeIfNull: false,
+  )
   final String address;
 
-  @JsonKey(name: 'confirmedAt')
+  @JsonKey(
+    name: 'confirmedAt',
+    includeIfNull: false,
+  )
   final DateTime confirmedAt;
 
   Map<String, dynamic> toJson() => _$UserEmailToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class UserInfo implements OpenApiContent {
   UserInfo({required this.emails});
 
   factory UserInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$UserInfoFromJson(jsonMap);
 
-  @JsonKey(name: 'emails')
+  @JsonKey(
+    name: 'emails',
+    includeIfNull: false,
+  )
   final List<UserEmail> emails;
 
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class RegisterRequest implements OpenApiContent {
   RegisterRequest({required this.email});
 
@@ -194,10 +293,14 @@ class RegisterRequest implements OpenApiContent {
       _$RegisterRequestFromJson(jsonMap);
 
   /// Email address for the current user.
-  @JsonKey(name: 'email')
+  @JsonKey(
+    name: 'email',
+    includeIfNull: false,
+  )
   final String email;
 
   Map<String, dynamic> toJson() => _$RegisterRequestToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -212,273 +315,410 @@ enum RegisterResponseStatus {
 extension RegisterResponseStatusExt on RegisterResponseStatus {
   static final Map<String, RegisterResponseStatus> _names = {
     'created': RegisterResponseStatus.created,
-    'confirmed': RegisterResponseStatus.confirmed
+    'confirmed': RegisterResponseStatus.confirmed,
   };
+
   static RegisterResponseStatus fromName(String name) =>
       _names[name] ??
       _throwStateError('Invalid enum name: $name for RegisterResponseStatus');
+
   String get name => toString().substring(23);
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class RegisterResponse implements OpenApiContent {
-  RegisterResponse(
-      {required this.userUuid, required this.authToken, required this.status});
+  RegisterResponse({
+    required this.userUuid,
+    required this.authToken,
+    required this.status,
+  });
 
   factory RegisterResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$RegisterResponseFromJson(jsonMap);
 
   /// Uuid of the newly registered user.
-  @JsonKey(name: 'userUuid')
+  @JsonKey(
+    name: 'userUuid',
+    includeIfNull: false,
+  )
   final String userUuid;
 
   /// Auth token which can be used for authentication, once email is confirmed.
-  @JsonKey(name: 'authToken')
+  @JsonKey(
+    name: 'authToken',
+    includeIfNull: false,
+  )
   final String authToken;
 
   /// Status of the user and auth token (created or confirmed).
-  @JsonKey(name: 'status')
+  @JsonKey(
+    name: 'status',
+    includeIfNull: false,
+  )
   final RegisterResponseStatus status;
 
   Map<String, dynamic> toJson() => _$RegisterResponseToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class Page implements OpenApiContent {
-  Page({this.nextPageToken, this.sinceToken});
+  Page({
+    this.nextPageToken,
+    this.sinceToken,
+  });
 
   factory Page.fromJson(Map<String, dynamic> jsonMap) =>
       _$PageFromJson(jsonMap);
 
   /// Token for the next page, might be null if there are no more pages.
-  @JsonKey(name: 'nextPageToken')
+  @JsonKey(
+    name: 'nextPageToken',
+    includeIfNull: false,
+  )
   final String? nextPageToken;
 
   /// Once everything is synced, this token can be used for subsequent syncs.
-  @JsonKey(name: 'sinceToken')
+  @JsonKey(
+    name: 'sinceToken',
+    includeIfNull: false,
+  )
   final String? sinceToken;
 
   Map<String, dynamic> toJson() => _$PageToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class EmailMessage implements OpenApiContent {
-  EmailMessage(
-      {required this.id,
-      required this.subject,
-      required this.sender,
-      required this.mailboxEntryUuid,
-      required this.createdAt,
-      required this.size,
-      required this.isRead});
+  EmailMessage({
+    required this.id,
+    required this.subject,
+    required this.sender,
+    required this.mailboxEntryUuid,
+    required this.createdAt,
+    required this.size,
+    required this.isRead,
+  });
 
   factory EmailMessage.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailMessageFromJson(jsonMap);
 
-  @JsonKey(name: 'id')
+  @JsonKey(
+    name: 'id',
+    includeIfNull: false,
+  )
   @ApiUuidJsonConverter()
   final ApiUuid id;
 
-  @JsonKey(name: 'subject')
+  @JsonKey(
+    name: 'subject',
+    includeIfNull: false,
+  )
   final String subject;
 
-  @JsonKey(name: 'sender')
+  @JsonKey(
+    name: 'sender',
+    includeIfNull: false,
+  )
   final String sender;
 
-  @JsonKey(name: 'mailboxEntryUuid')
+  @JsonKey(
+    name: 'mailboxEntryUuid',
+    includeIfNull: false,
+  )
   @ApiUuidJsonConverter()
   final ApiUuid mailboxEntryUuid;
 
-  @JsonKey(name: 'createdAt')
+  @JsonKey(
+    name: 'createdAt',
+    includeIfNull: false,
+  )
   final DateTime createdAt;
 
   /// Body size in bytes.
-  @JsonKey(name: 'size')
+  @JsonKey(
+    name: 'size',
+    includeIfNull: false,
+  )
   final int size;
 
   /// true if this mail was marked as read.
-  @JsonKey(name: 'isRead')
+  @JsonKey(
+    name: 'isRead',
+    includeIfNull: false,
+  )
   final bool isRead;
 
   Map<String, dynamic> toJson() => _$EmailMessageToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class Mailbox implements OpenApiContent {
-  Mailbox(
-      {required this.id,
-      required this.address,
-      required this.label,
-      required this.entryUuid,
-      required this.createdAt,
-      required this.isDisabled});
+  Mailbox({
+    required this.id,
+    required this.address,
+    required this.label,
+    required this.entryUuid,
+    required this.createdAt,
+    required this.isDisabled,
+  });
 
   factory Mailbox.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxFromJson(jsonMap);
 
-  @JsonKey(name: 'id')
+  @JsonKey(
+    name: 'id',
+    includeIfNull: false,
+  )
   @ApiUuidJsonConverter()
   final ApiUuid id;
 
   /// Unique email address (a@example.com)
-  @JsonKey(name: 'address')
+  @JsonKey(
+    name: 'address',
+    includeIfNull: false,
+  )
   final String address;
 
   /// Label as given during create. (Can be empty string)
-  @JsonKey(name: 'label')
+  @JsonKey(
+    name: 'label',
+    includeIfNull: false,
+  )
   final String label;
 
   /// Entry uuid given during create. (Can be empty string)
-  @JsonKey(name: 'entryUuid')
+  @JsonKey(
+    name: 'entryUuid',
+    includeIfNull: false,
+  )
   final String entryUuid;
 
-  @JsonKey(name: 'createdAt')
+  @JsonKey(
+    name: 'createdAt',
+    includeIfNull: false,
+  )
   final DateTime createdAt;
 
-  @JsonKey(name: 'isDisabled')
+  @JsonKey(
+    name: 'isDisabled',
+    includeIfNull: false,
+  )
   final bool isDisabled;
 
   Map<String, dynamic> toJson() => _$MailboxToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FileInfo implements OpenApiContent {
-  FileInfo(
-      {required this.fileToken,
-      required this.versionToken,
-      required this.name,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.readOnly,
-      required this.size});
+  FileInfo({
+    required this.fileToken,
+    required this.versionToken,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.readOnly,
+    required this.size,
+  });
 
   factory FileInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileInfoFromJson(jsonMap);
 
-  @JsonKey(name: 'fileToken')
+  @JsonKey(
+    name: 'fileToken',
+    includeIfNull: false,
+  )
   final String fileToken;
 
-  @JsonKey(name: 'versionToken')
+  @JsonKey(
+    name: 'versionToken',
+    includeIfNull: false,
+  )
   final String versionToken;
 
-  @JsonKey(name: 'name')
+  @JsonKey(
+    name: 'name',
+    includeIfNull: false,
+  )
   final String name;
 
-  @JsonKey(name: 'createdAt')
+  @JsonKey(
+    name: 'createdAt',
+    includeIfNull: false,
+  )
   final DateTime createdAt;
 
-  @JsonKey(name: 'updatedAt')
+  @JsonKey(
+    name: 'updatedAt',
+    includeIfNull: false,
+  )
   final DateTime updatedAt;
 
-  @JsonKey(name: 'readOnly')
+  @JsonKey(
+    name: 'readOnly',
+    includeIfNull: false,
+  )
   final bool readOnly;
 
-  @JsonKey(name: 'size')
+  @JsonKey(
+    name: 'size',
+    includeIfNull: false,
+  )
   final int size;
 
   Map<String, dynamic> toJson() => _$FileInfoToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FileListResponse implements OpenApiContent {
   FileListResponse({required this.files});
 
   factory FileListResponse.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileListResponseFromJson(jsonMap);
 
-  @JsonKey(name: 'files')
+  @JsonKey(
+    name: 'files',
+    includeIfNull: false,
+  )
   final List<FileInfo> files;
 
   Map<String, dynamic> toJson() => _$FileListResponseToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 /// Object wrapping a [attachmentToken].
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class AttachmentId implements OpenApiContent {
   AttachmentId({required this.attachmentToken});
 
   factory AttachmentId.fromJson(Map<String, dynamic> jsonMap) =>
       _$AttachmentIdFromJson(jsonMap);
 
-  @JsonKey(name: 'attachmentToken')
+  @JsonKey(
+    name: 'attachmentToken',
+    includeIfNull: false,
+  )
   final String attachmentToken;
 
   Map<String, dynamic> toJson() => _$AttachmentIdToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 /// Object wrapping a [fileToken].
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FileId implements OpenApiContent {
   FileId({required this.fileToken});
 
   factory FileId.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileIdFromJson(jsonMap);
 
-  @JsonKey(name: 'fileToken')
+  @JsonKey(
+    name: 'fileToken',
+    includeIfNull: false,
+  )
   final String fileToken;
 
   Map<String, dynamic> toJson() => _$FileIdToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class AttachmentTouch implements OpenApiContent {
-  AttachmentTouch({required this.file, required this.attachmentTokens});
+  AttachmentTouch({
+    required this.file,
+    required this.attachmentTokens,
+  });
 
   factory AttachmentTouch.fromJson(Map<String, dynamic> jsonMap) =>
       _$AttachmentTouchFromJson(jsonMap);
 
   /// Object wrapping a [fileToken].
-  @JsonKey(name: 'file')
+  @JsonKey(
+    name: 'file',
+    includeIfNull: false,
+  )
   final FileId file;
 
-  @JsonKey(name: 'attachmentTokens')
+  @JsonKey(
+    name: 'attachmentTokens',
+    includeIfNull: false,
+  )
   final List<String> attachmentTokens;
 
   Map<String, dynamic> toJson() => _$AttachmentTouchToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FileTokenInfo implements OpenApiContent {
-  FileTokenInfo(
-      {required this.fileToken,
-      required this.createdAt,
-      required this.label,
-      required this.readOnly});
+  FileTokenInfo({
+    required this.fileToken,
+    required this.createdAt,
+    required this.label,
+    required this.readOnly,
+  });
 
   factory FileTokenInfo.fromJson(Map<String, dynamic> jsonMap) =>
       _$FileTokenInfoFromJson(jsonMap);
 
-  @JsonKey(name: 'fileToken')
+  @JsonKey(
+    name: 'fileToken',
+    includeIfNull: false,
+  )
   final String fileToken;
 
-  @JsonKey(name: 'createdAt')
+  @JsonKey(
+    name: 'createdAt',
+    includeIfNull: false,
+  )
   final DateTime createdAt;
 
-  @JsonKey(name: 'label')
+  @JsonKey(
+    name: 'label',
+    includeIfNull: false,
+  )
   final String label;
 
-  @JsonKey(name: 'readOnly')
+  @JsonKey(
+    name: 'readOnly',
+    includeIfNull: false,
+  )
   final bool readOnly;
 
   Map<String, dynamic> toJson() => _$FileTokenInfoToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -494,8 +734,10 @@ class _CheckGetResponse200 extends CheckGetResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class CheckGetResponse extends OpenApiResponse
@@ -548,7 +790,7 @@ class _CheckStatusPostResponse200 extends CheckStatusPostResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -603,7 +845,7 @@ class _UserGetResponse200 extends UserGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -658,7 +900,7 @@ class _UserRegisterPostResponse200 extends UserRegisterPostResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -700,16 +942,19 @@ extension EmailStatusGetResponseBody200StatusExt
     on EmailStatusGetResponseBody200Status {
   static final Map<String, EmailStatusGetResponseBody200Status> _names = {
     'created': EmailStatusGetResponseBody200Status.created,
-    'confirmed': EmailStatusGetResponseBody200Status.confirmed
+    'confirmed': EmailStatusGetResponseBody200Status.confirmed,
   };
+
   static EmailStatusGetResponseBody200Status fromName(String name) =>
       _names[name] ??
       _throwStateError(
           'Invalid enum name: $name for EmailStatusGetResponseBody200Status');
+
   String get name => toString().substring(36);
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class EmailStatusGetResponseBody200 implements OpenApiContent {
   EmailStatusGetResponseBody200({this.status});
 
@@ -717,10 +962,14 @@ class EmailStatusGetResponseBody200 implements OpenApiContent {
           Map<String, dynamic> jsonMap) =>
       _$EmailStatusGetResponseBody200FromJson(jsonMap);
 
-  @JsonKey(name: 'status')
+  @JsonKey(
+    name: 'status',
+    includeIfNull: false,
+  )
   final EmailStatusGetResponseBody200Status? status;
 
   Map<String, dynamic> toJson() => _$EmailStatusGetResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -749,7 +998,7 @@ class _EmailStatusGetResponse200 extends EmailStatusGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -796,8 +1045,11 @@ class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse
@@ -815,8 +1067,11 @@ class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 abstract class EmailConfirmGetResponse extends OpenApiResponse
@@ -831,9 +1086,10 @@ abstract class EmailConfirmGetResponse extends OpenApiResponse
   factory EmailConfirmGetResponse.response400(String body) =>
       _EmailConfirmGetResponse400.response400(body);
 
-  void map(
-      {required ResponseMap<_EmailConfirmGetResponse200> on200,
-      required ResponseMap<_EmailConfirmGetResponse400> on400}) {
+  void map({
+    required ResponseMap<_EmailConfirmGetResponse200> on200,
+    required ResponseMap<_EmailConfirmGetResponse400> on400,
+  }) {
     if (this is _EmailConfirmGetResponse200) {
       on200((this as _EmailConfirmGetResponse200));
     } else if (this is _EmailConfirmGetResponse400) {
@@ -869,8 +1125,11 @@ class _EmailConfirmPostResponse200 extends EmailConfirmPostResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
@@ -884,8 +1143,10 @@ class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class EmailConfirmPostResponse extends OpenApiResponse
@@ -900,9 +1161,10 @@ abstract class EmailConfirmPostResponse extends OpenApiResponse
   factory EmailConfirmPostResponse.response400() =>
       _EmailConfirmPostResponse400.response400();
 
-  void map(
-      {required ResponseMap<_EmailConfirmPostResponse200> on200,
-      required ResponseMap<_EmailConfirmPostResponse400> on400}) {
+  void map({
+    required ResponseMap<_EmailConfirmPostResponse200> on200,
+    required ResponseMap<_EmailConfirmPostResponse400> on400,
+  }) {
     if (this is _EmailConfirmPostResponse200) {
       on200((this as _EmailConfirmPostResponse200));
     } else if (this is _EmailConfirmPostResponse400) {
@@ -924,50 +1186,349 @@ abstract class EmailConfirmPostResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class EmailConfirmPostSchema implements OpenApiContent {
-  EmailConfirmPostSchema(
-      {required this.token, required this.gRecaptchaResponse});
+  EmailConfirmPostSchema({
+    required this.token,
+    required this.gRecaptchaResponse,
+  });
 
   factory EmailConfirmPostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$EmailConfirmPostSchemaFromJson(jsonMap);
 
-  @JsonKey(name: 'token')
+  @JsonKey(
+    name: 'token',
+    includeIfNull: false,
+  )
   final String token;
 
-  @JsonKey(name: 'g-recaptcha-response')
+  @JsonKey(
+    name: 'g-recaptcha-response',
+    includeIfNull: false,
+  )
   final String gRecaptchaResponse;
 
   Map<String, dynamic> toJson() => _$EmailConfirmPostSchemaToJson(this);
+
+  @override
+  String toString() => toJson().toString();
+}
+
+class _UserDeletePostResponse200 extends UserDeletePostResponse
+    implements OpenApiResponseBodyString {
+  /// OK
+  _UserDeletePostResponse200.response200(this.body) : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
+}
+
+class _UserDeletePostResponse404 extends UserDeletePostResponse {
+  /// No user found with that email.
+  _UserDeletePostResponse404.response404() : status = 404;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
+}
+
+abstract class UserDeletePostResponse extends OpenApiResponse
+    implements HasSuccessResponse<String> {
+  UserDeletePostResponse();
+
+  /// OK
+  factory UserDeletePostResponse.response200(String body) =>
+      _UserDeletePostResponse200.response200(body);
+
+  /// No user found with that email.
+  factory UserDeletePostResponse.response404() =>
+      _UserDeletePostResponse404.response404();
+
+  void map({
+    required ResponseMap<_UserDeletePostResponse200> on200,
+    required ResponseMap<_UserDeletePostResponse404> on404,
+  }) {
+    if (this is _UserDeletePostResponse200) {
+      on200((this as _UserDeletePostResponse200));
+    } else if (this is _UserDeletePostResponse404) {
+      on404((this as _UserDeletePostResponse404));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  OK
+  @override
+  String requireSuccess() {
+    if (this is _UserDeletePostResponse200) {
+      return (this as _UserDeletePostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+@JsonSerializable()
+@ApiUuidJsonConverter()
+class UserDeletePostSchema implements OpenApiContent {
+  UserDeletePostSchema({required this.email});
+
+  factory UserDeletePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$UserDeletePostSchemaFromJson(jsonMap);
+
+  @JsonKey(
+    name: 'email',
+    includeIfNull: false,
+  )
+  final String email;
+
+  Map<String, dynamic> toJson() => _$UserDeletePostSchemaToJson(this);
+
+  @override
+  String toString() => toJson().toString();
+}
+
+class _UserDeleteConfirmGetResponse200 extends UserDeleteConfirmGetResponse
+    implements OpenApiResponseBodyString {
+  /// OK
+  _UserDeleteConfirmGetResponse200.response200(this.body) : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
+}
+
+class _UserDeleteConfirmGetResponse400 extends UserDeleteConfirmGetResponse
+    implements OpenApiResponseBodyString {
+  /// Invalid token or email address.
+  _UserDeleteConfirmGetResponse400.response400(this.body) : status = 400;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
+}
+
+abstract class UserDeleteConfirmGetResponse extends OpenApiResponse
+    implements HasSuccessResponse<String> {
+  UserDeleteConfirmGetResponse();
+
+  /// OK
+  factory UserDeleteConfirmGetResponse.response200(String body) =>
+      _UserDeleteConfirmGetResponse200.response200(body);
+
+  /// Invalid token or email address.
+  factory UserDeleteConfirmGetResponse.response400(String body) =>
+      _UserDeleteConfirmGetResponse400.response400(body);
+
+  void map({
+    required ResponseMap<_UserDeleteConfirmGetResponse200> on200,
+    required ResponseMap<_UserDeleteConfirmGetResponse400> on400,
+  }) {
+    if (this is _UserDeleteConfirmGetResponse200) {
+      on200((this as _UserDeleteConfirmGetResponse200));
+    } else if (this is _UserDeleteConfirmGetResponse400) {
+      on400((this as _UserDeleteConfirmGetResponse400));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  OK
+  @override
+  String requireSuccess() {
+    if (this is _UserDeleteConfirmGetResponse200) {
+      return (this as _UserDeleteConfirmGetResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+class _UserDeleteConfirmPostResponse200 extends UserDeleteConfirmPostResponse
+    implements OpenApiResponseBodyString {
+  /// OK
+  _UserDeleteConfirmPostResponse200.response200(this.body) : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
+}
+
+class _UserDeleteConfirmPostResponse400 extends UserDeleteConfirmPostResponse {
+  /// Invalid token or email address.
+  _UserDeleteConfirmPostResponse400.response400() : status = 400;
+
+  @override
+  final int status;
+
+  @override
+  final OpenApiContentType? contentType = null;
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
+}
+
+abstract class UserDeleteConfirmPostResponse extends OpenApiResponse
+    implements HasSuccessResponse<String> {
+  UserDeleteConfirmPostResponse();
+
+  /// OK
+  factory UserDeleteConfirmPostResponse.response200(String body) =>
+      _UserDeleteConfirmPostResponse200.response200(body);
+
+  /// Invalid token or email address.
+  factory UserDeleteConfirmPostResponse.response400() =>
+      _UserDeleteConfirmPostResponse400.response400();
+
+  void map({
+    required ResponseMap<_UserDeleteConfirmPostResponse200> on200,
+    required ResponseMap<_UserDeleteConfirmPostResponse400> on400,
+  }) {
+    if (this is _UserDeleteConfirmPostResponse200) {
+      on200((this as _UserDeleteConfirmPostResponse200));
+    } else if (this is _UserDeleteConfirmPostResponse400) {
+      on400((this as _UserDeleteConfirmPostResponse400));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  OK
+  @override
+  String requireSuccess() {
+    if (this is _UserDeleteConfirmPostResponse200) {
+      return (this as _UserDeleteConfirmPostResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
+}
+
+@JsonSerializable()
+@ApiUuidJsonConverter()
+class UserDeleteConfirmPostSchema implements OpenApiContent {
+  UserDeleteConfirmPostSchema({
+    required this.token,
+    required this.gRecaptchaResponse,
+  });
+
+  factory UserDeleteConfirmPostSchema.fromJson(Map<String, dynamic> jsonMap) =>
+      _$UserDeleteConfirmPostSchemaFromJson(jsonMap);
+
+  @JsonKey(
+    name: 'token',
+    includeIfNull: false,
+  )
+  final String token;
+
+  @JsonKey(
+    name: 'g-recaptcha-response',
+    includeIfNull: false,
+  )
+  final String gRecaptchaResponse;
+
+  Map<String, dynamic> toJson() => _$UserDeleteConfirmPostSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class StatusGetResponseBody200Mail implements OpenApiContent {
   StatusGetResponseBody200Mail({required this.messagesUnread});
 
   factory StatusGetResponseBody200Mail.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200MailFromJson(jsonMap);
 
-  @JsonKey(name: 'messagesUnread')
+  @JsonKey(
+    name: 'messagesUnread',
+    includeIfNull: false,
+  )
   final int messagesUnread;
 
   Map<String, dynamic> toJson() => _$StatusGetResponseBody200MailToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class StatusGetResponseBody200 implements OpenApiContent {
   StatusGetResponseBody200({required this.mail});
 
   factory StatusGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
       _$StatusGetResponseBody200FromJson(jsonMap);
 
-  @JsonKey(name: 'mail')
+  @JsonKey(
+    name: 'mail',
+    includeIfNull: false,
+  )
   final StatusGetResponseBody200Mail mail;
 
   Map<String, dynamic> toJson() => _$StatusGetResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -996,7 +1557,7 @@ class _StatusGetResponse200 extends StatusGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1028,16 +1589,21 @@ abstract class StatusGetResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxGetResponseBody200 implements OpenApiContent {
   MailboxGetResponseBody200({this.data});
 
   factory MailboxGetResponseBody200.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxGetResponseBody200FromJson(jsonMap);
 
-  @JsonKey(name: 'data')
+  @JsonKey(
+    name: 'data',
+    includeIfNull: false,
+  )
   final List<Mailbox>? data;
 
   Map<String, dynamic> toJson() => _$MailboxGetResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1066,7 +1632,7 @@ class _MailboxGetResponse200 extends MailboxGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1098,6 +1664,7 @@ abstract class MailboxGetResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxCreatePostResponseBody200 implements OpenApiContent {
   MailboxCreatePostResponseBody200({this.address});
 
@@ -1106,11 +1673,15 @@ class MailboxCreatePostResponseBody200 implements OpenApiContent {
       _$MailboxCreatePostResponseBody200FromJson(jsonMap);
 
   /// The address of the new mailbox.
-  @JsonKey(name: 'address')
+  @JsonKey(
+    name: 'address',
+    includeIfNull: false,
+  )
   final String? address;
 
   Map<String, dynamic> toJson() =>
       _$MailboxCreatePostResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1139,7 +1710,7 @@ class _MailboxCreatePostResponse200 extends MailboxCreatePostResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1172,40 +1743,62 @@ abstract class MailboxCreatePostResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxCreatePostSchema implements OpenApiContent {
-  MailboxCreatePostSchema({required this.label, required this.entryUuid});
+  MailboxCreatePostSchema({
+    required this.label,
+    required this.entryUuid,
+  });
 
   factory MailboxCreatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxCreatePostSchemaFromJson(jsonMap);
 
   /// label for this mailbox, can be an empty string.
-  @JsonKey(name: 'label')
+  @JsonKey(
+    name: 'label',
+    includeIfNull: false,
+  )
   final String label;
 
   /// Client provided entry uuid to match with password entry, can be an empty string.
-  @JsonKey(name: 'entryUuid')
+  @JsonKey(
+    name: 'entryUuid',
+    includeIfNull: false,
+  )
   final String entryUuid;
 
   Map<String, dynamic> toJson() => _$MailboxCreatePostSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxListGetResponseBody200 implements OpenApiContent {
-  MailboxListGetResponseBody200({required this.page, required this.data});
+  MailboxListGetResponseBody200({
+    required this.page,
+    required this.data,
+  });
 
   factory MailboxListGetResponseBody200.fromJson(
           Map<String, dynamic> jsonMap) =>
       _$MailboxListGetResponseBody200FromJson(jsonMap);
 
-  @JsonKey(name: 'page')
+  @JsonKey(
+    name: 'page',
+    includeIfNull: false,
+  )
   final Page page;
 
-  @JsonKey(name: 'data')
+  @JsonKey(
+    name: 'data',
+    includeIfNull: false,
+  )
   final List<EmailMessage> data;
 
   Map<String, dynamic> toJson() => _$MailboxListGetResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1234,7 +1827,7 @@ class _MailboxListGetResponse200 extends MailboxListGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1277,8 +1870,10 @@ class _MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailMassupdatePostResponse extends OpenApiResponse
@@ -1318,34 +1913,50 @@ enum MailMassupdatePostSchemaFilter {
 extension MailMassupdatePostSchemaFilterExt on MailMassupdatePostSchemaFilter {
   static final Map<String, MailMassupdatePostSchemaFilter> _names = {
     'messageIds': MailMassupdatePostSchemaFilter.messageIds,
-    'all': MailMassupdatePostSchemaFilter.all
+    'all': MailMassupdatePostSchemaFilter.all,
   };
+
   static MailMassupdatePostSchemaFilter fromName(String name) =>
       _names[name] ??
       _throwStateError(
           'Invalid enum name: $name for MailMassupdatePostSchemaFilter');
+
   String get name => toString().substring(31);
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailMassupdatePostSchema implements OpenApiContent {
-  MailMassupdatePostSchema(
-      {required this.filter, this.messageIds, this.isRead});
+  MailMassupdatePostSchema({
+    required this.filter,
+    this.messageIds,
+    this.isRead,
+  });
 
   factory MailMassupdatePostSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailMassupdatePostSchemaFromJson(jsonMap);
 
-  @JsonKey(name: 'filter')
+  @JsonKey(
+    name: 'filter',
+    includeIfNull: false,
+  )
   final MailMassupdatePostSchemaFilter filter;
 
   /// Only used if filter=messageIds
-  @JsonKey(name: 'messageIds')
+  @JsonKey(
+    name: 'messageIds',
+    includeIfNull: false,
+  )
   final List<String>? messageIds;
 
-  @JsonKey(name: 'isRead')
+  @JsonKey(
+    name: 'isRead',
+    includeIfNull: false,
+  )
   final bool? isRead;
 
   Map<String, dynamic> toJson() => _$MailMassupdatePostSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1361,8 +1972,10 @@ class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxUpdateResponse extends OpenApiResponse
@@ -1393,33 +2006,51 @@ abstract class MailboxUpdateResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxUpdateSchema implements OpenApiContent {
-  MailboxUpdateSchema(
-      {this.label,
-      this.entryUuid,
-      this.isDeleted,
-      this.isDisabled,
-      this.isHidden});
+  MailboxUpdateSchema({
+    this.label,
+    this.entryUuid,
+    this.isDeleted,
+    this.isDisabled,
+    this.isHidden,
+  });
 
   factory MailboxUpdateSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxUpdateSchemaFromJson(jsonMap);
 
-  @JsonKey(name: 'label')
+  @JsonKey(
+    name: 'label',
+    includeIfNull: false,
+  )
   final String? label;
 
-  @JsonKey(name: 'entryUuid')
+  @JsonKey(
+    name: 'entryUuid',
+    includeIfNull: false,
+  )
   final String? entryUuid;
 
-  @JsonKey(name: 'isDeleted')
+  @JsonKey(
+    name: 'isDeleted',
+    includeIfNull: false,
+  )
   final bool? isDeleted;
 
-  @JsonKey(name: 'isDisabled')
+  @JsonKey(
+    name: 'isDisabled',
+    includeIfNull: false,
+  )
   final bool? isDisabled;
 
-  @JsonKey(name: 'isHidden')
+  @JsonKey(
+    name: 'isHidden',
+    includeIfNull: false,
+  )
   final bool? isHidden;
 
   Map<String, dynamic> toJson() => _$MailboxUpdateSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1439,8 +2070,11 @@ class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/plain');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxMessageGetResponse extends OpenApiResponse
@@ -1481,8 +2115,10 @@ class _MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxMessageDeleteResponse extends OpenApiResponse
@@ -1523,8 +2159,10 @@ class _MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxMessageForwardResponse extends OpenApiResponse
@@ -1555,16 +2193,21 @@ abstract class MailboxMessageForwardResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class MailboxMessageForwardSchema implements OpenApiContent {
   MailboxMessageForwardSchema({this.email});
 
   factory MailboxMessageForwardSchema.fromJson(Map<String, dynamic> jsonMap) =>
       _$MailboxMessageForwardSchemaFromJson(jsonMap);
 
-  @JsonKey(name: 'email')
+  @JsonKey(
+    name: 'email',
+    includeIfNull: false,
+  )
   final String? email;
 
   Map<String, dynamic> toJson() => _$MailboxMessageForwardSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -1581,8 +2224,10 @@ class _MailboxMessageMarkReadResponse200
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxMessageMarkReadResponse extends OpenApiResponse
@@ -1624,8 +2269,10 @@ class _MailboxMessageMarkUnReadResponse200
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class MailboxMessageMarkUnReadResponse extends OpenApiResponse
@@ -1666,8 +2313,10 @@ class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 class _EmailReceivePostResponse403 extends EmailReceivePostResponse
@@ -1685,8 +2334,11 @@ class _EmailReceivePostResponse403 extends EmailReceivePostResponse
   final OpenApiContentType contentType = OpenApiContentType.parse('text/plain');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 abstract class EmailReceivePostResponse extends OpenApiResponse
@@ -1701,9 +2353,10 @@ abstract class EmailReceivePostResponse extends OpenApiResponse
   factory EmailReceivePostResponse.response403(String body) =>
       _EmailReceivePostResponse403.response403(body);
 
-  void map(
-      {required ResponseMap<_EmailReceivePostResponse200> on200,
-      required ResponseMap<_EmailReceivePostResponse403> on403}) {
+  void map({
+    required ResponseMap<_EmailReceivePostResponse200> on200,
+    required ResponseMap<_EmailReceivePostResponse403> on403,
+  }) {
     if (this is _EmailReceivePostResponse200) {
       on200((this as _EmailReceivePostResponse200));
     } else if (this is _EmailReceivePostResponse403) {
@@ -1749,7 +2402,7 @@ class _FilecloudFileMetadataPostResponse200
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1798,8 +2451,11 @@ class _FilecloudFileRetrievePostResponse200
       OpenApiContentType.parse('application/octet-set');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudFileRetrievePostResponse extends OpenApiResponse
@@ -1842,8 +2498,10 @@ class _FilecloudFileDeletePostResponse204
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudFileDeletePostResponse extends OpenApiResponse
@@ -1898,7 +2556,7 @@ class _FilecloudFileTokenCreatePostResponse200
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -1931,39 +2589,55 @@ abstract class FilecloudFileTokenCreatePostResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FilecloudFileTokenCreatePostSchema implements OpenApiContent {
-  FilecloudFileTokenCreatePostSchema(
-      {required this.fileToken,
-      required this.label,
-      this.userEmail,
-      this.readOnly = false});
+  FilecloudFileTokenCreatePostSchema({
+    required this.fileToken,
+    required this.label,
+    this.userEmail,
+    this.readOnly = false,
+  });
 
   factory FilecloudFileTokenCreatePostSchema.fromJson(
           Map<String, dynamic> jsonMap) =>
       _$FilecloudFileTokenCreatePostSchemaFromJson(jsonMap);
 
   /// The fileToken identifying the file to share
-  @JsonKey(name: 'fileToken')
+  @JsonKey(
+    name: 'fileToken',
+    includeIfNull: false,
+  )
   final String fileToken;
 
   /// Some label to help the user remember why they created the token.
-  @JsonKey(name: 'label')
+  @JsonKey(
+    name: 'label',
+    includeIfNull: false,
+  )
   final String label;
 
   /// Email address for the user to create a token. If null, the token will not be bound to a specific user.
-  @JsonKey(name: 'userEmail')
+  @JsonKey(
+    name: 'userEmail',
+    includeIfNull: false,
+  )
   final String? userEmail;
 
-  @JsonKey(name: 'readOnly')
+  @JsonKey(
+    name: 'readOnly',
+    includeIfNull: false,
+  )
   final bool readOnly;
 
   Map<String, dynamic> toJson() =>
       _$FilecloudFileTokenCreatePostSchemaToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
   FilecloudFileTokenListPostResponseBody200({required this.tokens});
 
@@ -1971,11 +2645,15 @@ class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
           Map<String, dynamic> jsonMap) =>
       _$FilecloudFileTokenListPostResponseBody200FromJson(jsonMap);
 
-  @JsonKey(name: 'tokens')
+  @JsonKey(
+    name: 'tokens',
+    includeIfNull: false,
+  )
   final List<FileTokenInfo> tokens;
 
   Map<String, dynamic> toJson() =>
       _$FilecloudFileTokenListPostResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -2005,7 +2683,7 @@ class _FilecloudFileTokenListPostResponse200
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -2062,7 +2740,7 @@ class _FilecloudFileGetResponse200 extends FilecloudFileGetResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -2094,6 +2772,7 @@ abstract class FilecloudFileGetResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FilecloudFilePutResponseBody200 implements OpenApiContent {
   FilecloudFilePutResponseBody200({required this.versionToken});
 
@@ -2102,11 +2781,15 @@ class FilecloudFilePutResponseBody200 implements OpenApiContent {
       _$FilecloudFilePutResponseBody200FromJson(jsonMap);
 
   /// Token identifieing the version of this file. Must be used for updating the file.
-  @JsonKey(name: 'versionToken')
+  @JsonKey(
+    name: 'versionToken',
+    includeIfNull: false,
+  )
   final String versionToken;
 
   Map<String, dynamic> toJson() =>
       _$FilecloudFilePutResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -2135,7 +2818,7 @@ class _FilecloudFilePutResponse200 extends FilecloudFilePutResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -2150,8 +2833,10 @@ class _FilecloudFilePutResponse409 extends FilecloudFilePutResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudFilePutResponse extends OpenApiResponse
@@ -2167,9 +2852,10 @@ abstract class FilecloudFilePutResponse extends OpenApiResponse
   factory FilecloudFilePutResponse.response409() =>
       _FilecloudFilePutResponse409.response409();
 
-  void map(
-      {required ResponseMap<_FilecloudFilePutResponse200> on200,
-      required ResponseMap<_FilecloudFilePutResponse409> on409}) {
+  void map({
+    required ResponseMap<_FilecloudFilePutResponse200> on200,
+    required ResponseMap<_FilecloudFilePutResponse409> on409,
+  }) {
     if (this is _FilecloudFilePutResponse200) {
       on200((this as _FilecloudFilePutResponse200));
     } else if (this is _FilecloudFilePutResponse409) {
@@ -2191,24 +2877,34 @@ abstract class FilecloudFilePutResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FilecloudFilePostResponseBody200 implements OpenApiContent {
-  FilecloudFilePostResponseBody200(
-      {required this.fileToken, required this.versionToken});
+  FilecloudFilePostResponseBody200({
+    required this.fileToken,
+    required this.versionToken,
+  });
 
   factory FilecloudFilePostResponseBody200.fromJson(
           Map<String, dynamic> jsonMap) =>
       _$FilecloudFilePostResponseBody200FromJson(jsonMap);
 
   /// Unique token to reference the newly created file.
-  @JsonKey(name: 'fileToken')
+  @JsonKey(
+    name: 'fileToken',
+    includeIfNull: false,
+  )
   final String fileToken;
 
   /// Token identifieing the version of this file. Must be used for updating the file.
-  @JsonKey(name: 'versionToken')
+  @JsonKey(
+    name: 'versionToken',
+    includeIfNull: false,
+  )
   final String versionToken;
 
   Map<String, dynamic> toJson() =>
       _$FilecloudFilePostResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -2237,7 +2933,7 @@ class _FilecloudFilePostResponse200 extends FilecloudFilePostResponse
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -2270,6 +2966,7 @@ abstract class FilecloudFilePostResponse extends OpenApiResponse
 }
 
 @JsonSerializable()
+@ApiUuidJsonConverter()
 class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
   FilecloudAttachmentPostResponseBody200({required this.attachmentToken});
 
@@ -2278,11 +2975,15 @@ class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
       _$FilecloudAttachmentPostResponseBody200FromJson(jsonMap);
 
   /// Unique token to reference the newly created file.
-  @JsonKey(name: 'attachmentToken')
+  @JsonKey(
+    name: 'attachmentToken',
+    includeIfNull: false,
+  )
   final String attachmentToken;
 
   Map<String, dynamic> toJson() =>
       _$FilecloudAttachmentPostResponseBody200ToJson(this);
+
   @override
   String toString() => toJson().toString();
 }
@@ -2311,7 +3012,7 @@ class _FilecloudAttachmentPostResponse200
         'status': status,
         'body': body,
         'bodyJson': bodyJson,
-        'contentType': contentType
+        'contentType': contentType,
       };
 }
 
@@ -2355,8 +3056,10 @@ class _FilecloudAttachmentTouchPostResponse200
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudAttachmentTouchPostResponse extends OpenApiResponse
@@ -2399,8 +3102,10 @@ class _FilecloudAttachmentUnlinkPostResponse200
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudAttachmentUnlinkPostResponse extends OpenApiResponse
@@ -2449,8 +3154,11 @@ class _FilecloudAttachmentRetrievePostResponse200
       OpenApiContentType.parse('application/octet-set');
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
@@ -2486,8 +3194,10 @@ abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
 class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
     implements OpenApiResponseBodyBinary {
   /// Image
-  _WebsiteImageGetResponse200.response200(this.contentType, this.body)
-      : status = 200;
+  _WebsiteImageGetResponse200.response200(
+    this.contentType,
+    this.body,
+  ) : status = 200;
 
   @override
   final int status;
@@ -2499,8 +3209,11 @@ class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
   final OpenApiContentType contentType;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'body': body, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
 }
 
 class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
@@ -2514,8 +3227,10 @@ class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
   final OpenApiContentType? contentType = null;
 
   @override
-  Map<String, Object?> propertiesToString() =>
-      {'status': status, 'contentType': contentType};
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'contentType': contentType,
+      };
 }
 
 abstract class WebsiteImageGetResponse extends OpenApiResponse
@@ -2524,16 +3239,22 @@ abstract class WebsiteImageGetResponse extends OpenApiResponse
 
   /// Image
   factory WebsiteImageGetResponse.response200(
-          OpenApiContentType contentType, _i1.Uint8List body) =>
-      _WebsiteImageGetResponse200.response200(contentType, body);
+    OpenApiContentType contentType,
+    _i1.Uint8List body,
+  ) =>
+      _WebsiteImageGetResponse200.response200(
+        contentType,
+        body,
+      );
 
   /// No image found for this url.
   factory WebsiteImageGetResponse.response404() =>
       _WebsiteImageGetResponse404.response404();
 
-  void map(
-      {required ResponseMap<_WebsiteImageGetResponse200> on200,
-      required ResponseMap<_WebsiteImageGetResponse404> on404}) {
+  void map({
+    required ResponseMap<_WebsiteImageGetResponse200> on200,
+    required ResponseMap<_WebsiteImageGetResponse404> on404,
+  }) {
     if (this is _WebsiteImageGetResponse200) {
       on200((this as _WebsiteImageGetResponse200));
     } else if (this is _WebsiteImageGetResponse404) {
@@ -2585,6 +3306,20 @@ abstract class AuthPassCloud implements ApiEndpoint {
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
 
+  /// Request user deletion.
+  /// post: /user/delete
+  Future<UserDeletePostResponse> userDeletePost(UserDeletePostSchema body);
+
+  /// Confirm deleting of user/email address.
+  /// get: /user/delete/confirm
+  Future<UserDeleteConfirmGetResponse> userDeleteConfirmGet(
+      {required String token});
+
+  /// Confirm with recaptcha
+  /// post: /user/delete/confirm
+  Future<UserDeleteConfirmPostResponse> userDeleteConfirmPost(
+      UserDeleteConfirmPostSchema body);
+
   /// Get status of the user account.
   /// get: /status
   Future<StatusGetResponse> statusGet();
@@ -2601,8 +3336,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// List all emails in all mailboxes of the current user.
   ///
   /// get: /mailbox/list
-  Future<MailboxListGetResponse> mailboxListGet(
-      {String? pageToken, String? sinceToken});
+  Future<MailboxListGetResponse> mailboxListGet({
+    String? pageToken,
+    String? sinceToken,
+  });
 
   /// Apply the given update to all matching mails.
   /// post: /mail/massupdate
@@ -2611,8 +3348,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
-  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {required String mailboxAddress});
+  Future<MailboxUpdateResponse> mailboxUpdate(
+    MailboxUpdateSchema body, {
+    required String mailboxAddress,
+  });
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -2627,8 +3366,9 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// Forward email to users actual email address
   /// post: /mailbox/message/{messageId}/forward
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
-      MailboxMessageForwardSchema body,
-      {required ApiUuid messageId});
+    MailboxMessageForwardSchema body, {
+    required ApiUuid messageId,
+  });
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
@@ -2643,8 +3383,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
   /// Receive emails throw smtp bridge.
   /// post: /email/receive
   /// [body]: Email content (header and body)
-  Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {required String xAuthpassToken});
+  Future<EmailReceivePostResponse> emailReceivePost(
+    String body, {
+    required String xAuthpassToken,
+  });
 
   /// Retrieve file meta data.
   /// post: /filecloud/file/metadata
@@ -2680,20 +3422,26 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
   /// Update file
   /// put: /filecloud/file
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
-      {required String fileToken, required String versionToken});
+  Future<FilecloudFilePutResponse> filecloudFilePut(
+    _i1.Uint8List body, {
+    required String fileToken,
+    required String versionToken,
+  });
 
   /// Create new file
   /// post: /filecloud/file
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
-      {required String fileName});
+  Future<FilecloudFilePostResponse> filecloudFilePost(
+    _i1.Uint8List body, {
+    required String fileName,
+  });
 
   /// Create attachment
   /// post: /filecloud/attachment
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i1.Uint8List body,
-      {required String fileName,
-      required String fileToken});
+    _i1.Uint8List body, {
+    required String fileName,
+    required String fileToken,
+  });
 
   /// Touches an attachment that it is still in use for the given file.
   /// post: /filecloud/attachment/touch
@@ -2718,8 +3466,13 @@ abstract class AuthPassCloud implements ApiEndpoint {
 
 abstract class AuthPassCloudClient implements OpenApiClient {
   factory AuthPassCloudClient(
-          Uri baseUri, OpenApiRequestSender requestSender) =>
-      _AuthPassCloudClientImpl._(baseUri, requestSender);
+    Uri baseUri,
+    OpenApiRequestSender requestSender,
+  ) =>
+      _AuthPassCloudClientImpl._(
+        baseUri,
+        requestSender,
+      );
 
   /// Health check.
   /// Health check of endpoint data
@@ -2759,6 +3512,24 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
 
+  /// Request user deletion.
+  /// post: /user/delete
+  ///
+  Future<UserDeletePostResponse> userDeletePost(UserDeletePostSchema body);
+
+  /// Confirm deleting of user/email address.
+  /// get: /user/delete/confirm
+  ///
+  /// * [token]: Unique token which was sent to email address.
+  Future<UserDeleteConfirmGetResponse> userDeleteConfirmGet(
+      {required String token});
+
+  /// Confirm with recaptcha
+  /// post: /user/delete/confirm
+  ///
+  Future<UserDeleteConfirmPostResponse> userDeleteConfirmPost(
+      UserDeleteConfirmPostSchema body);
+
   /// Get status of the user account.
   /// get: /status
   ///
@@ -2781,8 +3552,10 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   ///
   /// * [pageToken]: Page token as returned by Page
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
-  Future<MailboxListGetResponse> mailboxListGet(
-      {String? pageToken, String? sinceToken});
+  Future<MailboxListGetResponse> mailboxListGet({
+    String? pageToken,
+    String? sinceToken,
+  });
 
   /// Apply the given update to all matching mails.
   /// post: /mail/massupdate
@@ -2793,8 +3566,10 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
   ///
-  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {required String mailboxAddress});
+  Future<MailboxUpdateResponse> mailboxUpdate(
+    MailboxUpdateSchema body, {
+    required String mailboxAddress,
+  });
 
   /// Fetch raw email message.
   /// get: /mailbox/message/{messageId}
@@ -2812,8 +3587,9 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// post: /mailbox/message/{messageId}/forward
   ///
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
-      MailboxMessageForwardSchema body,
-      {required ApiUuid messageId});
+    MailboxMessageForwardSchema body, {
+    required ApiUuid messageId,
+  });
 
   /// Mark message as read
   /// put: /mailbox/message/{messageId}/read
@@ -2832,8 +3608,10 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   ///
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
   /// [body]: Email content (header and body)
-  Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {required String xAuthpassToken});
+  Future<EmailReceivePostResponse> emailReceivePost(
+    String body, {
+    required String xAuthpassToken,
+  });
 
   /// Retrieve file meta data.
   /// post: /filecloud/file/metadata
@@ -2876,22 +3654,28 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   /// Update file
   /// put: /filecloud/file
   ///
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
-      {required String fileToken, required String versionToken});
+  Future<FilecloudFilePutResponse> filecloudFilePut(
+    _i1.Uint8List body, {
+    required String fileToken,
+    required String versionToken,
+  });
 
   /// Create new file
   /// post: /filecloud/file
   ///
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
-      {required String fileName});
+  Future<FilecloudFilePostResponse> filecloudFilePost(
+    _i1.Uint8List body, {
+    required String fileName,
+  });
 
   /// Create attachment
   /// post: /filecloud/attachment
   ///
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i1.Uint8List body,
-      {required String fileName,
-      required String fileToken});
+    _i1.Uint8List body, {
+    required String fileName,
+    required String fileToken,
+  });
 
   /// Touches an attachment that it is still in use for the given file.
   /// post: /filecloud/attachment/touch
@@ -2920,7 +3704,10 @@ abstract class AuthPassCloudClient implements OpenApiClient {
 
 class _AuthPassCloudClientImpl extends OpenApiClientBase
     implements AuthPassCloudClient {
-  _AuthPassCloudClientImpl._(this.baseUri, this.requestSender);
+  _AuthPassCloudClientImpl._(
+    this.baseUri,
+    this.requestSender,
+  );
 
   @override
   final Uri baseUri;
@@ -2934,11 +3721,18 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<CheckGetResponse> checkGet() async {
-    final request = OpenApiClientRequest('get', '/check', []);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _CheckGetResponse200.response200()
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/check',
+      [],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _CheckGetResponse200.response200()
+      },
+    );
   }
 
   /// Status Check.
@@ -2946,17 +3740,30 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<CheckStatusPostResponse> checkStatusPost({String? xSecret}) async {
-    final request = OpenApiClientRequest('post', '/check/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('x-secret', encodeString(xSecret));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _CheckStatusPostResponse200.response200(
-              SystemStatus.fromJson(await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'post',
+      '/check/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'x-secret',
+      encodeString(xSecret),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _CheckStatusPostResponse200.response200(
+                SystemStatus.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Retrieve info about the currently logged in user and about the token.
@@ -2964,16 +3771,26 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<UserGetResponse> userGet() async {
-    final request = OpenApiClientRequest('get', '/user', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _UserGetResponse200.response200(
-              UserInfo.fromJson(await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/user',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserGetResponse200.response200(
+                UserInfo.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Create new user, or login the user using confirmation email.
@@ -2982,14 +3799,24 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<UserRegisterPostResponse> userRegisterPost(
       RegisterRequest body) async {
-    final request = OpenApiClientRequest('post', '/user/register', []);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/register',
+      [],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _UserRegisterPostResponse200.response200(
-              RegisterResponse.fromJson(await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserRegisterPostResponse200.response200(
+                RegisterResponse.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Get the status of the current auth token (whether it was confirmed or not).
@@ -2997,17 +3824,27 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<EmailStatusGetResponse> emailStatusGet() async {
-    final request = OpenApiClientRequest('get', '/email/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _EmailStatusGetResponse200.response200(
-              EmailStatusGetResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/email/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _EmailStatusGetResponse200.response200(
+                EmailStatusGetResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Confirm email address
@@ -3017,16 +3854,26 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<EmailConfirmGetResponse> emailConfirmGet(
       {required String token}) async {
-    final request = OpenApiClientRequest('get', '/email/confirm', []);
-    request.addQueryParameter('token', encodeString(token));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _EmailConfirmGetResponse200.response200(
-              await response.responseBodyString()),
-      '400': (OpenApiClientResponse response) async =>
-          _EmailConfirmGetResponse400.response400(
-              await response.responseBodyString())
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/email/confirm',
+      [],
+    );
+    request.addQueryParameter(
+      'token',
+      encodeString(token),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _EmailConfirmGetResponse200.response200(
+                await response.responseBodyString()),
+        '400': (OpenApiClientResponse response) async =>
+            _EmailConfirmGetResponse400.response400(
+                await response.responseBodyString()),
+      },
+    );
   }
 
   /// Confirm with recaptcha
@@ -3035,16 +3882,111 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body) async {
-    final request = OpenApiClientRequest('post', '/email/confirm', []);
-    request.setHeader('content-type', 'application/x-www-form-urlencoded');
+    final request = OpenApiClientRequest(
+      'post',
+      '/email/confirm',
+      [],
+    );
+    request.setHeader(
+      'content-type',
+      'application/x-www-form-urlencoded',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _EmailConfirmPostResponse200.response200(
-              await response.responseBodyString()),
-      '400': (OpenApiClientResponse response) async =>
-          _EmailConfirmPostResponse400.response400()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _EmailConfirmPostResponse200.response200(
+                await response.responseBodyString()),
+        '400': (OpenApiClientResponse response) async =>
+            _EmailConfirmPostResponse400.response400(),
+      },
+    );
+  }
+
+  /// Request user deletion.
+  /// post: /user/delete
+  ///
+  @override
+  Future<UserDeletePostResponse> userDeletePost(
+      UserDeletePostSchema body) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/delete',
+      [],
+    );
+    request.setHeader(
+      'content-type',
+      'application/x-www-form-urlencoded',
+    );
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserDeletePostResponse200.response200(
+                await response.responseBodyString()),
+        '404': (OpenApiClientResponse response) async =>
+            _UserDeletePostResponse404.response404(),
+      },
+    );
+  }
+
+  /// Confirm deleting of user/email address.
+  /// get: /user/delete/confirm
+  ///
+  /// * [token]: Unique token which was sent to email address.
+  @override
+  Future<UserDeleteConfirmGetResponse> userDeleteConfirmGet(
+      {required String token}) async {
+    final request = OpenApiClientRequest(
+      'get',
+      '/user/delete/confirm',
+      [],
+    );
+    request.addQueryParameter(
+      'token',
+      encodeString(token),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserDeleteConfirmGetResponse200.response200(
+                await response.responseBodyString()),
+        '400': (OpenApiClientResponse response) async =>
+            _UserDeleteConfirmGetResponse400.response400(
+                await response.responseBodyString()),
+      },
+    );
+  }
+
+  /// Confirm with recaptcha
+  /// post: /user/delete/confirm
+  ///
+  @override
+  Future<UserDeleteConfirmPostResponse> userDeleteConfirmPost(
+      UserDeleteConfirmPostSchema body) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/delete/confirm',
+      [],
+    );
+    request.setHeader(
+      'content-type',
+      'application/x-www-form-urlencoded',
+    );
+    request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserDeleteConfirmPostResponse200.response200(
+                await response.responseBodyString()),
+        '400': (OpenApiClientResponse response) async =>
+            _UserDeleteConfirmPostResponse400.response400(),
+      },
+    );
   }
 
   /// Get status of the user account.
@@ -3052,16 +3994,26 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<StatusGetResponse> statusGet() async {
-    final request = OpenApiClientRequest('get', '/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _StatusGetResponse200.response200(StatusGetResponseBody200.fromJson(
-              await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _StatusGetResponse200.response200(StatusGetResponseBody200.fromJson(
+                await response.responseBodyJson()))
+      },
+    );
   }
 
   /// List of all mailboxes of the current user.
@@ -3069,16 +4021,27 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxGetResponse> mailboxGet() async {
-    final request = OpenApiClientRequest('get', '/mailbox', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxGetResponse200.response200(MailboxGetResponseBody200.fromJson(
-              await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxGetResponse200.response200(
+                MailboxGetResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Creates a new (random) email address mailbox.
@@ -3087,19 +4050,32 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxCreatePostResponse> mailboxCreatePost(
       MailboxCreatePostSchema body) async {
-    final request = OpenApiClientRequest('post', '/mailbox/create', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/mailbox/create',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxCreatePostResponse200.response200(
-              MailboxCreatePostResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxCreatePostResponse200.response200(
+                MailboxCreatePostResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// List all emails in all mailboxes of the current user.
@@ -3109,21 +4085,39 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// * [pageToken]: Page token as returned by Page
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
   @override
-  Future<MailboxListGetResponse> mailboxListGet(
-      {String? pageToken, String? sinceToken}) async {
-    final request = OpenApiClientRequest('get', '/mailbox/list', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('since_token', encodeString(sinceToken));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxListGetResponse200.response200(
-              MailboxListGetResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+  Future<MailboxListGetResponse> mailboxListGet({
+    String? pageToken,
+    String? sinceToken,
+  }) async {
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox/list',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addQueryParameter(
+      'page_token',
+      encodeString(pageToken),
+    );
+    request.addQueryParameter(
+      'since_token',
+      encodeString(sinceToken),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxListGetResponse200.response200(
+                MailboxListGetResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Apply the given update to all matching mails.
@@ -3132,38 +4126,68 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailMassupdatePostResponse> mailMassupdatePost(
       MailMassupdatePostSchema body) async {
-    final request = OpenApiClientRequest('post', '/mail/massupdate', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/mail/massupdate',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailMassupdatePostResponse200.response200()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailMassupdatePostResponse200.response200()
+      },
+    );
   }
 
   /// Update information about mailbox
   /// put: /mailbox/update/{mailboxAddress}
   ///
   @override
-  Future<MailboxUpdateResponse> mailboxUpdate(MailboxUpdateSchema body,
-      {required String mailboxAddress}) async {
-    final request =
-        OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
-    request.setHeader('content-type', 'application/json');
+  Future<MailboxUpdateResponse> mailboxUpdate(
+    MailboxUpdateSchema body, {
+    required String mailboxAddress,
+  }) async {
+    final request = OpenApiClientRequest(
+      'put',
+      '/mailbox/update/{mailboxAddress}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addPathParameter(
+      'mailboxAddress',
+      encodeString(mailboxAddress),
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxUpdateResponse200.response200()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxUpdateResponse200.response200()
+      },
+    );
   }
 
   /// Fetch raw email message.
@@ -3172,19 +4196,30 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxMessageGetResponse> mailboxMessageGet(
       {required ApiUuid messageId}) async {
-    final request =
-        OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox/message/{messageId}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxMessageGetResponse200.response200(
-              await response.responseBodyString())
-    });
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxMessageGetResponse200.response200(
+                await response.responseBodyString())
+      },
+    );
   }
 
   /// Delete the given message.
@@ -3193,18 +4228,29 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxMessageDeleteResponse> mailboxMessageDelete(
       {required ApiUuid messageId}) async {
-    final request =
-        OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'delete',
+      '/mailbox/message/{messageId}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxMessageDeleteResponse200.response200()
-    });
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxMessageDeleteResponse200.response200()
+      },
+    );
   }
 
   /// Forward email to users actual email address
@@ -3212,22 +4258,37 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<MailboxMessageForwardResponse> mailboxMessageForward(
-      MailboxMessageForwardSchema body,
-      {required ApiUuid messageId}) async {
-    final request =
-        OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    MailboxMessageForwardSchema body, {
+    required ApiUuid messageId,
+  }) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/mailbox/message/{messageId}/forward',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
-    request.setHeader('content-type', 'application/json');
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxMessageForwardResponse200.response200()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxMessageForwardResponse200.response200()
+      },
+    );
   }
 
   /// Mark message as read
@@ -3236,18 +4297,29 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxMessageMarkReadResponse> mailboxMessageMarkRead(
       {required ApiUuid messageId}) async {
-    final request =
-        OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'put',
+      '/mailbox/message/{messageId}/read',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxMessageMarkReadResponse200.response200()
-    });
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxMessageMarkReadResponse200.response200()
+      },
+    );
   }
 
   /// Mark message as unread (again)
@@ -3256,18 +4328,29 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<MailboxMessageMarkUnReadResponse> mailboxMessageMarkUnRead(
       {required ApiUuid messageId}) async {
-    final request =
-        OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'delete',
+      '/mailbox/message/{messageId}/read',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _MailboxMessageMarkUnReadResponse200.response200()
-    });
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _MailboxMessageMarkUnReadResponse200.response200()
+      },
+    );
   }
 
   /// Receive emails throw smtp bridge.
@@ -3276,20 +4359,34 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
   /// [body]: Email content (header and body)
   @override
-  Future<EmailReceivePostResponse> emailReceivePost(String body,
-      {required String xAuthpassToken}) async {
-    final request = OpenApiClientRequest('post', '/email/receive', []);
+  Future<EmailReceivePostResponse> emailReceivePost(
+    String body, {
+    required String xAuthpassToken,
+  }) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/email/receive',
+      [],
+    );
     request.addHeaderParameter(
-        'x-authpass-token', encodeString(xAuthpassToken));
-    request.setHeader('content-type', 'text/plain');
+      'x-authpass-token',
+      encodeString(xAuthpassToken),
+    );
+    request.setHeader(
+      'content-type',
+      'text/plain',
+    );
     request.setBody(OpenApiClientRequestBodyText(body));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _EmailReceivePostResponse200.response200(),
-      '403': (OpenApiClientResponse response) async =>
-          _EmailReceivePostResponse403.response403(
-              await response.responseBodyString())
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _EmailReceivePostResponse200.response200(),
+        '403': (OpenApiClientResponse response) async =>
+            _EmailReceivePostResponse403.response403(
+                await response.responseBodyString()),
+      },
+    );
   }
 
   /// Retrieve file meta data.
@@ -3299,18 +4396,31 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudFileMetadataPostResponse> filecloudFileMetadataPost(
       FileId body) async {
-    final request = OpenApiClientRequest('post', '/filecloud/file/metadata', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/metadata',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFileMetadataPostResponse200.response200(
-              FileInfo.fromJson(await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFileMetadataPostResponse200.response200(
+                FileInfo.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Retrieve a previously created file.
@@ -3320,18 +4430,31 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudFileRetrievePostResponse> filecloudFileRetrievePost(
       FileId body) async {
-    final request = OpenApiClientRequest('post', '/filecloud/file/retrieve', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/retrieve',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFileRetrievePostResponse200.response200(
-              await response.responseBodyBytes())
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFileRetrievePostResponse200.response200(
+                await response.responseBodyBytes())
+      },
+    );
   }
 
   /// Deletes a file with the given fileToken
@@ -3341,17 +4464,30 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudFileDeletePostResponse> filecloudFileDeletePost(
       FileId body) async {
-    final request = OpenApiClientRequest('post', '/filecloud/file/delete', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/delete',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '204': (OpenApiClientResponse response) async =>
-          _FilecloudFileDeletePostResponse204.response204()
-    });
+    return await sendRequest(
+      request,
+      {
+        '204': (OpenApiClientResponse response) async =>
+            _FilecloudFileDeletePostResponse204.response204()
+      },
+    );
   }
 
   /// Create file tokens which can be used to share the file.
@@ -3360,19 +4496,31 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudFileTokenCreatePostResponse> filecloudFileTokenCreatePost(
       FilecloudFileTokenCreatePostSchema body) async {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/file/token/create', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/token/create',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFileTokenCreatePostResponse200.response200(
-              FileId.fromJson(await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFileTokenCreatePostResponse200.response200(
+                FileId.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// List all tokens for a given file. Only available for the owner of the file.
@@ -3382,19 +4530,32 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudFileTokenListPostResponse> filecloudFileTokenListPost(
       FileId body) async {
-    final request = OpenApiClientRequest('post', '/filecloud/file/token/list', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/token/list',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFileTokenListPostResponse200.response200(
-              FilecloudFileTokenListPostResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFileTokenListPostResponse200.response200(
+                FilecloudFileTokenListPostResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// List available files for user
@@ -3402,63 +4563,113 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<FilecloudFileGetResponse> filecloudFileGet() async {
-    final request = OpenApiClientRequest('get', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFileGetResponse200.response200(
-              FileListResponse.fromJson(await response.responseBodyJson()))
-    });
+    final request = OpenApiClientRequest(
+      'get',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFileGetResponse200.response200(
+                FileListResponse.fromJson(await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Update file
   /// put: /filecloud/file
   ///
   @override
-  Future<FilecloudFilePutResponse> filecloudFilePut(_i1.Uint8List body,
-      {required String fileToken, required String versionToken}) async {
-    final request = OpenApiClientRequest('put', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileToken', encodeString(fileToken));
-    request.addHeaderParameter('versionToken', encodeString(versionToken));
-    request.setHeader('content-type', 'application/octet-stream');
+  Future<FilecloudFilePutResponse> filecloudFilePut(
+    _i1.Uint8List body, {
+    required String fileToken,
+    required String versionToken,
+  }) async {
+    final request = OpenApiClientRequest(
+      'put',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileToken',
+      encodeString(fileToken),
+    );
+    request.addHeaderParameter(
+      'versionToken',
+      encodeString(versionToken),
+    );
+    request.setHeader(
+      'content-type',
+      'application/octet-stream',
+    );
     request.setBody(OpenApiClientRequestBodyBinary(body));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFilePutResponse200.response200(
-              FilecloudFilePutResponseBody200.fromJson(
-                  await response.responseBodyJson())),
-      '409': (OpenApiClientResponse response) async =>
-          _FilecloudFilePutResponse409.response409()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFilePutResponse200.response200(
+                FilecloudFilePutResponseBody200.fromJson(
+                    await response.responseBodyJson())),
+        '409': (OpenApiClientResponse response) async =>
+            _FilecloudFilePutResponse409.response409(),
+      },
+    );
   }
 
   /// Create new file
   /// post: /filecloud/file
   ///
   @override
-  Future<FilecloudFilePostResponse> filecloudFilePost(_i1.Uint8List body,
-      {required String fileName}) async {
-    final request = OpenApiClientRequest('post', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileName', encodeString(fileName));
-    request.setHeader('content-type', 'application/octet-stream');
+  Future<FilecloudFilePostResponse> filecloudFilePost(
+    _i1.Uint8List body, {
+    required String fileName,
+  }) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileName',
+      encodeString(fileName),
+    );
+    request.setHeader(
+      'content-type',
+      'application/octet-stream',
+    );
     request.setBody(OpenApiClientRequestBodyBinary(body));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudFilePostResponse200.response200(
-              FilecloudFilePostResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudFilePostResponse200.response200(
+                FilecloudFilePostResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Create attachment
@@ -3466,24 +4677,44 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<FilecloudAttachmentPostResponse> filecloudAttachmentPost(
-      _i1.Uint8List body,
-      {required String fileName,
-      required String fileToken}) async {
-    final request = OpenApiClientRequest('post', '/filecloud/attachment', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileName', encodeString(fileName));
-    request.addHeaderParameter('fileToken', encodeString(fileToken));
-    request.setHeader('content-type', 'application/octet-stream');
+    _i1.Uint8List body, {
+    required String fileName,
+    required String fileToken,
+  }) async {
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileName',
+      encodeString(fileName),
+    );
+    request.addHeaderParameter(
+      'fileToken',
+      encodeString(fileToken),
+    );
+    request.setHeader(
+      'content-type',
+      'application/octet-stream',
+    );
     request.setBody(OpenApiClientRequestBodyBinary(body));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudAttachmentPostResponse200.response200(
-              FilecloudAttachmentPostResponseBody200.fromJson(
-                  await response.responseBodyJson()))
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudAttachmentPostResponse200.response200(
+                FilecloudAttachmentPostResponseBody200.fromJson(
+                    await response.responseBodyJson()))
+      },
+    );
   }
 
   /// Touches an attachment that it is still in use for the given file.
@@ -3492,18 +4723,30 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudAttachmentTouchPostResponse> filecloudAttachmentTouchPost(
       AttachmentTouch body) async {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/touch', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/touch',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudAttachmentTouchPostResponse200.response200()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudAttachmentTouchPostResponse200.response200()
+      },
+    );
   }
 
   /// Release a attachment - used when an attachment is removed from a file.
@@ -3512,18 +4755,30 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudAttachmentUnlinkPostResponse> filecloudAttachmentUnlinkPost(
       AttachmentTouch body) async {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/unlink', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/unlink',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudAttachmentUnlinkPostResponse200.response200()
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudAttachmentUnlinkPostResponse200.response200()
+      },
+    );
   }
 
   /// Retrieve an attachment.
@@ -3533,19 +4788,31 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   @override
   Future<FilecloudAttachmentRetrievePostResponse>
       filecloudAttachmentRetrievePost(AttachmentId body) async {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/retrieve', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.setHeader('content-type', 'application/json');
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/retrieve',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.setHeader(
+      'content-type',
+      'application/json',
+    );
     request.setBody(OpenApiClientRequestBodyJson(body.toJson()));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _FilecloudAttachmentRetrievePostResponse200.response200(
-              await response.responseBodyBytes())
-    });
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _FilecloudAttachmentRetrievePostResponse200.response200(
+                await response.responseBodyBytes())
+      },
+    );
   }
 
   /// Load the best image for the given website.
@@ -3553,20 +4820,34 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
   ///
   @override
   Future<WebsiteImageGetResponse> websiteImageGet({required String url}) async {
-    final request = OpenApiClientRequest('get', '/website/image', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addQueryParameter('url', encodeString(url));
-    return await sendRequest(request, {
-      '200': (OpenApiClientResponse response) async =>
-          _WebsiteImageGetResponse200.response200(
+    final request = OpenApiClientRequest(
+      'get',
+      '/website/image',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addQueryParameter(
+      'url',
+      encodeString(url),
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _WebsiteImageGetResponse200.response200(
               response.responseContentType(),
-              await response.responseBodyBytes()),
-      '404': (OpenApiClientResponse response) async =>
-          _WebsiteImageGetResponse404.response404()
-    });
+              await response.responseBodyBytes(),
+            ),
+        '404': (OpenApiClientResponse response) async =>
+            _WebsiteImageGetResponse404.response404(),
+      },
+    );
   }
 }
 
@@ -3576,7 +4857,11 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /check
   ///
   OpenApiClientRequest checkGet() {
-    final request = OpenApiClientRequest('get', '/check', []);
+    final request = OpenApiClientRequest(
+      'get',
+      '/check',
+      [],
+    );
     return request;
   }
 
@@ -3584,12 +4869,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /check/status
   ///
   OpenApiClientRequest checkStatusPost({String? xSecret}) {
-    final request = OpenApiClientRequest('post', '/check/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('x-secret', encodeString(xSecret));
+    final request = OpenApiClientRequest(
+      'post',
+      '/check/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'x-secret',
+      encodeString(xSecret),
+    );
     return request;
   }
 
@@ -3597,11 +4892,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /user
   ///
   OpenApiClientRequest userGet() {
-    final request = OpenApiClientRequest('get', '/user', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/user',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3609,7 +4911,11 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /user/register
   ///
   OpenApiClientRequest userRegisterPost() {
-    final request = OpenApiClientRequest('post', '/user/register', []);
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/register',
+      [],
+    );
     return request;
   }
 
@@ -3617,11 +4923,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /email/status
   ///
   OpenApiClientRequest emailStatusGet() {
-    final request = OpenApiClientRequest('get', '/email/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/email/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3630,8 +4943,15 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   ///
   /// * [token]: Unique token which was sent to email address.
   OpenApiClientRequest emailConfirmGet({required String token}) {
-    final request = OpenApiClientRequest('get', '/email/confirm', []);
-    request.addQueryParameter('token', encodeString(token));
+    final request = OpenApiClientRequest(
+      'get',
+      '/email/confirm',
+      [],
+    );
+    request.addQueryParameter(
+      'token',
+      encodeString(token),
+    );
     return request;
   }
 
@@ -3639,7 +4959,52 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /email/confirm
   ///
   OpenApiClientRequest emailConfirmPost() {
-    final request = OpenApiClientRequest('post', '/email/confirm', []);
+    final request = OpenApiClientRequest(
+      'post',
+      '/email/confirm',
+      [],
+    );
+    return request;
+  }
+
+  /// Request user deletion.
+  /// post: /user/delete
+  ///
+  OpenApiClientRequest userDeletePost() {
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/delete',
+      [],
+    );
+    return request;
+  }
+
+  /// Confirm deleting of user/email address.
+  /// get: /user/delete/confirm
+  ///
+  /// * [token]: Unique token which was sent to email address.
+  OpenApiClientRequest userDeleteConfirmGet({required String token}) {
+    final request = OpenApiClientRequest(
+      'get',
+      '/user/delete/confirm',
+      [],
+    );
+    request.addQueryParameter(
+      'token',
+      encodeString(token),
+    );
+    return request;
+  }
+
+  /// Confirm with recaptcha
+  /// post: /user/delete/confirm
+  ///
+  OpenApiClientRequest userDeleteConfirmPost() {
+    final request = OpenApiClientRequest(
+      'post',
+      '/user/delete/confirm',
+      [],
+    );
     return request;
   }
 
@@ -3647,11 +5012,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /status
   ///
   OpenApiClientRequest statusGet() {
-    final request = OpenApiClientRequest('get', '/status', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/status',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3659,11 +5031,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /mailbox
   ///
   OpenApiClientRequest mailboxGet() {
-    final request = OpenApiClientRequest('get', '/mailbox', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3671,11 +5050,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /mailbox/create
   ///
   OpenApiClientRequest mailboxCreatePost() {
-    final request = OpenApiClientRequest('post', '/mailbox/create', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/mailbox/create',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3685,14 +5071,30 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   ///
   /// * [pageToken]: Page token as returned by Page
   /// * [sinceToken]: As returned from a previous page object for a finished sync.
-  OpenApiClientRequest mailboxListGet({String? pageToken, String? sinceToken}) {
-    final request = OpenApiClientRequest('get', '/mailbox/list', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addQueryParameter('page_token', encodeString(pageToken));
-    request.addQueryParameter('since_token', encodeString(sinceToken));
+  OpenApiClientRequest mailboxListGet({
+    String? pageToken,
+    String? sinceToken,
+  }) {
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox/list',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addQueryParameter(
+      'page_token',
+      encodeString(pageToken),
+    );
+    request.addQueryParameter(
+      'since_token',
+      encodeString(sinceToken),
+    );
     return request;
   }
 
@@ -3700,11 +5102,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /mail/massupdate
   ///
   OpenApiClientRequest mailMassupdatePost() {
-    final request = OpenApiClientRequest('post', '/mail/massupdate', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/mail/massupdate',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3712,13 +5121,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// put: /mailbox/update/{mailboxAddress}
   ///
   OpenApiClientRequest mailboxUpdate({required String mailboxAddress}) {
-    final request =
-        OpenApiClientRequest('put', '/mailbox/update/{mailboxAddress}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addPathParameter('mailboxAddress', encodeString(mailboxAddress));
+    final request = OpenApiClientRequest(
+      'put',
+      '/mailbox/update/{mailboxAddress}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addPathParameter(
+      'mailboxAddress',
+      encodeString(mailboxAddress),
+    );
     return request;
   }
 
@@ -3726,14 +5144,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /mailbox/message/{messageId}
   ///
   OpenApiClientRequest mailboxMessageGet({required ApiUuid messageId}) {
-    final request =
-        OpenApiClientRequest('get', '/mailbox/message/{messageId}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/mailbox/message/{messageId}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
     return request;
   }
 
@@ -3741,14 +5167,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// delete: /mailbox/message/{messageId}
   ///
   OpenApiClientRequest mailboxMessageDelete({required ApiUuid messageId}) {
-    final request =
-        OpenApiClientRequest('delete', '/mailbox/message/{messageId}', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'delete',
+      '/mailbox/message/{messageId}',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
     return request;
   }
 
@@ -3756,14 +5190,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /mailbox/message/{messageId}/forward
   ///
   OpenApiClientRequest mailboxMessageForward({required ApiUuid messageId}) {
-    final request =
-        OpenApiClientRequest('post', '/mailbox/message/{messageId}/forward', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/mailbox/message/{messageId}/forward',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
     return request;
   }
 
@@ -3771,14 +5213,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// put: /mailbox/message/{messageId}/read
   ///
   OpenApiClientRequest mailboxMessageMarkRead({required ApiUuid messageId}) {
-    final request =
-        OpenApiClientRequest('put', '/mailbox/message/{messageId}/read', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'put',
+      '/mailbox/message/{messageId}/read',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
     return request;
   }
 
@@ -3786,14 +5236,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// delete: /mailbox/message/{messageId}/read
   ///
   OpenApiClientRequest mailboxMessageMarkUnRead({required ApiUuid messageId}) {
-    final request =
-        OpenApiClientRequest('delete', '/mailbox/message/{messageId}/read', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'delete',
+      '/mailbox/message/{messageId}/read',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     request.addPathParameter(
-        'messageId', encodeString(messageId.encodeToString()));
+      'messageId',
+      encodeString(messageId.encodeToString()),
+    );
     return request;
   }
 
@@ -3802,9 +5260,15 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   ///
   /// * [xAuthpassToken]: Security token to validate origin from trusted server
   OpenApiClientRequest emailReceivePost({required String xAuthpassToken}) {
-    final request = OpenApiClientRequest('post', '/email/receive', []);
+    final request = OpenApiClientRequest(
+      'post',
+      '/email/receive',
+      [],
+    );
     request.addHeaderParameter(
-        'x-authpass-token', encodeString(xAuthpassToken));
+      'x-authpass-token',
+      encodeString(xAuthpassToken),
+    );
     return request;
   }
 
@@ -3812,11 +5276,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file/metadata
   ///
   OpenApiClientRequest filecloudFileMetadataPost() {
-    final request = OpenApiClientRequest('post', '/filecloud/file/metadata', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/metadata',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3824,11 +5295,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file/retrieve
   ///
   OpenApiClientRequest filecloudFileRetrievePost() {
-    final request = OpenApiClientRequest('post', '/filecloud/file/retrieve', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/retrieve',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3836,11 +5314,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file/delete
   ///
   OpenApiClientRequest filecloudFileDeletePost() {
-    final request = OpenApiClientRequest('post', '/filecloud/file/delete', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/delete',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3848,12 +5333,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file/token/create
   ///
   OpenApiClientRequest filecloudFileTokenCreatePost() {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/file/token/create', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/token/create',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3861,11 +5352,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file/token/list
   ///
   OpenApiClientRequest filecloudFileTokenListPost() {
-    final request = OpenApiClientRequest('post', '/filecloud/file/token/list', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file/token/list',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3873,26 +5371,48 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /filecloud/file
   ///
   OpenApiClientRequest filecloudFileGet() {
-    final request = OpenApiClientRequest('get', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'get',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
   /// Update file
   /// put: /filecloud/file
   ///
-  OpenApiClientRequest filecloudFilePut(
-      {required String fileToken, required String versionToken}) {
-    final request = OpenApiClientRequest('put', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileToken', encodeString(fileToken));
-    request.addHeaderParameter('versionToken', encodeString(versionToken));
+  OpenApiClientRequest filecloudFilePut({
+    required String fileToken,
+    required String versionToken,
+  }) {
+    final request = OpenApiClientRequest(
+      'put',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileToken',
+      encodeString(fileToken),
+    );
+    request.addHeaderParameter(
+      'versionToken',
+      encodeString(versionToken),
+    );
     return request;
   }
 
@@ -3900,27 +5420,52 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/file
   ///
   OpenApiClientRequest filecloudFilePost({required String fileName}) {
-    final request = OpenApiClientRequest('post', '/filecloud/file', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileName', encodeString(fileName));
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/file',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileName',
+      encodeString(fileName),
+    );
     return request;
   }
 
   /// Create attachment
   /// post: /filecloud/attachment
   ///
-  OpenApiClientRequest filecloudAttachmentPost(
-      {required String fileName, required String fileToken}) {
-    final request = OpenApiClientRequest('post', '/filecloud/attachment', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addHeaderParameter('fileName', encodeString(fileName));
-    request.addHeaderParameter('fileToken', encodeString(fileToken));
+  OpenApiClientRequest filecloudAttachmentPost({
+    required String fileName,
+    required String fileToken,
+  }) {
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addHeaderParameter(
+      'fileName',
+      encodeString(fileName),
+    );
+    request.addHeaderParameter(
+      'fileToken',
+      encodeString(fileToken),
+    );
     return request;
   }
 
@@ -3928,12 +5473,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/attachment/touch
   ///
   OpenApiClientRequest filecloudAttachmentTouchPost() {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/touch', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/touch',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3941,12 +5492,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/attachment/unlink
   ///
   OpenApiClientRequest filecloudAttachmentUnlinkPost() {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/unlink', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/unlink',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3954,12 +5511,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// post: /filecloud/attachment/retrieve
   ///
   OpenApiClientRequest filecloudAttachmentRetrievePost() {
-    final request =
-        OpenApiClientRequest('post', '/filecloud/attachment/retrieve', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+    final request = OpenApiClientRequest(
+      'post',
+      '/filecloud/attachment/retrieve',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
     return request;
   }
 
@@ -3967,12 +5530,22 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
   /// get: /website/image
   ///
   OpenApiClientRequest websiteImageGet({required String url}) {
-    final request = OpenApiClientRequest('get', '/website/image', [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    request.addQueryParameter('url', encodeString(url));
+    final request = OpenApiClientRequest(
+      'get',
+      '/website/image',
+      [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    request.addQueryParameter(
+      'url',
+      encodeString(url),
+    );
     return request;
   }
 }
@@ -3984,370 +5557,701 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
 
   @override
   void configure() {
-    addRoute('/check', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.checkGet());
-    }, security: []);
-    addRoute('/check/status', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+    addRoute(
+      '/check',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.checkGet(),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/check/status',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.checkStatusPost(
               xSecret: paramOpt(
-                  name: 'x-secret',
-                  value: request.headerParameter('x-secret'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/user', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.userGet());
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/user/register', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'x-secret',
+            value: request.headerParameter('x-secret'),
+            decode: (value) => paramToString(value),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/user',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.userGet(),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/user/register',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.userRegisterPost(
-              RegisterRequest.fromJson(await request.readJsonBody())));
-    }, security: []);
-    addRoute('/email/status', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.emailStatusGet());
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/email/confirm', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
+              RegisterRequest.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/email/status',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.emailStatusGet(),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/email/confirm',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmGet(
               token: paramRequired(
-                  name: 'token',
-                  value: request.queryParameter('token'),
-                  decode: (value) => paramToString(value))));
-    }, security: []);
-    addRoute('/email/confirm', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'token',
+            value: request.queryParameter('token'),
+            decode: (value) => paramToString(value),
+          )),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/email/confirm',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailConfirmPost(
               EmailConfirmPostSchema.fromJson(
-                  await request.readUrlEncodedBodyFlat())));
-    }, security: []);
-    addRoute('/status', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.statusGet());
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.mailboxGet());
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/create', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+                  await request.readUrlEncodedBodyFlat())),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/user/delete',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.userDeletePost(
+              UserDeletePostSchema.fromJson(
+                  await request.readUrlEncodedBodyFlat())),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/user/delete/confirm',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.userDeleteConfirmGet(
+              token: paramRequired(
+            name: 'token',
+            value: request.queryParameter('token'),
+            decode: (value) => paramToString(value),
+          )),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/user/delete/confirm',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.userDeleteConfirmPost(
+              UserDeleteConfirmPostSchema.fromJson(
+                  await request.readUrlEncodedBodyFlat())),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/status',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.statusGet(),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.mailboxGet(),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/create',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxCreatePost(
-              MailboxCreatePostSchema.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/list', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
+              MailboxCreatePostSchema.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/list',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxListGet(
-              pageToken: paramOpt(
-                  name: 'page_token',
-                  value: request.queryParameter('page_token'),
-                  decode: (value) => paramToString(value)),
-              sinceToken: paramOpt(
-                  name: 'since_token',
-                  value: request.queryParameter('since_token'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mail/massupdate', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            pageToken: paramOpt(
+              name: 'page_token',
+              value: request.queryParameter('page_token'),
+              decode: (value) => paramToString(value),
+            ),
+            sinceToken: paramOpt(
+              name: 'since_token',
+              value: request.queryParameter('since_token'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mail/massupdate',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailMassupdatePost(
-              MailMassupdatePostSchema.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/update/{mailboxAddress}', 'put',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+              MailMassupdatePostSchema.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/update/{mailboxAddress}',
+      'put',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxUpdate(
-              MailboxUpdateSchema.fromJson(await request.readJsonBody()),
-              mailboxAddress: paramRequired(
-                  name: 'mailboxAddress',
-                  value: request.pathParameter('mailboxAddress'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/message/{messageId}', 'get',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            MailboxUpdateSchema.fromJson(await request.readJsonBody()),
+            mailboxAddress: paramRequired(
+              name: 'mailboxAddress',
+              value: request.pathParameter('mailboxAddress'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/message/{messageId}',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageGet(
               messageId: paramRequired(
-                  name: 'messageId',
-                  value: request.pathParameter('messageId'),
-                  decode: (value) => ApiUuid.parse(paramToString(value)))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/message/{messageId}', 'delete',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'messageId',
+            value: request.pathParameter('messageId'),
+            decode: (value) => ApiUuid.parse(paramToString(value)),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/message/{messageId}',
+      'delete',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageDelete(
               messageId: paramRequired(
-                  name: 'messageId',
-                  value: request.pathParameter('messageId'),
-                  decode: (value) => ApiUuid.parse(paramToString(value)))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/message/{messageId}/forward', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'messageId',
+            value: request.pathParameter('messageId'),
+            decode: (value) => ApiUuid.parse(paramToString(value)),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/message/{messageId}/forward',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageForward(
-              MailboxMessageForwardSchema.fromJson(
-                  await request.readJsonBody()),
-              messageId: paramRequired(
-                  name: 'messageId',
-                  value: request.pathParameter('messageId'),
-                  decode: (value) => ApiUuid.parse(paramToString(value)))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/message/{messageId}/read', 'put',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            MailboxMessageForwardSchema.fromJson(await request.readJsonBody()),
+            messageId: paramRequired(
+              name: 'messageId',
+              value: request.pathParameter('messageId'),
+              decode: (value) => ApiUuid.parse(paramToString(value)),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/message/{messageId}/read',
+      'put',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageMarkRead(
               messageId: paramRequired(
-                  name: 'messageId',
-                  value: request.pathParameter('messageId'),
-                  decode: (value) => ApiUuid.parse(paramToString(value)))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/mailbox/message/{messageId}/read', 'delete',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'messageId',
+            value: request.pathParameter('messageId'),
+            decode: (value) => ApiUuid.parse(paramToString(value)),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/mailbox/message/{messageId}/read',
+      'delete',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.mailboxMessageMarkUnRead(
               messageId: paramRequired(
-                  name: 'messageId',
-                  value: request.pathParameter('messageId'),
-                  decode: (value) => ApiUuid.parse(paramToString(value)))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/email/receive', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            name: 'messageId',
+            value: request.pathParameter('messageId'),
+            decode: (value) => ApiUuid.parse(paramToString(value)),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/email/receive',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.emailReceivePost(
-              await request.readBodyString(),
-              xAuthpassToken: paramRequired(
-                  name: 'x-authpass-token',
-                  value: request.headerParameter('x-authpass-token'),
-                  decode: (value) => paramToString(value))));
-    }, security: []);
-    addRoute('/filecloud/file/metadata', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            await request.readBodyString(),
+            xAuthpassToken: paramRequired(
+              name: 'x-authpass-token',
+              value: request.headerParameter('x-authpass-token'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/filecloud/file/metadata',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileMetadataPost(
-              FileId.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file/retrieve', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+              FileId.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file/retrieve',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileRetrievePost(
-              FileId.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file/delete', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+              FileId.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file/delete',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileDeletePost(
-              FileId.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file/token/create', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+              FileId.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file/token/create',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileTokenCreatePost(
               FilecloudFileTokenCreatePostSchema.fromJson(
-                  await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file/token/list', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+                  await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file/token/list',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFileTokenListPost(
-              FileId.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
-          request, (AuthPassCloud impl) async => impl.filecloudFileGet());
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file', 'put', (OpenApiRequest request) async {
-      return await impl.invoke(
+              FileId.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.filecloudFileGet(),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file',
+      'put',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFilePut(
-              await request.readBodyBytes(),
-              fileToken: paramRequired(
-                  name: 'fileToken',
-                  value: request.headerParameter('fileToken'),
-                  decode: (value) => paramToString(value)),
-              versionToken: paramRequired(
-                  name: 'versionToken',
-                  value: request.headerParameter('versionToken'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/file', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            await request.readBodyBytes(),
+            fileToken: paramRequired(
+              name: 'fileToken',
+              value: request.headerParameter('fileToken'),
+              decode: (value) => paramToString(value),
+            ),
+            versionToken: paramRequired(
+              name: 'versionToken',
+              value: request.headerParameter('versionToken'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/file',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudFilePost(
-              await request.readBodyBytes(),
-              fileName: paramRequired(
-                  name: 'fileName',
-                  value: request.headerParameter('fileName'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/attachment', 'post', (OpenApiRequest request) async {
-      return await impl.invoke(
+            await request.readBodyBytes(),
+            fileName: paramRequired(
+              name: 'fileName',
+              value: request.headerParameter('fileName'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/attachment',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudAttachmentPost(
-              await request.readBodyBytes(),
-              fileName: paramRequired(
-                  name: 'fileName',
-                  value: request.headerParameter('fileName'),
-                  decode: (value) => paramToString(value)),
-              fileToken: paramRequired(
-                  name: 'fileToken',
-                  value: request.headerParameter('fileToken'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/attachment/touch', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+            await request.readBodyBytes(),
+            fileName: paramRequired(
+              name: 'fileName',
+              value: request.headerParameter('fileName'),
+              decode: (value) => paramToString(value),
+            ),
+            fileToken: paramRequired(
+              name: 'fileToken',
+              value: request.headerParameter('fileToken'),
+              decode: (value) => paramToString(value),
+            ),
+          ),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/attachment/touch',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudAttachmentTouchPost(
-              AttachmentTouch.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/attachment/unlink', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+              AttachmentTouch.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/attachment/unlink',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudAttachmentUnlinkPost(
-              AttachmentTouch.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/filecloud/attachment/retrieve', 'post',
-        (OpenApiRequest request) async {
-      return await impl.invoke(
+              AttachmentTouch.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/filecloud/attachment/retrieve',
+      'post',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.filecloudAttachmentRetrievePost(
-              AttachmentId.fromJson(await request.readJsonBody())));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
-    addRoute('/website/image', 'get', (OpenApiRequest request) async {
-      return await impl.invoke(
+              AttachmentId.fromJson(await request.readJsonBody())),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
+    addRoute(
+      '/website/image',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
           request,
           (AuthPassCloud impl) async => impl.websiteImageGet(
               url: paramRequired(
-                  name: 'url',
-                  value: request.queryParameter('url'),
-                  decode: (value) => paramToString(value))));
-    }, security: [
-      SecurityRequirement(schemes: [
-        SecurityRequirementScheme(scheme: SecuritySchemes.authToken, scopes: [])
-      ])
-    ]);
+            name: 'url',
+            value: request.queryParameter('url'),
+            decode: (value) => paramToString(value),
+          )),
+        );
+      },
+      security: [
+        SecurityRequirement(schemes: [
+          SecurityRequirementScheme(
+            scheme: SecuritySchemes.authToken,
+            scopes: [],
+          )
+        ])
+      ],
+    );
   }
 }
 

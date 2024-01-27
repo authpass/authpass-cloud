@@ -126,6 +126,81 @@ paths:
                 type: string
         '400':
           description: Invalid token or email address.
+  /user/delete:
+    post:
+      summary: Request user deletion.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: 'No user found with that email.'
+  /user/delete/confirm:
+    get:
+      summary: Confirm deleting of user/email address.
+      security: []
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: Unique token which was sent to email address.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Invalid token or email address.
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      summary: Confirm with recaptcha
+      security: []
+      requestBody:
+        required: true
+        description: ''
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                g-recaptcha-response:
+                  type: string
+              required:
+                - token
+                - g-recaptcha-response
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+        '400':
+          description: Invalid token or email address.
   /status:
     get:
       summary: Get status of the user account.

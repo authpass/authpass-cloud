@@ -507,6 +507,26 @@ class AuthPassCloudImpl extends AuthPassCloud {
     );
     return FilecloudAttachmentUnlinkPostResponse.response200();
   }
+
+  @override
+  Future<UserDeleteConfirmGetResponse> userDeleteConfirmGet(
+      {required String token}) {
+    // TODO: implement userDeleteConfirmGet
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserDeleteConfirmPostResponse> userDeleteConfirmPost(
+      UserDeleteConfirmPostSchema body) {
+    // TODO: implement userDeleteConfirmPost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserDeletePostResponse> userDeletePost(UserDeletePostSchema body) {
+    // TODO: implement userDeletePost
+    throw UnimplementedError();
+  }
 }
 
 class PageToken {
