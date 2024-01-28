@@ -25,11 +25,11 @@ jobs:
       run: cd docker && docker-compose build backend
     - name: docker login and push
       run: |
-        echo '${{ secrets.CONTAINER_ACCESS_TOKEN }}' | docker login https://containers.pkg.github.com -u ${{ secrets.CONTAINER_USER }} --password-stdin
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
         cd docker && docker-compose push backend
     - name: extract executable from image
       run: |
-        image=$( docker create containers.pkg.github.com/authpass/authpass-backend )
+        image=$( docker create ghcr.io/authpass/authpass-backend )
         docker cp ${image}:/authpass_backend.exe .
         docker rm ${image}
     - uses: actions/upload-artifact@v2

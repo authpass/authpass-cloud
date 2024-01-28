@@ -31,7 +31,7 @@ services:
         constraints: [node.role == manager]
     stop_grace_period: 60s
   backend:
-    image: containers.pkg.github.com/authpass/authpass-backend
+    image: ghcr.io/authpass/authpass-backend
     #image: hpoul/authpass-backend-test
     build:
       context: ..
@@ -58,7 +58,7 @@ services:
         monitor: 5m
         failure_action: rollback
   smtpd:
-    image: containers.pkg.github.com/authpass/authpass-backend
+    image: ghcr.io/authpass/authpass-backend
     ports:
       - 9561:25
     command: /authpass_backend.exe smtpd -c config/prod.yaml
