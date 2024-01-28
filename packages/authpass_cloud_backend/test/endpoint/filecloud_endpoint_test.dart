@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
@@ -19,9 +18,9 @@ void main() {
   _logger.fine('starting tests...');
 
   const fileName = 'foo.kdbx';
-  final content = utf8.encode('test') as Uint8List;
-  final content2 = utf8.encode('test2') as Uint8List;
-  final content3 = utf8.encode('test3') as Uint8List;
+  final content = utf8.encode('test');
+  final content2 = utf8.encode('test2');
+  final content3 = utf8.encode('test3');
 
   group('filecloud file test', () {
     endpointTest('fail anonymous', (endpoint) async {
@@ -227,8 +226,8 @@ void main() {
     });
   });
   group('attachments', () {
-    final attachmentContent = utf8.encode('foo') as Uint8List;
-    final attachmentContent2 = utf8.encode('foo') as Uint8List;
+    final attachmentContent = utf8.encode('foo');
+    final attachmentContent2 = utf8.encode('foo');
     endpointTest('create tokens', (endpoint) async {
       var fakeDate = DateTime.utc(2020);
       final clock = Clock(() => fakeDate);

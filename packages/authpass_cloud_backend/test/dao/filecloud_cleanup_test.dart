@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables_enum.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
@@ -18,7 +17,7 @@ void main() {
   _logger.fine('starting tests...');
 
   const fileName = 'foo.kdbx';
-  final content = utf8.encode('test') as Uint8List;
+  final content = utf8.encode('test');
   var now = DateTime.utc(2020, 1, 1);
 
   endpointTest('cleanup files', (endpoint) async {
