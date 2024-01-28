@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.4 (Debian 14.4-1.pgdg110+1)
--- Dumped by pg_dump version 14.4 (Debian 14.4-1.pgdg110+1)
+-- Dumped from database version 16.1 (Debian 16.1-1.pgdg120+1)
+-- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg120+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -93,7 +93,7 @@ CREATE SEQUENCE public.authpass_migration_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.authpass_migration_id_seq OWNER TO authpass;
+ALTER SEQUENCE public.authpass_migration_id_seq OWNER TO authpass;
 
 --
 -- Name: authpass_migration_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: authpass
@@ -244,7 +244,9 @@ ALTER TABLE public.filecloud_token OWNER TO authpass;
 
 CREATE TABLE public."user" (
     id uuid NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp without time zone,
+    deleted_by character varying
 );
 
 
