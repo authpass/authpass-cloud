@@ -1,7 +1,7 @@
 # Dockerfile must be run in root directory of project
 # or better yet with the docker-compose.yaml
 
-FROM dart:2.17.5 as build
+FROM dart:3.2.5 as build
 
 ARG buildnumber
 ARG hostinfo
