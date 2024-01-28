@@ -48,6 +48,7 @@ dev_dependencies:
   freezed: ^2.0.3+1
   json_serializable: ^6.2.0
   flutter_lints: ^2.0.1
+  faker: ^2.1.0
 
 dependency_overrides:
   # Because enough_mail >=2.1.6 depends on intl ^0.19.0 and mailer >=6.0.0 depends on intl >=0.17.0 <0.19.0, enough_mail >=2.1.6 is incompatible with mailer >=6.0.0.

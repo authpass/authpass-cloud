@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'website_tables.dart';
 
@@ -29,79 +29,81 @@ mixin _$WebsiteEntity {
 abstract class $WebsiteEntityCopyWith<$Res> {
   factory $WebsiteEntityCopyWith(
           WebsiteEntity value, $Res Function(WebsiteEntity) then) =
-      _$WebsiteEntityCopyWithImpl<$Res>;
+      _$WebsiteEntityCopyWithImpl<$Res, WebsiteEntity>;
+  @useResult
   $Res call({String id, String url, String urlCanonical});
 }
 
 /// @nodoc
-class _$WebsiteEntityCopyWithImpl<$Res>
+class _$WebsiteEntityCopyWithImpl<$Res, $Val extends WebsiteEntity>
     implements $WebsiteEntityCopyWith<$Res> {
   _$WebsiteEntityCopyWithImpl(this._value, this._then);
 
-  final WebsiteEntity _value;
   // ignore: unused_field
-  final $Res Function(WebsiteEntity) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? url = freezed,
-    Object? urlCanonical = freezed,
+    Object? id = null,
+    Object? url = null,
+    Object? urlCanonical = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      url: url == freezed
+      url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
-      urlCanonical: urlCanonical == freezed
+      urlCanonical: null == urlCanonical
           ? _value.urlCanonical
           : urlCanonical // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_WebsiteEntityCopyWith<$Res>
+abstract class _$$WebsiteEntityImplCopyWith<$Res>
     implements $WebsiteEntityCopyWith<$Res> {
-  factory _$$_WebsiteEntityCopyWith(
-          _$_WebsiteEntity value, $Res Function(_$_WebsiteEntity) then) =
-      __$$_WebsiteEntityCopyWithImpl<$Res>;
+  factory _$$WebsiteEntityImplCopyWith(
+          _$WebsiteEntityImpl value, $Res Function(_$WebsiteEntityImpl) then) =
+      __$$WebsiteEntityImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String id, String url, String urlCanonical});
 }
 
 /// @nodoc
-class __$$_WebsiteEntityCopyWithImpl<$Res>
-    extends _$WebsiteEntityCopyWithImpl<$Res>
-    implements _$$_WebsiteEntityCopyWith<$Res> {
-  __$$_WebsiteEntityCopyWithImpl(
-      _$_WebsiteEntity _value, $Res Function(_$_WebsiteEntity) _then)
-      : super(_value, (v) => _then(v as _$_WebsiteEntity));
+class __$$WebsiteEntityImplCopyWithImpl<$Res>
+    extends _$WebsiteEntityCopyWithImpl<$Res, _$WebsiteEntityImpl>
+    implements _$$WebsiteEntityImplCopyWith<$Res> {
+  __$$WebsiteEntityImplCopyWithImpl(
+      _$WebsiteEntityImpl _value, $Res Function(_$WebsiteEntityImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _$_WebsiteEntity get _value => super._value as _$_WebsiteEntity;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? url = freezed,
-    Object? urlCanonical = freezed,
+    Object? id = null,
+    Object? url = null,
+    Object? urlCanonical = null,
   }) {
-    return _then(_$_WebsiteEntity(
-      id: id == freezed
+    return _then(_$WebsiteEntityImpl(
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      url: url == freezed
+      url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
               as String,
-      urlCanonical: urlCanonical == freezed
+      urlCanonical: null == urlCanonical
           ? _value.urlCanonical
           : urlCanonical // ignore: cast_nullable_to_non_nullable
               as String,
@@ -111,8 +113,8 @@ class __$$_WebsiteEntityCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_WebsiteEntity implements _WebsiteEntity {
-  const _$_WebsiteEntity(
+class _$WebsiteEntityImpl implements _WebsiteEntity {
+  const _$WebsiteEntityImpl(
       {required this.id, required this.url, required this.urlCanonical});
 
   @override
@@ -128,43 +130,40 @@ class _$_WebsiteEntity implements _WebsiteEntity {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_WebsiteEntity &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.url, url) &&
-            const DeepCollectionEquality()
-                .equals(other.urlCanonical, urlCanonical));
+            other is _$WebsiteEntityImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.urlCanonical, urlCanonical) ||
+                other.urlCanonical == urlCanonical));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(url),
-      const DeepCollectionEquality().hash(urlCanonical));
+  int get hashCode => Object.hash(runtimeType, id, url, urlCanonical);
 
   @JsonKey(ignore: true)
   @override
-  _$$_WebsiteEntityCopyWith<_$_WebsiteEntity> get copyWith =>
-      __$$_WebsiteEntityCopyWithImpl<_$_WebsiteEntity>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$WebsiteEntityImplCopyWith<_$WebsiteEntityImpl> get copyWith =>
+      __$$WebsiteEntityImplCopyWithImpl<_$WebsiteEntityImpl>(this, _$identity);
 }
 
 abstract class _WebsiteEntity implements WebsiteEntity {
   const factory _WebsiteEntity(
       {required final String id,
       required final String url,
-      required final String urlCanonical}) = _$_WebsiteEntity;
+      required final String urlCanonical}) = _$WebsiteEntityImpl;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String get url => throw _privateConstructorUsedError;
+  String get url;
   @override
-  String get urlCanonical => throw _privateConstructorUsedError;
+  String get urlCanonical;
   @override
   @JsonKey(ignore: true)
-  _$$_WebsiteEntityCopyWith<_$_WebsiteEntity> get copyWith =>
+  _$$WebsiteEntityImplCopyWith<_$WebsiteEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

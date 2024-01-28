@@ -357,6 +357,13 @@ class UserTable extends TableBase with TableConstants {
     final user = authToken.user;
     final ret = DbUpdateTracker('user');
     await ret.track(
+      _TABLE_EMAIL_CONFIRM,
+      () async => await db.query(
+        'DELETE FROM $_TABLE_EMAIL_CONFIRM WHERE $_COLUMN_EMAIL_ID IN (SELECT $columnId FROM $_TABLE_EMAIL WHERE $COLUMN_USER_ID = @userId)',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
       _TABLE_EMAIL,
       () async => await db.query(
         'DELETE FROM $_TABLE_EMAIL WHERE $COLUMN_USER_ID = @userId',

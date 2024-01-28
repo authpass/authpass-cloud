@@ -6,20 +6,20 @@ part of 'filecloud_tables.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CleanupStats _$$_CleanupStatsFromJson(Map<String, dynamic> json) =>
-    _$_CleanupStats(
+_$CleanupStatsImpl _$$CleanupStatsImplFromJson(Map<String, dynamic> json) =>
+    _$CleanupStatsImpl(
       timeMs: json['timeMs'] as int,
       count: json['count'] as int,
       versionSignificance: $enumDecode(
           _$VersionSignificanceEnumMap, json['versionSignificance']),
     );
 
-Map<String, dynamic> _$$_CleanupStatsToJson(_$_CleanupStats instance) =>
+Map<String, dynamic> _$$CleanupStatsImplToJson(_$CleanupStatsImpl instance) =>
     <String, dynamic>{
       'timeMs': instance.timeMs,
       'count': instance.count,
       'versionSignificance':
-          _$VersionSignificanceEnumMap[instance.versionSignificance],
+          _$VersionSignificanceEnumMap[instance.versionSignificance]!,
     };
 
 const _$VersionSignificanceEnumMap = {
@@ -32,8 +32,9 @@ const _$VersionSignificanceEnumMap = {
   VersionSignificance.firstVersion: 'firstVersion',
 };
 
-_$_CleanupStatsLog _$$_CleanupStatsLogFromJson(Map<String, dynamic> json) =>
-    _$_CleanupStatsLog(
+_$CleanupStatsLogImpl _$$CleanupStatsLogImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CleanupStatsLogImpl(
       timeMs: json['timeMs'] as int,
       cleanupCount: json['cleanupCount'] as int,
       cleanupStats: (json['cleanupStats'] as List<dynamic>)
@@ -41,7 +42,8 @@ _$_CleanupStatsLog _$$_CleanupStatsLogFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_CleanupStatsLogToJson(_$_CleanupStatsLog instance) =>
+Map<String, dynamic> _$$CleanupStatsLogImplToJson(
+        _$CleanupStatsLogImpl instance) =>
     <String, dynamic>{
       'timeMs': instance.timeMs,
       'cleanupCount': instance.cleanupCount,

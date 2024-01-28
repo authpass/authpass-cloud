@@ -727,6 +727,17 @@ class FileCloudTable extends TableBase with TableConstants {
       ),
     );
     await ret.track(
+      TABLE_ATTACHMENT,
+      () async => await db.query(
+        'DELETE FROM $TABLE_ATTACHMENT a '
+        'WHERE a.$columnUserId = @userId '
+        'AND NOT EXISTS ('
+        'SELECT 1 FROM $TABLE_ATTACHMENT_TOUCH at WHERE at.$_columnAttachmentId = a.$columnId'
+        ')',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
       TABLE_FILE_TOKEN,
       () async => await db.query(
         'DELETE FROM $TABLE_FILE_TOKEN WHERE $_columnFileId IN (SELECT $columnId FROM $TABLE_FILE WHERE $columnUserId = @userId)',

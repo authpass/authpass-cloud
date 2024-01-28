@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:authpass_cloud_backend/src/dao/tables/email_tables.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/endpoint/authpass_endpoint.dart';
@@ -8,6 +10,7 @@ import 'package:authpass_cloud_backend/src/service/email_service.dart';
 import 'package:authpass_cloud_backend/src/service/recaptcha_service.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:faker/faker.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_appenders/logging_appenders.dart';
 import 'package:meta/meta.dart';
@@ -80,7 +83,8 @@ void endpointTest(
 class EndpointTestUtil {
   static Future<AuthTokenEntity?> createUserConfirmed(
       AuthPassCloudImpl endpoint,
-      {String email = 'a@b.com'}) async {
+      {String? email}) async {
+    email ??= Faker().internet.email();
     final db = endpoint.db;
     final confirm =
         await db.tables.user.insertUser(endpoint.db, email, 'unit test');
@@ -94,20 +98,25 @@ class EndpointTestUtil {
     when(endpoint.request.headerParameter('Authorization')).thenReturn(['']);
   }
 
-  static Future<MailboxEntity> createUserWithMailbox(
-      AuthPassCloudImpl endpoint) async {
-    final authToken = await createUserConfirmed(endpoint);
+  static Future<MailboxEntity> createUserWithMailbox(AuthPassCloudImpl endpoint,
+      {String? email}) async {
+    final authToken = await createUserConfirmed(endpoint, email: email);
     if (authToken == null) {
       throw StateError('Must not be null.');
     }
-    const address = 'x@mail.authpass.app';
-    await endpoint.db.tables.email.insertMailbox(
-      endpoint.db,
-      userEntity: authToken.user,
+    // const address = 'x@mail.authpass.app';
+    final address = await endpoint.repository.email.createAddress(
+      authToken.user,
       label: '',
-      address: address,
       clientEntryUuid: '',
     );
+    // await endpoint.db.tables.email.insertMailbox(
+    //   endpoint.db,
+    //   userEntity: authToken.user,
+    //   label: '',
+    //   address: address,
+    //   clientEntryUuid: '',
+    // );
     return (await endpoint.db.tables.email
         .findMailbox(endpoint.db, address: address))!;
   }
@@ -272,6 +281,127 @@ void main() {
           .requireSuccess();
       final statusAfter = await endpoint.statusGet().requireSuccess();
       expect(statusAfter.mail.messagesUnread, 0);
+    });
+    endpointTest('delete user', (endpoint) async {
+      final e1 = Faker().internet.email();
+      final mailbox =
+          await EndpointTestUtil.createUserWithMailbox(endpoint, email: e1);
+      await endpoint.repository.email.createAddress(
+        mailbox.user,
+        label: '',
+        clientEntryUuid: '',
+      );
+
+      final mailbox2 = await EndpointTestUtil.createUserWithMailbox(endpoint);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      await EndpointTestUtil.createMessage(endpoint, mailbox);
+      await EndpointTestUtil.createMessage(endpoint, mailbox2);
+      await EndpointTestUtil.createMessage(endpoint, mailbox2);
+
+      {
+        final bytes = Uint8List.fromList([1, 2, 3]);
+        // create some files with a few variants for the first user..
+        final f = await endpoint.repository.fileCloud
+            .createFile(mailbox.user, 'test.txt', bytes);
+        final f2 = await endpoint.repository.fileCloud.updateFile(mailbox.user,
+            fileToken: f.fileToken,
+            versionToken: f.versionToken,
+            bytes: Uint8List.fromList([1, 2, 3]));
+        await endpoint.repository.fileCloud.updateFile(mailbox.user,
+            fileToken: f2.fileToken,
+            versionToken: f2.versionToken,
+            bytes: Uint8List.fromList([1, 2, 3]));
+
+        // create attachment
+        final a1 = await endpoint.repository.fileCloud.createAttachment(
+            mailbox.user,
+            bytes: bytes,
+            fileName: 'attachment.txt',
+            fileToken: f2.fileToken);
+        await endpoint.repository.fileCloud.touchAttachment(
+          mailbox.user,
+          fileToken: f.fileToken,
+          attachmentIds: [a1],
+        );
+        final a2 = await endpoint.repository.fileCloud.createAttachment(
+            mailbox.user,
+            bytes: bytes,
+            fileName: 'attachment.txt',
+            fileToken: f2.fileToken);
+        await endpoint.repository.fileCloud.touchAttachment(
+          mailbox.user,
+          fileToken: f.fileToken,
+          attachmentIds: [a2],
+        );
+
+        // also create a file for the second user.
+        final u2f1 = await endpoint.repository.fileCloud.createFile(
+            mailbox2.user, 'test2.txt', Uint8List.fromList([1, 2, 3]));
+        // create attachment for second user.
+        final u2a1 = await endpoint.repository.fileCloud.createAttachment(
+            mailbox2.user,
+            bytes: bytes,
+            fileName: 'attachment.txt',
+            fileToken: u2f1.fileToken);
+        await endpoint.repository.fileCloud.touchAttachment(
+          mailbox.user,
+          fileToken: u2f1.fileToken,
+          attachmentIds: [u2a1],
+        );
+        // let user 2 also touch file 2
+        await endpoint.repository.fileCloud.touchAttachment(
+          mailbox2.user,
+          fileToken: u2f1.fileToken,
+          attachmentIds: [a2],
+        );
+
+        final status = await endpoint
+            .checkStatusPost(
+                xSecret: endpoint
+                    .serviceProvider.env.config.secrets.systemStatusSecret)
+            .requireSuccess();
+        expect(status.fileCloud.attachmentCount, 3);
+        expect(status.fileCloud.fileCount, 2);
+        expect(status.fileCloud.fileContentCount, 4);
+      }
+
+      {
+        final mailboxCount =
+            await endpoint.db.tables.email.countMailbox(endpoint.db);
+        expect(mailboxCount.mailboxCount, 3);
+      }
+
+      final emailService =
+          endpoint.serviceProvider.emailService as MockEmailService;
+      await endpoint.userDeletePost(UserDeletePostSchema(email: e1));
+      final captured = verify(emailService
+              .sendEmailConfirmationForUserDeleteToken(captureAny, captureAny))
+          .captured;
+      expect(captured, [e1, matches('^http.+')]);
+      final emailToken =
+          Uri.parse(captured[1] as String).queryParameters['token']!;
+      final recaptchaService =
+          endpoint.serviceProvider.recaptchaService as MockRecaptchaService;
+
+      when(recaptchaService.verify(any, any))
+          .thenAnswer((realInvocation) async => true);
+      final result = await endpoint.userDeleteConfirmPost(
+          UserDeleteConfirmPostSchema(
+              token: emailToken, gRecaptchaResponse: ''));
+      expect(result.status, 200);
+      final mailboxCount =
+          await endpoint.db.tables.email.countMailbox(endpoint.db);
+      expect(mailboxCount.mailboxCount, 1);
+
+      final status = await endpoint
+          .checkStatusPost(
+              xSecret: endpoint
+                  .serviceProvider.env.config.secrets.systemStatusSecret)
+          .requireSuccess();
+      // 1 attachment was touched by both users, so it should still remain available.
+      expect(status.fileCloud.attachmentCount, 2);
+      expect(status.fileCloud.fileCount, 1);
+      expect(status.fileCloud.fileContentCount, 1);
     });
   });
 

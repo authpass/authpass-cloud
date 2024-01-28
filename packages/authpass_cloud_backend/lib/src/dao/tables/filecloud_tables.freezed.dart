@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'filecloud_tables.dart';
 
@@ -35,78 +35,81 @@ mixin _$CleanupStats {
 abstract class $CleanupStatsCopyWith<$Res> {
   factory $CleanupStatsCopyWith(
           CleanupStats value, $Res Function(CleanupStats) then) =
-      _$CleanupStatsCopyWithImpl<$Res>;
+      _$CleanupStatsCopyWithImpl<$Res, CleanupStats>;
+  @useResult
   $Res call({int timeMs, int count, VersionSignificance versionSignificance});
 }
 
 /// @nodoc
-class _$CleanupStatsCopyWithImpl<$Res> implements $CleanupStatsCopyWith<$Res> {
+class _$CleanupStatsCopyWithImpl<$Res, $Val extends CleanupStats>
+    implements $CleanupStatsCopyWith<$Res> {
   _$CleanupStatsCopyWithImpl(this._value, this._then);
 
-  final CleanupStats _value;
   // ignore: unused_field
-  final $Res Function(CleanupStats) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? timeMs = freezed,
-    Object? count = freezed,
-    Object? versionSignificance = freezed,
+    Object? timeMs = null,
+    Object? count = null,
+    Object? versionSignificance = null,
   }) {
     return _then(_value.copyWith(
-      timeMs: timeMs == freezed
+      timeMs: null == timeMs
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
               as int,
-      count: count == freezed
+      count: null == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
-      versionSignificance: versionSignificance == freezed
+      versionSignificance: null == versionSignificance
           ? _value.versionSignificance
           : versionSignificance // ignore: cast_nullable_to_non_nullable
               as VersionSignificance,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_CleanupStatsCopyWith<$Res>
+abstract class _$$CleanupStatsImplCopyWith<$Res>
     implements $CleanupStatsCopyWith<$Res> {
-  factory _$$_CleanupStatsCopyWith(
-          _$_CleanupStats value, $Res Function(_$_CleanupStats) then) =
-      __$$_CleanupStatsCopyWithImpl<$Res>;
+  factory _$$CleanupStatsImplCopyWith(
+          _$CleanupStatsImpl value, $Res Function(_$CleanupStatsImpl) then) =
+      __$$CleanupStatsImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int timeMs, int count, VersionSignificance versionSignificance});
 }
 
 /// @nodoc
-class __$$_CleanupStatsCopyWithImpl<$Res>
-    extends _$CleanupStatsCopyWithImpl<$Res>
-    implements _$$_CleanupStatsCopyWith<$Res> {
-  __$$_CleanupStatsCopyWithImpl(
-      _$_CleanupStats _value, $Res Function(_$_CleanupStats) _then)
-      : super(_value, (v) => _then(v as _$_CleanupStats));
+class __$$CleanupStatsImplCopyWithImpl<$Res>
+    extends _$CleanupStatsCopyWithImpl<$Res, _$CleanupStatsImpl>
+    implements _$$CleanupStatsImplCopyWith<$Res> {
+  __$$CleanupStatsImplCopyWithImpl(
+      _$CleanupStatsImpl _value, $Res Function(_$CleanupStatsImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _$_CleanupStats get _value => super._value as _$_CleanupStats;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? timeMs = freezed,
-    Object? count = freezed,
-    Object? versionSignificance = freezed,
+    Object? timeMs = null,
+    Object? count = null,
+    Object? versionSignificance = null,
   }) {
-    return _then(_$_CleanupStats(
-      timeMs: timeMs == freezed
+    return _then(_$CleanupStatsImpl(
+      timeMs: null == timeMs
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
               as int,
-      count: count == freezed
+      count: null == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
-      versionSignificance: versionSignificance == freezed
+      versionSignificance: null == versionSignificance
           ? _value.versionSignificance
           : versionSignificance // ignore: cast_nullable_to_non_nullable
               as VersionSignificance,
@@ -116,14 +119,14 @@ class __$$_CleanupStatsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CleanupStats implements _CleanupStats {
-  const _$_CleanupStats(
+class _$CleanupStatsImpl implements _CleanupStats {
+  const _$CleanupStatsImpl(
       {required this.timeMs,
       required this.count,
       required this.versionSignificance});
 
-  factory _$_CleanupStats.fromJson(Map<String, dynamic> json) =>
-      _$$_CleanupStatsFromJson(json);
+  factory _$CleanupStatsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CleanupStatsImplFromJson(json);
 
   @override
   final int timeMs;
@@ -138,32 +141,32 @@ class _$_CleanupStats implements _CleanupStats {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CleanupStats &&
-            const DeepCollectionEquality().equals(other.timeMs, timeMs) &&
-            const DeepCollectionEquality().equals(other.count, count) &&
-            const DeepCollectionEquality()
-                .equals(other.versionSignificance, versionSignificance));
+            other is _$CleanupStatsImpl &&
+            (identical(other.timeMs, timeMs) || other.timeMs == timeMs) &&
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.versionSignificance, versionSignificance) ||
+                other.versionSignificance == versionSignificance));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(timeMs),
-      const DeepCollectionEquality().hash(count),
-      const DeepCollectionEquality().hash(versionSignificance));
+  int get hashCode =>
+      Object.hash(runtimeType, timeMs, count, versionSignificance);
 
   @JsonKey(ignore: true)
   @override
-  _$$_CleanupStatsCopyWith<_$_CleanupStats> get copyWith =>
-      __$$_CleanupStatsCopyWithImpl<_$_CleanupStats>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$CleanupStatsImplCopyWith<_$CleanupStatsImpl> get copyWith =>
+      __$$CleanupStatsImplCopyWithImpl<_$CleanupStatsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CleanupStatsToJson(this);
+    return _$$CleanupStatsImplToJson(
+      this,
+    );
   }
 }
 
@@ -172,21 +175,20 @@ abstract class _CleanupStats implements CleanupStats {
           {required final int timeMs,
           required final int count,
           required final VersionSignificance versionSignificance}) =
-      _$_CleanupStats;
+      _$CleanupStatsImpl;
 
   factory _CleanupStats.fromJson(Map<String, dynamic> json) =
-      _$_CleanupStats.fromJson;
+      _$CleanupStatsImpl.fromJson;
 
   @override
-  int get timeMs => throw _privateConstructorUsedError;
+  int get timeMs;
   @override
-  int get count => throw _privateConstructorUsedError;
+  int get count;
   @override
-  VersionSignificance get versionSignificance =>
-      throw _privateConstructorUsedError;
+  VersionSignificance get versionSignificance;
   @override
   @JsonKey(ignore: true)
-  _$$_CleanupStatsCopyWith<_$_CleanupStats> get copyWith =>
+  _$$CleanupStatsImplCopyWith<_$CleanupStatsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -206,7 +208,8 @@ mixin _$FileContentDebug {
 abstract class $FileContentDebugCopyWith<$Res> {
   factory $FileContentDebugCopyWith(
           FileContentDebug value, $Res Function(FileContentDebug) then) =
-      _$FileContentDebugCopyWithImpl<$Res>;
+      _$FileContentDebugCopyWithImpl<$Res, FileContentDebug>;
+  @useResult
   $Res call(
       {DateTime createdAt,
       VersionSignificance? versionSignificance,
@@ -214,44 +217,47 @@ abstract class $FileContentDebugCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FileContentDebugCopyWithImpl<$Res>
+class _$FileContentDebugCopyWithImpl<$Res, $Val extends FileContentDebug>
     implements $FileContentDebugCopyWith<$Res> {
   _$FileContentDebugCopyWithImpl(this._value, this._then);
 
-  final FileContentDebug _value;
   // ignore: unused_field
-  final $Res Function(FileContentDebug) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdAt = freezed,
+    Object? createdAt = null,
     Object? versionSignificance = freezed,
-    Object? contentCount = freezed,
+    Object? contentCount = null,
   }) {
     return _then(_value.copyWith(
-      createdAt: createdAt == freezed
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      versionSignificance: versionSignificance == freezed
+      versionSignificance: freezed == versionSignificance
           ? _value.versionSignificance
           : versionSignificance // ignore: cast_nullable_to_non_nullable
               as VersionSignificance?,
-      contentCount: contentCount == freezed
+      contentCount: null == contentCount
           ? _value.contentCount
           : contentCount // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_FileContentDebugCopyWith<$Res>
+abstract class _$$FileContentDebugImplCopyWith<$Res>
     implements $FileContentDebugCopyWith<$Res> {
-  factory _$$_FileContentDebugCopyWith(
-          _$_FileContentDebug value, $Res Function(_$_FileContentDebug) then) =
-      __$$_FileContentDebugCopyWithImpl<$Res>;
+  factory _$$FileContentDebugImplCopyWith(_$FileContentDebugImpl value,
+          $Res Function(_$FileContentDebugImpl) then) =
+      __$$FileContentDebugImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {DateTime createdAt,
       VersionSignificance? versionSignificance,
@@ -259,32 +265,30 @@ abstract class _$$_FileContentDebugCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FileContentDebugCopyWithImpl<$Res>
-    extends _$FileContentDebugCopyWithImpl<$Res>
-    implements _$$_FileContentDebugCopyWith<$Res> {
-  __$$_FileContentDebugCopyWithImpl(
-      _$_FileContentDebug _value, $Res Function(_$_FileContentDebug) _then)
-      : super(_value, (v) => _then(v as _$_FileContentDebug));
+class __$$FileContentDebugImplCopyWithImpl<$Res>
+    extends _$FileContentDebugCopyWithImpl<$Res, _$FileContentDebugImpl>
+    implements _$$FileContentDebugImplCopyWith<$Res> {
+  __$$FileContentDebugImplCopyWithImpl(_$FileContentDebugImpl _value,
+      $Res Function(_$FileContentDebugImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _$_FileContentDebug get _value => super._value as _$_FileContentDebug;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createdAt = freezed,
+    Object? createdAt = null,
     Object? versionSignificance = freezed,
-    Object? contentCount = freezed,
+    Object? contentCount = null,
   }) {
-    return _then(_$_FileContentDebug(
-      createdAt: createdAt == freezed
+    return _then(_$FileContentDebugImpl(
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      versionSignificance: versionSignificance == freezed
+      versionSignificance: freezed == versionSignificance
           ? _value.versionSignificance
           : versionSignificance // ignore: cast_nullable_to_non_nullable
               as VersionSignificance?,
-      contentCount: contentCount == freezed
+      contentCount: null == contentCount
           ? _value.contentCount
           : contentCount // ignore: cast_nullable_to_non_nullable
               as int,
@@ -294,8 +298,8 @@ class __$$_FileContentDebugCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FileContentDebug implements _FileContentDebug {
-  const _$_FileContentDebug(
+class _$FileContentDebugImpl implements _FileContentDebug {
+  const _$FileContentDebugImpl(
       {required this.createdAt,
       required this.versionSignificance,
       required this.contentCount});
@@ -313,46 +317,45 @@ class _$_FileContentDebug implements _FileContentDebug {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FileContentDebug &&
-            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
-            const DeepCollectionEquality()
-                .equals(other.versionSignificance, versionSignificance) &&
-            const DeepCollectionEquality()
-                .equals(other.contentCount, contentCount));
+            other is _$FileContentDebugImpl &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.versionSignificance, versionSignificance) ||
+                other.versionSignificance == versionSignificance) &&
+            (identical(other.contentCount, contentCount) ||
+                other.contentCount == contentCount));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(createdAt),
-      const DeepCollectionEquality().hash(versionSignificance),
-      const DeepCollectionEquality().hash(contentCount));
+  int get hashCode =>
+      Object.hash(runtimeType, createdAt, versionSignificance, contentCount);
 
   @JsonKey(ignore: true)
   @override
-  _$$_FileContentDebugCopyWith<_$_FileContentDebug> get copyWith =>
-      __$$_FileContentDebugCopyWithImpl<_$_FileContentDebug>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$FileContentDebugImplCopyWith<_$FileContentDebugImpl> get copyWith =>
+      __$$FileContentDebugImplCopyWithImpl<_$FileContentDebugImpl>(
+          this, _$identity);
 }
 
 abstract class _FileContentDebug implements FileContentDebug {
   const factory _FileContentDebug(
       {required final DateTime createdAt,
       required final VersionSignificance? versionSignificance,
-      required final int contentCount}) = _$_FileContentDebug;
+      required final int contentCount}) = _$FileContentDebugImpl;
 
   @override
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get createdAt;
   @override
-  VersionSignificance? get versionSignificance =>
-      throw _privateConstructorUsedError;
+  VersionSignificance? get versionSignificance;
   @override
-  int get contentCount => throw _privateConstructorUsedError;
+  int get contentCount;
   @override
   @JsonKey(ignore: true)
-  _$$_FileContentDebugCopyWith<_$_FileContentDebug> get copyWith =>
+  _$$FileContentDebugImplCopyWith<_$FileContentDebugImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -376,79 +379,81 @@ mixin _$CleanupStatsLog {
 abstract class $CleanupStatsLogCopyWith<$Res> {
   factory $CleanupStatsLogCopyWith(
           CleanupStatsLog value, $Res Function(CleanupStatsLog) then) =
-      _$CleanupStatsLogCopyWithImpl<$Res>;
+      _$CleanupStatsLogCopyWithImpl<$Res, CleanupStatsLog>;
+  @useResult
   $Res call({int timeMs, int cleanupCount, List<CleanupStats> cleanupStats});
 }
 
 /// @nodoc
-class _$CleanupStatsLogCopyWithImpl<$Res>
+class _$CleanupStatsLogCopyWithImpl<$Res, $Val extends CleanupStatsLog>
     implements $CleanupStatsLogCopyWith<$Res> {
   _$CleanupStatsLogCopyWithImpl(this._value, this._then);
 
-  final CleanupStatsLog _value;
   // ignore: unused_field
-  final $Res Function(CleanupStatsLog) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? timeMs = freezed,
-    Object? cleanupCount = freezed,
-    Object? cleanupStats = freezed,
+    Object? timeMs = null,
+    Object? cleanupCount = null,
+    Object? cleanupStats = null,
   }) {
     return _then(_value.copyWith(
-      timeMs: timeMs == freezed
+      timeMs: null == timeMs
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
               as int,
-      cleanupCount: cleanupCount == freezed
+      cleanupCount: null == cleanupCount
           ? _value.cleanupCount
           : cleanupCount // ignore: cast_nullable_to_non_nullable
               as int,
-      cleanupStats: cleanupStats == freezed
+      cleanupStats: null == cleanupStats
           ? _value.cleanupStats
           : cleanupStats // ignore: cast_nullable_to_non_nullable
               as List<CleanupStats>,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_CleanupStatsLogCopyWith<$Res>
+abstract class _$$CleanupStatsLogImplCopyWith<$Res>
     implements $CleanupStatsLogCopyWith<$Res> {
-  factory _$$_CleanupStatsLogCopyWith(
-          _$_CleanupStatsLog value, $Res Function(_$_CleanupStatsLog) then) =
-      __$$_CleanupStatsLogCopyWithImpl<$Res>;
+  factory _$$CleanupStatsLogImplCopyWith(_$CleanupStatsLogImpl value,
+          $Res Function(_$CleanupStatsLogImpl) then) =
+      __$$CleanupStatsLogImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int timeMs, int cleanupCount, List<CleanupStats> cleanupStats});
 }
 
 /// @nodoc
-class __$$_CleanupStatsLogCopyWithImpl<$Res>
-    extends _$CleanupStatsLogCopyWithImpl<$Res>
-    implements _$$_CleanupStatsLogCopyWith<$Res> {
-  __$$_CleanupStatsLogCopyWithImpl(
-      _$_CleanupStatsLog _value, $Res Function(_$_CleanupStatsLog) _then)
-      : super(_value, (v) => _then(v as _$_CleanupStatsLog));
+class __$$CleanupStatsLogImplCopyWithImpl<$Res>
+    extends _$CleanupStatsLogCopyWithImpl<$Res, _$CleanupStatsLogImpl>
+    implements _$$CleanupStatsLogImplCopyWith<$Res> {
+  __$$CleanupStatsLogImplCopyWithImpl(
+      _$CleanupStatsLogImpl _value, $Res Function(_$CleanupStatsLogImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _$_CleanupStatsLog get _value => super._value as _$_CleanupStatsLog;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? timeMs = freezed,
-    Object? cleanupCount = freezed,
-    Object? cleanupStats = freezed,
+    Object? timeMs = null,
+    Object? cleanupCount = null,
+    Object? cleanupStats = null,
   }) {
-    return _then(_$_CleanupStatsLog(
-      timeMs: timeMs == freezed
+    return _then(_$CleanupStatsLogImpl(
+      timeMs: null == timeMs
           ? _value.timeMs
           : timeMs // ignore: cast_nullable_to_non_nullable
               as int,
-      cleanupCount: cleanupCount == freezed
+      cleanupCount: null == cleanupCount
           ? _value.cleanupCount
           : cleanupCount // ignore: cast_nullable_to_non_nullable
               as int,
-      cleanupStats: cleanupStats == freezed
+      cleanupStats: null == cleanupStats
           ? _value._cleanupStats
           : cleanupStats // ignore: cast_nullable_to_non_nullable
               as List<CleanupStats>,
@@ -458,16 +463,16 @@ class __$$_CleanupStatsLogCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CleanupStatsLog extends _CleanupStatsLog {
-  const _$_CleanupStatsLog(
+class _$CleanupStatsLogImpl extends _CleanupStatsLog {
+  const _$CleanupStatsLogImpl(
       {required this.timeMs,
       required this.cleanupCount,
       required final List<CleanupStats> cleanupStats})
       : _cleanupStats = cleanupStats,
         super._();
 
-  factory _$_CleanupStatsLog.fromJson(Map<String, dynamic> json) =>
-      _$$_CleanupStatsLogFromJson(json);
+  factory _$CleanupStatsLogImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CleanupStatsLogImplFromJson(json);
 
   @override
   final int timeMs;
@@ -476,6 +481,7 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
   final List<CleanupStats> _cleanupStats;
   @override
   List<CleanupStats> get cleanupStats {
+    if (_cleanupStats is EqualUnmodifiableListView) return _cleanupStats;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_cleanupStats);
   }
@@ -486,33 +492,34 @@ class _$_CleanupStatsLog extends _CleanupStatsLog {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CleanupStatsLog &&
-            const DeepCollectionEquality().equals(other.timeMs, timeMs) &&
-            const DeepCollectionEquality()
-                .equals(other.cleanupCount, cleanupCount) &&
+            other is _$CleanupStatsLogImpl &&
+            (identical(other.timeMs, timeMs) || other.timeMs == timeMs) &&
+            (identical(other.cleanupCount, cleanupCount) ||
+                other.cleanupCount == cleanupCount) &&
             const DeepCollectionEquality()
                 .equals(other._cleanupStats, _cleanupStats));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(timeMs),
-      const DeepCollectionEquality().hash(cleanupCount),
+  int get hashCode => Object.hash(runtimeType, timeMs, cleanupCount,
       const DeepCollectionEquality().hash(_cleanupStats));
 
   @JsonKey(ignore: true)
   @override
-  _$$_CleanupStatsLogCopyWith<_$_CleanupStatsLog> get copyWith =>
-      __$$_CleanupStatsLogCopyWithImpl<_$_CleanupStatsLog>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$CleanupStatsLogImplCopyWith<_$CleanupStatsLogImpl> get copyWith =>
+      __$$CleanupStatsLogImplCopyWithImpl<_$CleanupStatsLogImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CleanupStatsLogToJson(this);
+    return _$$CleanupStatsLogImplToJson(
+      this,
+    );
   }
 }
 
@@ -520,20 +527,20 @@ abstract class _CleanupStatsLog extends CleanupStatsLog {
   const factory _CleanupStatsLog(
       {required final int timeMs,
       required final int cleanupCount,
-      required final List<CleanupStats> cleanupStats}) = _$_CleanupStatsLog;
+      required final List<CleanupStats> cleanupStats}) = _$CleanupStatsLogImpl;
   const _CleanupStatsLog._() : super._();
 
   factory _CleanupStatsLog.fromJson(Map<String, dynamic> json) =
-      _$_CleanupStatsLog.fromJson;
+      _$CleanupStatsLogImpl.fromJson;
 
   @override
-  int get timeMs => throw _privateConstructorUsedError;
+  int get timeMs;
   @override
-  int get cleanupCount => throw _privateConstructorUsedError;
+  int get cleanupCount;
   @override
-  List<CleanupStats> get cleanupStats => throw _privateConstructorUsedError;
+  List<CleanupStats> get cleanupStats;
   @override
   @JsonKey(ignore: true)
-  _$$_CleanupStatsLogCopyWith<_$_CleanupStatsLog> get copyWith =>
+  _$$CleanupStatsLogImplCopyWith<_$CleanupStatsLogImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
