@@ -2,5 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/mailer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/openapi_dart" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/openapi_dart/deps/dart-codable" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/openapi_dart/deps/open-api-dart" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/postgres_utils.dart" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../deps/smtpd.dart" vcs="Git" />
   </component>
 </project>

@@ -1,3 +1,4 @@
+import 'package:authpass_cloud_backend/src/dao/db_update_util.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
@@ -381,6 +382,25 @@ class EmailTable extends TableBase with TableConstants {
       messageCount: message[0] as int,
       messageReadCount: message[1] as int,
     );
+  }
+
+  Future<DbUpdateTracker> deleteAllForUser(
+      DatabaseTransactionBase db, UserEntity user) async {
+    final ret = DbUpdateTracker('email');
+    await ret.track(
+      _TABLE_EMAIL_MESSAGE,
+      () async => await db.query(
+        'DELETE FROM $_TABLE_EMAIL_MESSAGE WHERE $_COLUMN_MAILBOX_ID IN (SELECT $columnId FROM $_TABLE_EMAIL_MAILBOX WHERE $COLUMN_USER_ID = @userId)',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
+      _TABLE_EMAIL_MESSAGE,
+      () async => await db.query(
+          'DELETE FROM $_TABLE_EMAIL_MAILBOX WHERE $COLUMN_USER_ID = @userId',
+          values: {'userId': user.id}),
+    );
+    return ret;
   }
 }
 

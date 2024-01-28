@@ -127,6 +127,16 @@ paths:
         '400':
           description: Invalid token or email address.
   /user/delete:
+    get:
+      summary: Shows a form to enter email address to start deletion process.
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
     post:
       summary: Request user deletion.
       security: []

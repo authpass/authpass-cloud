@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/env/env.dart';
 
 String pageScaffold(
@@ -28,6 +29,19 @@ ${script?.call() ?? ''}
 <style>
 body {
 background-color: white;
+}
+input[type=email] {
+padding: 8px;
+    border-radius: 4px;
+    border: 1px solid black;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    display: block;
+    width: 100%;
+}
+input[type=submit] {
+    padding: 8px;
+    margin-top: 16px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 }
 </style>
 </head>
@@ -83,6 +97,58 @@ String emailConfirmationTokenError(Env env) {
   If the problem persists <a href="https://forum.authpass.app/c/user-help/error-reports/11" target="_blank">please contact support</a>.
 </p>
 ''');
+}
+
+String deleteUserByEmailFormInput(Env env) {
+  return pageScaffold(env,
+      body: () => '''
+  <h1>AuthPass Cloud: Delete user data</h1> 
+<p>
+To delete your user account please enter your email address.
+</p>
+<p>Afterwards you will receive an email to confirm your deletion process.</p>
+<form action="?" method="POST">
+<input type="email" name="email" placeholder="your.email@address.com" />
+<input type="submit" value="Delete account" />
+</form>
+''');
+}
+
+String deleteUserEmailVerificationSent(Env env) {
+  return pageScaffold(env,
+      body: () => '''
+<p>
+  To delete your email address check your emails and click the link in the email to confirm your email address.
+</p>
+''');
+}
+
+String deleteUserEmailConfirmationPage(Env env, String? token) {
+  return pageScaffold(
+    env,
+    script: () => '''
+<script>
+function onReturnCallback() {
+  document.forms[0].submit();
+}
+</script>
+''',
+    body: () => '''
+    <form action="?" method="POST">
+      <input type="hidden" name="token" value="$token" />
+      <h2>Delete your account</h2>
+      <p>Click the checkbox to confirm deleting your account. <strong>This can't be undone.</strong></p>
+      <div class="g-recaptcha" data-sitekey="${env.config.secrets.recaptchaSiteKey}" data-callback="onReturnCallback"></div>
+    </form>
+  ''',
+  );
+}
+
+String deleteUserSuccessPage(Env env, EmailEntity email) {
+  return pageScaffold(env,
+      body: () => '''
+<strong>Successfully deleted user data.</strong>
+  ''');
 }
 
 const _htmlEscape = HtmlEscape(HtmlEscapeMode.element);

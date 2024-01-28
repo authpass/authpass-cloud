@@ -9,6 +9,8 @@ final _logger = Logger('email_service');
 
 abstract class EmailService {
   Future<void> sendEmailConfirmationToken(String recipient, String url);
+  Future<void> sendEmailConfirmationForUserDeleteToken(
+      String recipient, String url);
   Future<void> forwardMimeMessage(
       String mimeMessageContent, String recipientEmail);
 }
@@ -23,6 +25,24 @@ abstract class EmailServiceImpl extends EmailService {
 Hello,
 
 Please confirm your email address by visiting the following URL:
+  $url
+
+Best Regards,
+  Your AuthPass Team.
+    ''',
+    );
+  }
+
+  @override
+  Future<void> sendEmailConfirmationForUserDeleteToken(
+      String recipient, String url) async {
+    await sendEmail(
+      recipient: recipient,
+      subject: 'Delete Account: Email Confirmation',
+      body: '''
+Hello,
+
+To delete your account please visit the following URL and confirm your email address:
   $url
 
 Best Regards,

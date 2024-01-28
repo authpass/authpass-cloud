@@ -509,23 +509,54 @@ class AuthPassCloudImpl extends AuthPassCloud {
   }
 
   @override
+  Future<UserDeleteGetResponse> userDeleteGet() async {
+    return UserDeleteGetResponse.response200(
+        deleteUserByEmailFormInput(serviceProvider.env));
+  }
+
+  @override
   Future<UserDeleteConfirmGetResponse> userDeleteConfirmGet(
-      {required String token}) {
-    // TODO: implement userDeleteConfirmGet
-    throw UnimplementedError();
+      {required String token}) async {
+    if (!await repository.user.isValidEmailConfirmToken(token)) {
+      return UserDeleteConfirmGetResponse.response400('');
+    }
+    return UserDeleteConfirmGetResponse.response200(
+        deleteUserEmailConfirmationPage(serviceProvider.env, token));
   }
 
   @override
   Future<UserDeleteConfirmPostResponse> userDeleteConfirmPost(
-      UserDeleteConfirmPostSchema body) {
-    // TODO: implement userDeleteConfirmPost
-    throw UnimplementedError();
+      UserDeleteConfirmPostSchema body) async {
+    final success =
+        await serviceProvider.recaptchaService.verify(body.gRecaptchaResponse);
+    if (!success) {
+      return UserDeleteConfirmPostResponse.response400();
+    }
+    final token = await repository.user.deleteAccountForEmailToken(body.token);
+    if (token == null) {
+      return UserDeleteConfirmPostResponse.response400();
+    }
+    return UserDeleteConfirmPostResponse.response200(
+        deleteUserSuccessPage(serviceProvider.env, token.email));
   }
 
   @override
-  Future<UserDeletePostResponse> userDeletePost(UserDeletePostSchema body) {
-    // TODO: implement userDeletePost
-    throw UnimplementedError();
+  Future<UserDeletePostResponse> userDeletePost(
+      UserDeletePostSchema body) async {
+    final emailConfirm = await repository.user.createUserOrConfirmEmail(
+      body.email,
+      request.headerParameter(HttpHeaders.userAgentHeader).single,
+      requireExistingUser: true,
+    );
+    final urlResolve = AuthPassCloudUrlResolve();
+    final url = urlResolve
+        .userDeleteConfirmGet(token: emailConfirm.token)
+        .resolveUri(serviceProvider.env.baseUri);
+    await serviceProvider.emailService.sendEmailConfirmationForUserDeleteToken(
+        emailConfirm.email.emailAddress, url.toString());
+    _logger.fine('Deleting user. ${body.email}');
+    return UserDeletePostResponse.response200(
+        deleteUserEmailVerificationSent(serviceProvider.env));
   }
 }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:authpass_cloud_backend/src/dao/db_update_util.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/filecloud_tables_enum.dart';
 import 'package:authpass_cloud_backend/src/dao/tables/user_tables.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
@@ -47,7 +48,7 @@ class FileCloudTable extends TableBase with TableConstants {
 
   /// the revision number of this content. see also [_columnLastContentCount]
   static const _columnContentCount = 'content_count';
-  static const _columnDeletedAt = 'deleted_at';
+  late final _columnDeletedAt = columnDeletedAt;
   static const _columnTokenType = 'token_type';
   static const _columnLabel = 'label';
 
@@ -713,6 +714,40 @@ class FileCloudTable extends TableBase with TableConstants {
       },
       timeoutInSeconds: 600,
     );
+  }
+
+  Future<DbUpdateTracker> deleteAllForUser(
+      DatabaseTransactionBase db, UserEntity user) async {
+    final ret = DbUpdateTracker('filecloud');
+    await ret.track(
+      TABLE_ATTACHMENT_TOUCH,
+      () async => await db.query(
+        'DELETE FROM $TABLE_ATTACHMENT_TOUCH t WHERE $columnUserId = @userId',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
+      TABLE_FILE_TOKEN,
+      () async => await db.query(
+        'DELETE FROM $TABLE_FILE_TOKEN WHERE $_columnFileId IN (SELECT $columnId FROM $TABLE_FILE WHERE $columnUserId = @userId)',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
+      TABLE_FILE_CONTENT,
+      () async => await db.query(
+        'DELETE FROM $TABLE_FILE_CONTENT WHERE $_columnFileId IN (SELECT $columnId FROM $TABLE_FILE WHERE $columnUserId = @userId)',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
+      TABLE_FILE,
+      () async => await db.query(
+        'DELETE FROM $TABLE_FILE WHERE $columnUserId = @userId',
+        values: {'userId': user.id},
+      ),
+    );
+    return ret;
   }
 }
 

@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:authpass_cloud_backend/src/dao/db_update_util.dart';
 import 'package:authpass_cloud_backend/src/service/crypto_service.dart';
 import 'package:authpass_cloud_shared/authpass_cloud_shared.dart';
+import 'package:clock/clock.dart';
+import 'package:crypto/crypto.dart';
 import 'package:logging/logging.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
@@ -40,6 +44,8 @@ class UserTable extends TableBase with TableConstants {
   static const _COLUMN_CONFIRMED_AT = 'confirmed_at';
   static const _TYPE_STATUS = 'AuthTokenStatus';
   static const _COLUMN_USER_AGENT = 'user_agent';
+  // sha-256 hash of email address used when deleting.
+  static const _columnDeletedBy = 'deleted_by';
 
   final CryptoService cryptoService;
 
@@ -94,6 +100,13 @@ class UserTable extends TableBase with TableConstants {
     await db.execute('''
     ALTER TABLE $_TABLE_AUTH_TOKEN ADD $_COLUMN_USER_AGENT VARCHAR NOT NULL DEFAULT 'unknown';
     ALTER TABLE $_TABLE_AUTH_TOKEN ALTER $_COLUMN_USER_AGENT DROP DEFAULT;
+    ''');
+  }
+
+  Future<void> migrate18(DatabaseTransactionBase db) async {
+    await db.execute('''
+    ALTER TABLE $TABLE_USER ADD COLUMN $columnDeletedAt $typeTimestamp NULL;
+    ALTER TABLE $TABLE_USER ADD COLUMN $_columnDeletedBy VARCHAR NULL;
     ''');
   }
 
@@ -337,6 +350,39 @@ class UserTable extends TableBase with TableConstants {
               confirmedAt: e[1] as DateTime,
             ))
         .toList(growable: false);
+  }
+
+  Future<DbUpdateTracker> deleteUserAndAllReferences(DatabaseTransactionBase db,
+      EmailConfirmEntity emailConfirmEntity, AuthTokenEntity authToken) async {
+    final user = authToken.user;
+    final ret = DbUpdateTracker('user');
+    await ret.track(
+      _TABLE_EMAIL,
+      () async => await db.query(
+        'DELETE FROM $_TABLE_EMAIL WHERE $COLUMN_USER_ID = @userId',
+        values: {'userId': user.id},
+      ),
+    );
+    await ret.track(
+      _TABLE_AUTH_TOKEN,
+      () async => db.query(
+        'DELETE FROM $_TABLE_AUTH_TOKEN WHERE $COLUMN_USER_ID = @userId',
+        values: {'userId': user.id},
+      ),
+    );
+    final now = clock.now().toUtc();
+    final deletedByEmailBytes =
+        utf8.encode(emailConfirmEntity.email.emailAddress);
+    final deletedBySha = sha256.convert(deletedByEmailBytes);
+    await db.executeUpdate(
+      TABLE_USER,
+      set: {
+        columnDeletedAt: now,
+        _columnDeletedBy: deletedBySha.toString(),
+      },
+      where: {columnId: user.id},
+    );
+    return ret;
   }
 }
 

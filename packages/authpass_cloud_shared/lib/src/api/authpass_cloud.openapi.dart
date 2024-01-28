@@ -8,7 +8,6 @@ import 'dart:typed_data' as _i1;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:openapi_base/openapi_base.dart';
-
 part 'authpass_cloud.openapi.g.dart';
 
 @JsonSerializable()
@@ -317,11 +316,9 @@ extension RegisterResponseStatusExt on RegisterResponseStatus {
     'created': RegisterResponseStatus.created,
     'confirmed': RegisterResponseStatus.confirmed,
   };
-
   static RegisterResponseStatus fromName(String name) =>
       _names[name] ??
       _throwStateError('Invalid enum name: $name for RegisterResponseStatus');
-
   String get name => toString().substring(23);
 }
 
@@ -944,12 +941,10 @@ extension EmailStatusGetResponseBody200StatusExt
     'created': EmailStatusGetResponseBody200Status.created,
     'confirmed': EmailStatusGetResponseBody200Status.confirmed,
   };
-
   static EmailStatusGetResponseBody200Status fromName(String name) =>
       _names[name] ??
       _throwStateError(
           'Invalid enum name: $name for EmailStatusGetResponseBody200Status');
-
   String get name => toString().substring(36);
 }
 
@@ -1212,6 +1207,55 @@ class EmailConfirmPostSchema implements OpenApiContent {
 
   @override
   String toString() => toJson().toString();
+}
+
+class _UserDeleteGetResponse200 extends UserDeleteGetResponse
+    implements OpenApiResponseBodyString {
+  /// OK
+  _UserDeleteGetResponse200.response200(this.body) : status = 200;
+
+  @override
+  final int status;
+
+  @override
+  final String body;
+
+  @override
+  final OpenApiContentType contentType = OpenApiContentType.parse('text/html');
+
+  @override
+  Map<String, Object?> propertiesToString() => {
+        'status': status,
+        'body': body,
+        'contentType': contentType,
+      };
+}
+
+abstract class UserDeleteGetResponse extends OpenApiResponse
+    implements HasSuccessResponse<String> {
+  UserDeleteGetResponse();
+
+  /// OK
+  factory UserDeleteGetResponse.response200(String body) =>
+      _UserDeleteGetResponse200.response200(body);
+
+  void map({required ResponseMap<_UserDeleteGetResponse200> on200}) {
+    if (this is _UserDeleteGetResponse200) {
+      on200((this as _UserDeleteGetResponse200));
+    } else {
+      throw StateError('Invalid instance type $this');
+    }
+  }
+
+  /// status 200:  OK
+  @override
+  String requireSuccess() {
+    if (this is _UserDeleteGetResponse200) {
+      return (this as _UserDeleteGetResponse200).body;
+    } else {
+      throw StateError('Expected success response, but got $this');
+    }
+  }
 }
 
 class _UserDeletePostResponse200 extends UserDeletePostResponse
@@ -1915,12 +1959,10 @@ extension MailMassupdatePostSchemaFilterExt on MailMassupdatePostSchemaFilter {
     'messageIds': MailMassupdatePostSchemaFilter.messageIds,
     'all': MailMassupdatePostSchemaFilter.all,
   };
-
   static MailMassupdatePostSchemaFilter fromName(String name) =>
       _names[name] ??
       _throwStateError(
           'Invalid enum name: $name for MailMassupdatePostSchemaFilter');
-
   String get name => toString().substring(31);
 }
 
@@ -3306,6 +3348,10 @@ abstract class AuthPassCloud implements ApiEndpoint {
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
 
+  /// Shows a form to enter email address to start deletion process.
+  /// get: /user/delete
+  Future<UserDeleteGetResponse> userDeleteGet();
+
   /// Request user deletion.
   /// post: /user/delete
   Future<UserDeletePostResponse> userDeletePost(UserDeletePostSchema body);
@@ -3511,6 +3557,11 @@ abstract class AuthPassCloudClient implements OpenApiClient {
   ///
   Future<EmailConfirmPostResponse> emailConfirmPost(
       EmailConfirmPostSchema body);
+
+  /// Shows a form to enter email address to start deletion process.
+  /// get: /user/delete
+  ///
+  Future<UserDeleteGetResponse> userDeleteGet();
 
   /// Request user deletion.
   /// post: /user/delete
@@ -3900,6 +3951,26 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
                 await response.responseBodyString()),
         '400': (OpenApiClientResponse response) async =>
             _EmailConfirmPostResponse400.response400(),
+      },
+    );
+  }
+
+  /// Shows a form to enter email address to start deletion process.
+  /// get: /user/delete
+  ///
+  @override
+  Future<UserDeleteGetResponse> userDeleteGet() async {
+    final request = OpenApiClientRequest(
+      'get',
+      '/user/delete',
+      [],
+    );
+    return await sendRequest(
+      request,
+      {
+        '200': (OpenApiClientResponse response) async =>
+            _UserDeleteGetResponse200.response200(
+                await response.responseBodyString())
       },
     );
   }
@@ -4967,6 +5038,18 @@ class AuthPassCloudUrlResolve with OpenApiUrlEncodeMixin {
     return request;
   }
 
+  /// Shows a form to enter email address to start deletion process.
+  /// get: /user/delete
+  ///
+  OpenApiClientRequest userDeleteGet() {
+    final request = OpenApiClientRequest(
+      'get',
+      '/user/delete',
+      [],
+    );
+    return request;
+  }
+
   /// Request user deletion.
   /// post: /user/delete
   ///
@@ -5664,6 +5747,17 @@ class AuthPassCloudRouter extends OpenApiServerRouterBase {
           (AuthPassCloud impl) async => impl.emailConfirmPost(
               EmailConfirmPostSchema.fromJson(
                   await request.readUrlEncodedBodyFlat())),
+        );
+      },
+      security: [],
+    );
+    addRoute(
+      '/user/delete',
+      'get',
+      (OpenApiRequest request) async {
+        return await impl.invoke(
+          request,
+          (AuthPassCloud impl) async => impl.userDeleteGet(),
         );
       },
       security: [],
