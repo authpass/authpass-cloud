@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: prefer_initializing_formals, no_leading_underscores_for_library_prefixes, library_private_types_in_public_api
+// ignore_for_file: prefer_initializing_formals, library_private_types_in_public_api
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:typed_data' as _i1;
@@ -720,9 +720,9 @@ class FileTokenInfo implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _CheckGetResponse200 extends CheckGetResponse {
+class CheckGetResponse200 extends CheckGetResponse {
   /// Everything OK
-  _CheckGetResponse200.response200() : status = 200;
+  CheckGetResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -737,25 +737,30 @@ class _CheckGetResponse200 extends CheckGetResponse {
       };
 }
 
-abstract class CheckGetResponse extends OpenApiResponse
+sealed class CheckGetResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   CheckGetResponse();
 
   /// Everything OK
-  factory CheckGetResponse.response200() => _CheckGetResponse200.response200();
+  factory CheckGetResponse.response200() => CheckGetResponse200.response200();
 
-  void map({required ResponseMap<_CheckGetResponse200> on200}) {
-    if (this is _CheckGetResponse200) {
-      on200((this as _CheckGetResponse200));
+  R map<R>({
+    required ResponseMap<CheckGetResponse200, R> on200,
+    ResponseMap<CheckGetResponse, R>? onElse,
+  }) {
+    if (this is CheckGetResponse200) {
+      return on200((this as CheckGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Everything OK
   @override
   void requireSuccess() {
-    if (this is _CheckGetResponse200) {
+    if (this is CheckGetResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -763,10 +768,10 @@ abstract class CheckGetResponse extends OpenApiResponse
   }
 }
 
-class _CheckStatusPostResponse200 extends CheckStatusPostResponse
+class CheckStatusPostResponse200 extends CheckStatusPostResponse
     implements OpenApiResponseBodyJson {
   /// Status
-  _CheckStatusPostResponse200.response200(this.body)
+  CheckStatusPostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -791,37 +796,42 @@ class _CheckStatusPostResponse200 extends CheckStatusPostResponse
       };
 }
 
-abstract class CheckStatusPostResponse extends OpenApiResponse
+sealed class CheckStatusPostResponse extends OpenApiResponse
     implements HasSuccessResponse<SystemStatus> {
   CheckStatusPostResponse();
 
   /// Status
   factory CheckStatusPostResponse.response200(SystemStatus body) =>
-      _CheckStatusPostResponse200.response200(body);
+      CheckStatusPostResponse200.response200(body);
 
-  void map({required ResponseMap<_CheckStatusPostResponse200> on200}) {
-    if (this is _CheckStatusPostResponse200) {
-      on200((this as _CheckStatusPostResponse200));
+  R map<R>({
+    required ResponseMap<CheckStatusPostResponse200, R> on200,
+    ResponseMap<CheckStatusPostResponse, R>? onElse,
+  }) {
+    if (this is CheckStatusPostResponse200) {
+      return on200((this as CheckStatusPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Status
   @override
   SystemStatus requireSuccess() {
-    if (this is _CheckStatusPostResponse200) {
-      return (this as _CheckStatusPostResponse200).body;
+    if (this is CheckStatusPostResponse200) {
+      return (this as CheckStatusPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _UserGetResponse200 extends UserGetResponse
+class UserGetResponse200 extends UserGetResponse
     implements OpenApiResponseBodyJson {
   /// OK
-  _UserGetResponse200.response200(this.body)
+  UserGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -846,37 +856,42 @@ class _UserGetResponse200 extends UserGetResponse
       };
 }
 
-abstract class UserGetResponse extends OpenApiResponse
+sealed class UserGetResponse extends OpenApiResponse
     implements HasSuccessResponse<UserInfo> {
   UserGetResponse();
 
   /// OK
   factory UserGetResponse.response200(UserInfo body) =>
-      _UserGetResponse200.response200(body);
+      UserGetResponse200.response200(body);
 
-  void map({required ResponseMap<_UserGetResponse200> on200}) {
-    if (this is _UserGetResponse200) {
-      on200((this as _UserGetResponse200));
+  R map<R>({
+    required ResponseMap<UserGetResponse200, R> on200,
+    ResponseMap<UserGetResponse, R>? onElse,
+  }) {
+    if (this is UserGetResponse200) {
+      return on200((this as UserGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   UserInfo requireSuccess() {
-    if (this is _UserGetResponse200) {
-      return (this as _UserGetResponse200).body;
+    if (this is UserGetResponse200) {
+      return (this as UserGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _UserRegisterPostResponse200 extends UserRegisterPostResponse
+class UserRegisterPostResponse200 extends UserRegisterPostResponse
     implements OpenApiResponseBodyJson {
   /// OK
-  _UserRegisterPostResponse200.response200(this.body)
+  UserRegisterPostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -901,27 +916,32 @@ class _UserRegisterPostResponse200 extends UserRegisterPostResponse
       };
 }
 
-abstract class UserRegisterPostResponse extends OpenApiResponse
+sealed class UserRegisterPostResponse extends OpenApiResponse
     implements HasSuccessResponse<RegisterResponse> {
   UserRegisterPostResponse();
 
   /// OK
   factory UserRegisterPostResponse.response200(RegisterResponse body) =>
-      _UserRegisterPostResponse200.response200(body);
+      UserRegisterPostResponse200.response200(body);
 
-  void map({required ResponseMap<_UserRegisterPostResponse200> on200}) {
-    if (this is _UserRegisterPostResponse200) {
-      on200((this as _UserRegisterPostResponse200));
+  R map<R>({
+    required ResponseMap<UserRegisterPostResponse200, R> on200,
+    ResponseMap<UserRegisterPostResponse, R>? onElse,
+  }) {
+    if (this is UserRegisterPostResponse200) {
+      return on200((this as UserRegisterPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   RegisterResponse requireSuccess() {
-    if (this is _UserRegisterPostResponse200) {
-      return (this as _UserRegisterPostResponse200).body;
+    if (this is UserRegisterPostResponse200) {
+      return (this as UserRegisterPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -969,10 +989,10 @@ class EmailStatusGetResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _EmailStatusGetResponse200 extends EmailStatusGetResponse
+class EmailStatusGetResponse200 extends EmailStatusGetResponse
     implements OpenApiResponseBodyJson {
   /// Whether it was confirmed or not.
-  _EmailStatusGetResponse200.response200(this.body)
+  EmailStatusGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -997,38 +1017,43 @@ class _EmailStatusGetResponse200 extends EmailStatusGetResponse
       };
 }
 
-abstract class EmailStatusGetResponse extends OpenApiResponse
+sealed class EmailStatusGetResponse extends OpenApiResponse
     implements HasSuccessResponse<EmailStatusGetResponseBody200> {
   EmailStatusGetResponse();
 
   /// Whether it was confirmed or not.
   factory EmailStatusGetResponse.response200(
           EmailStatusGetResponseBody200 body) =>
-      _EmailStatusGetResponse200.response200(body);
+      EmailStatusGetResponse200.response200(body);
 
-  void map({required ResponseMap<_EmailStatusGetResponse200> on200}) {
-    if (this is _EmailStatusGetResponse200) {
-      on200((this as _EmailStatusGetResponse200));
+  R map<R>({
+    required ResponseMap<EmailStatusGetResponse200, R> on200,
+    ResponseMap<EmailStatusGetResponse, R>? onElse,
+  }) {
+    if (this is EmailStatusGetResponse200) {
+      return on200((this as EmailStatusGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Whether it was confirmed or not.
   @override
   EmailStatusGetResponseBody200 requireSuccess() {
-    if (this is _EmailStatusGetResponse200) {
-      return (this as _EmailStatusGetResponse200).body;
+    if (this is EmailStatusGetResponse200) {
+      return (this as EmailStatusGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse
+class EmailConfirmGetResponse200 extends EmailConfirmGetResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _EmailConfirmGetResponse200.response200(this.body) : status = 200;
+  EmailConfirmGetResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1047,10 +1072,10 @@ class _EmailConfirmGetResponse200 extends EmailConfirmGetResponse
       };
 }
 
-class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse
+class EmailConfirmGetResponse400 extends EmailConfirmGetResponse
     implements OpenApiResponseBodyString {
   /// Invalid token or email address.
-  _EmailConfirmGetResponse400.response400(this.body) : status = 400;
+  EmailConfirmGetResponse400.response400(this.body) : status = 400;
 
   @override
   final int status;
@@ -1069,46 +1094,49 @@ class _EmailConfirmGetResponse400 extends EmailConfirmGetResponse
       };
 }
 
-abstract class EmailConfirmGetResponse extends OpenApiResponse
+sealed class EmailConfirmGetResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   EmailConfirmGetResponse();
 
   /// OK
   factory EmailConfirmGetResponse.response200(String body) =>
-      _EmailConfirmGetResponse200.response200(body);
+      EmailConfirmGetResponse200.response200(body);
 
   /// Invalid token or email address.
   factory EmailConfirmGetResponse.response400(String body) =>
-      _EmailConfirmGetResponse400.response400(body);
+      EmailConfirmGetResponse400.response400(body);
 
-  void map({
-    required ResponseMap<_EmailConfirmGetResponse200> on200,
-    required ResponseMap<_EmailConfirmGetResponse400> on400,
+  R map<R>({
+    required ResponseMap<EmailConfirmGetResponse200, R> on200,
+    required ResponseMap<EmailConfirmGetResponse400, R> on400,
+    ResponseMap<EmailConfirmGetResponse, R>? onElse,
   }) {
-    if (this is _EmailConfirmGetResponse200) {
-      on200((this as _EmailConfirmGetResponse200));
-    } else if (this is _EmailConfirmGetResponse400) {
-      on400((this as _EmailConfirmGetResponse400));
+    if (this is EmailConfirmGetResponse200) {
+      return on200((this as EmailConfirmGetResponse200));
+    } else if (this is EmailConfirmGetResponse400) {
+      return on400((this as EmailConfirmGetResponse400));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _EmailConfirmGetResponse200) {
-      return (this as _EmailConfirmGetResponse200).body;
+    if (this is EmailConfirmGetResponse200) {
+      return (this as EmailConfirmGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _EmailConfirmPostResponse200 extends EmailConfirmPostResponse
+class EmailConfirmPostResponse200 extends EmailConfirmPostResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _EmailConfirmPostResponse200.response200(this.body) : status = 200;
+  EmailConfirmPostResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1127,9 +1155,9 @@ class _EmailConfirmPostResponse200 extends EmailConfirmPostResponse
       };
 }
 
-class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
+class EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
   /// Invalid token or email address.
-  _EmailConfirmPostResponse400.response400() : status = 400;
+  EmailConfirmPostResponse400.response400() : status = 400;
 
   @override
   final int status;
@@ -1144,36 +1172,39 @@ class _EmailConfirmPostResponse400 extends EmailConfirmPostResponse {
       };
 }
 
-abstract class EmailConfirmPostResponse extends OpenApiResponse
+sealed class EmailConfirmPostResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   EmailConfirmPostResponse();
 
   /// OK
   factory EmailConfirmPostResponse.response200(String body) =>
-      _EmailConfirmPostResponse200.response200(body);
+      EmailConfirmPostResponse200.response200(body);
 
   /// Invalid token or email address.
   factory EmailConfirmPostResponse.response400() =>
-      _EmailConfirmPostResponse400.response400();
+      EmailConfirmPostResponse400.response400();
 
-  void map({
-    required ResponseMap<_EmailConfirmPostResponse200> on200,
-    required ResponseMap<_EmailConfirmPostResponse400> on400,
+  R map<R>({
+    required ResponseMap<EmailConfirmPostResponse200, R> on200,
+    required ResponseMap<EmailConfirmPostResponse400, R> on400,
+    ResponseMap<EmailConfirmPostResponse, R>? onElse,
   }) {
-    if (this is _EmailConfirmPostResponse200) {
-      on200((this as _EmailConfirmPostResponse200));
-    } else if (this is _EmailConfirmPostResponse400) {
-      on400((this as _EmailConfirmPostResponse400));
+    if (this is EmailConfirmPostResponse200) {
+      return on200((this as EmailConfirmPostResponse200));
+    } else if (this is EmailConfirmPostResponse400) {
+      return on400((this as EmailConfirmPostResponse400));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _EmailConfirmPostResponse200) {
-      return (this as _EmailConfirmPostResponse200).body;
+    if (this is EmailConfirmPostResponse200) {
+      return (this as EmailConfirmPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1209,10 +1240,10 @@ class EmailConfirmPostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _UserDeleteGetResponse200 extends UserDeleteGetResponse
+class UserDeleteGetResponse200 extends UserDeleteGetResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _UserDeleteGetResponse200.response200(this.body) : status = 200;
+  UserDeleteGetResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1231,37 +1262,42 @@ class _UserDeleteGetResponse200 extends UserDeleteGetResponse
       };
 }
 
-abstract class UserDeleteGetResponse extends OpenApiResponse
+sealed class UserDeleteGetResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   UserDeleteGetResponse();
 
   /// OK
   factory UserDeleteGetResponse.response200(String body) =>
-      _UserDeleteGetResponse200.response200(body);
+      UserDeleteGetResponse200.response200(body);
 
-  void map({required ResponseMap<_UserDeleteGetResponse200> on200}) {
-    if (this is _UserDeleteGetResponse200) {
-      on200((this as _UserDeleteGetResponse200));
+  R map<R>({
+    required ResponseMap<UserDeleteGetResponse200, R> on200,
+    ResponseMap<UserDeleteGetResponse, R>? onElse,
+  }) {
+    if (this is UserDeleteGetResponse200) {
+      return on200((this as UserDeleteGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _UserDeleteGetResponse200) {
-      return (this as _UserDeleteGetResponse200).body;
+    if (this is UserDeleteGetResponse200) {
+      return (this as UserDeleteGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _UserDeletePostResponse200 extends UserDeletePostResponse
+class UserDeletePostResponse200 extends UserDeletePostResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _UserDeletePostResponse200.response200(this.body) : status = 200;
+  UserDeletePostResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1280,9 +1316,9 @@ class _UserDeletePostResponse200 extends UserDeletePostResponse
       };
 }
 
-class _UserDeletePostResponse404 extends UserDeletePostResponse {
+class UserDeletePostResponse404 extends UserDeletePostResponse {
   /// No user found with that email.
-  _UserDeletePostResponse404.response404() : status = 404;
+  UserDeletePostResponse404.response404() : status = 404;
 
   @override
   final int status;
@@ -1297,36 +1333,39 @@ class _UserDeletePostResponse404 extends UserDeletePostResponse {
       };
 }
 
-abstract class UserDeletePostResponse extends OpenApiResponse
+sealed class UserDeletePostResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   UserDeletePostResponse();
 
   /// OK
   factory UserDeletePostResponse.response200(String body) =>
-      _UserDeletePostResponse200.response200(body);
+      UserDeletePostResponse200.response200(body);
 
   /// No user found with that email.
   factory UserDeletePostResponse.response404() =>
-      _UserDeletePostResponse404.response404();
+      UserDeletePostResponse404.response404();
 
-  void map({
-    required ResponseMap<_UserDeletePostResponse200> on200,
-    required ResponseMap<_UserDeletePostResponse404> on404,
+  R map<R>({
+    required ResponseMap<UserDeletePostResponse200, R> on200,
+    required ResponseMap<UserDeletePostResponse404, R> on404,
+    ResponseMap<UserDeletePostResponse, R>? onElse,
   }) {
-    if (this is _UserDeletePostResponse200) {
-      on200((this as _UserDeletePostResponse200));
-    } else if (this is _UserDeletePostResponse404) {
-      on404((this as _UserDeletePostResponse404));
+    if (this is UserDeletePostResponse200) {
+      return on200((this as UserDeletePostResponse200));
+    } else if (this is UserDeletePostResponse404) {
+      return on404((this as UserDeletePostResponse404));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _UserDeletePostResponse200) {
-      return (this as _UserDeletePostResponse200).body;
+    if (this is UserDeletePostResponse200) {
+      return (this as UserDeletePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1353,10 +1392,10 @@ class UserDeletePostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _UserDeleteConfirmGetResponse200 extends UserDeleteConfirmGetResponse
+class UserDeleteConfirmGetResponse200 extends UserDeleteConfirmGetResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _UserDeleteConfirmGetResponse200.response200(this.body) : status = 200;
+  UserDeleteConfirmGetResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1375,10 +1414,10 @@ class _UserDeleteConfirmGetResponse200 extends UserDeleteConfirmGetResponse
       };
 }
 
-class _UserDeleteConfirmGetResponse400 extends UserDeleteConfirmGetResponse
+class UserDeleteConfirmGetResponse400 extends UserDeleteConfirmGetResponse
     implements OpenApiResponseBodyString {
   /// Invalid token or email address.
-  _UserDeleteConfirmGetResponse400.response400(this.body) : status = 400;
+  UserDeleteConfirmGetResponse400.response400(this.body) : status = 400;
 
   @override
   final int status;
@@ -1397,46 +1436,49 @@ class _UserDeleteConfirmGetResponse400 extends UserDeleteConfirmGetResponse
       };
 }
 
-abstract class UserDeleteConfirmGetResponse extends OpenApiResponse
+sealed class UserDeleteConfirmGetResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   UserDeleteConfirmGetResponse();
 
   /// OK
   factory UserDeleteConfirmGetResponse.response200(String body) =>
-      _UserDeleteConfirmGetResponse200.response200(body);
+      UserDeleteConfirmGetResponse200.response200(body);
 
   /// Invalid token or email address.
   factory UserDeleteConfirmGetResponse.response400(String body) =>
-      _UserDeleteConfirmGetResponse400.response400(body);
+      UserDeleteConfirmGetResponse400.response400(body);
 
-  void map({
-    required ResponseMap<_UserDeleteConfirmGetResponse200> on200,
-    required ResponseMap<_UserDeleteConfirmGetResponse400> on400,
+  R map<R>({
+    required ResponseMap<UserDeleteConfirmGetResponse200, R> on200,
+    required ResponseMap<UserDeleteConfirmGetResponse400, R> on400,
+    ResponseMap<UserDeleteConfirmGetResponse, R>? onElse,
   }) {
-    if (this is _UserDeleteConfirmGetResponse200) {
-      on200((this as _UserDeleteConfirmGetResponse200));
-    } else if (this is _UserDeleteConfirmGetResponse400) {
-      on400((this as _UserDeleteConfirmGetResponse400));
+    if (this is UserDeleteConfirmGetResponse200) {
+      return on200((this as UserDeleteConfirmGetResponse200));
+    } else if (this is UserDeleteConfirmGetResponse400) {
+      return on400((this as UserDeleteConfirmGetResponse400));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _UserDeleteConfirmGetResponse200) {
-      return (this as _UserDeleteConfirmGetResponse200).body;
+    if (this is UserDeleteConfirmGetResponse200) {
+      return (this as UserDeleteConfirmGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _UserDeleteConfirmPostResponse200 extends UserDeleteConfirmPostResponse
+class UserDeleteConfirmPostResponse200 extends UserDeleteConfirmPostResponse
     implements OpenApiResponseBodyString {
   /// OK
-  _UserDeleteConfirmPostResponse200.response200(this.body) : status = 200;
+  UserDeleteConfirmPostResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -1455,9 +1497,9 @@ class _UserDeleteConfirmPostResponse200 extends UserDeleteConfirmPostResponse
       };
 }
 
-class _UserDeleteConfirmPostResponse400 extends UserDeleteConfirmPostResponse {
+class UserDeleteConfirmPostResponse400 extends UserDeleteConfirmPostResponse {
   /// Invalid token or email address.
-  _UserDeleteConfirmPostResponse400.response400() : status = 400;
+  UserDeleteConfirmPostResponse400.response400() : status = 400;
 
   @override
   final int status;
@@ -1472,36 +1514,39 @@ class _UserDeleteConfirmPostResponse400 extends UserDeleteConfirmPostResponse {
       };
 }
 
-abstract class UserDeleteConfirmPostResponse extends OpenApiResponse
+sealed class UserDeleteConfirmPostResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   UserDeleteConfirmPostResponse();
 
   /// OK
   factory UserDeleteConfirmPostResponse.response200(String body) =>
-      _UserDeleteConfirmPostResponse200.response200(body);
+      UserDeleteConfirmPostResponse200.response200(body);
 
   /// Invalid token or email address.
   factory UserDeleteConfirmPostResponse.response400() =>
-      _UserDeleteConfirmPostResponse400.response400();
+      UserDeleteConfirmPostResponse400.response400();
 
-  void map({
-    required ResponseMap<_UserDeleteConfirmPostResponse200> on200,
-    required ResponseMap<_UserDeleteConfirmPostResponse400> on400,
+  R map<R>({
+    required ResponseMap<UserDeleteConfirmPostResponse200, R> on200,
+    required ResponseMap<UserDeleteConfirmPostResponse400, R> on400,
+    ResponseMap<UserDeleteConfirmPostResponse, R>? onElse,
   }) {
-    if (this is _UserDeleteConfirmPostResponse200) {
-      on200((this as _UserDeleteConfirmPostResponse200));
-    } else if (this is _UserDeleteConfirmPostResponse400) {
-      on400((this as _UserDeleteConfirmPostResponse400));
+    if (this is UserDeleteConfirmPostResponse200) {
+      return on200((this as UserDeleteConfirmPostResponse200));
+    } else if (this is UserDeleteConfirmPostResponse400) {
+      return on400((this as UserDeleteConfirmPostResponse400));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  OK
   @override
   String requireSuccess() {
-    if (this is _UserDeleteConfirmPostResponse200) {
-      return (this as _UserDeleteConfirmPostResponse200).body;
+    if (this is UserDeleteConfirmPostResponse200) {
+      return (this as UserDeleteConfirmPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1577,10 +1622,10 @@ class StatusGetResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _StatusGetResponse200 extends StatusGetResponse
+class StatusGetResponse200 extends StatusGetResponse
     implements OpenApiResponseBodyJson {
   /// Information of the logged in account.
-  _StatusGetResponse200.response200(this.body)
+  StatusGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -1605,27 +1650,32 @@ class _StatusGetResponse200 extends StatusGetResponse
       };
 }
 
-abstract class StatusGetResponse extends OpenApiResponse
+sealed class StatusGetResponse extends OpenApiResponse
     implements HasSuccessResponse<StatusGetResponseBody200> {
   StatusGetResponse();
 
   /// Information of the logged in account.
   factory StatusGetResponse.response200(StatusGetResponseBody200 body) =>
-      _StatusGetResponse200.response200(body);
+      StatusGetResponse200.response200(body);
 
-  void map({required ResponseMap<_StatusGetResponse200> on200}) {
-    if (this is _StatusGetResponse200) {
-      on200((this as _StatusGetResponse200));
+  R map<R>({
+    required ResponseMap<StatusGetResponse200, R> on200,
+    ResponseMap<StatusGetResponse, R>? onElse,
+  }) {
+    if (this is StatusGetResponse200) {
+      return on200((this as StatusGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Information of the logged in account.
   @override
   StatusGetResponseBody200 requireSuccess() {
-    if (this is _StatusGetResponse200) {
-      return (this as _StatusGetResponse200).body;
+    if (this is StatusGetResponse200) {
+      return (this as StatusGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1652,10 +1702,10 @@ class MailboxGetResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxGetResponse200 extends MailboxGetResponse
+class MailboxGetResponse200 extends MailboxGetResponse
     implements OpenApiResponseBodyJson {
   /// On Success returns unpaginated list (right now) of all mailboxes.
-  _MailboxGetResponse200.response200(this.body)
+  MailboxGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -1680,27 +1730,32 @@ class _MailboxGetResponse200 extends MailboxGetResponse
       };
 }
 
-abstract class MailboxGetResponse extends OpenApiResponse
+sealed class MailboxGetResponse extends OpenApiResponse
     implements HasSuccessResponse<MailboxGetResponseBody200> {
   MailboxGetResponse();
 
   /// On Success returns unpaginated list (right now) of all mailboxes.
   factory MailboxGetResponse.response200(MailboxGetResponseBody200 body) =>
-      _MailboxGetResponse200.response200(body);
+      MailboxGetResponse200.response200(body);
 
-  void map({required ResponseMap<_MailboxGetResponse200> on200}) {
-    if (this is _MailboxGetResponse200) {
-      on200((this as _MailboxGetResponse200));
+  R map<R>({
+    required ResponseMap<MailboxGetResponse200, R> on200,
+    ResponseMap<MailboxGetResponse, R>? onElse,
+  }) {
+    if (this is MailboxGetResponse200) {
+      return on200((this as MailboxGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  On Success returns unpaginated list (right now) of all mailboxes.
   @override
   MailboxGetResponseBody200 requireSuccess() {
-    if (this is _MailboxGetResponse200) {
-      return (this as _MailboxGetResponse200).body;
+    if (this is MailboxGetResponse200) {
+      return (this as MailboxGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1730,10 +1785,10 @@ class MailboxCreatePostResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxCreatePostResponse200 extends MailboxCreatePostResponse
+class MailboxCreatePostResponse200 extends MailboxCreatePostResponse
     implements OpenApiResponseBodyJson {
   /// Successfully created mailbox.
-  _MailboxCreatePostResponse200.response200(this.body)
+  MailboxCreatePostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -1758,28 +1813,33 @@ class _MailboxCreatePostResponse200 extends MailboxCreatePostResponse
       };
 }
 
-abstract class MailboxCreatePostResponse extends OpenApiResponse
+sealed class MailboxCreatePostResponse extends OpenApiResponse
     implements HasSuccessResponse<MailboxCreatePostResponseBody200> {
   MailboxCreatePostResponse();
 
   /// Successfully created mailbox.
   factory MailboxCreatePostResponse.response200(
           MailboxCreatePostResponseBody200 body) =>
-      _MailboxCreatePostResponse200.response200(body);
+      MailboxCreatePostResponse200.response200(body);
 
-  void map({required ResponseMap<_MailboxCreatePostResponse200> on200}) {
-    if (this is _MailboxCreatePostResponse200) {
-      on200((this as _MailboxCreatePostResponse200));
+  R map<R>({
+    required ResponseMap<MailboxCreatePostResponse200, R> on200,
+    ResponseMap<MailboxCreatePostResponse, R>? onElse,
+  }) {
+    if (this is MailboxCreatePostResponse200) {
+      return on200((this as MailboxCreatePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully created mailbox.
   @override
   MailboxCreatePostResponseBody200 requireSuccess() {
-    if (this is _MailboxCreatePostResponse200) {
-      return (this as _MailboxCreatePostResponse200).body;
+    if (this is MailboxCreatePostResponse200) {
+      return (this as MailboxCreatePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -1847,10 +1907,10 @@ class MailboxListGetResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxListGetResponse200 extends MailboxListGetResponse
+class MailboxListGetResponse200 extends MailboxListGetResponse
     implements OpenApiResponseBodyJson {
   /// Successful list
-  _MailboxListGetResponse200.response200(this.body)
+  MailboxListGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -1875,37 +1935,42 @@ class _MailboxListGetResponse200 extends MailboxListGetResponse
       };
 }
 
-abstract class MailboxListGetResponse extends OpenApiResponse
+sealed class MailboxListGetResponse extends OpenApiResponse
     implements HasSuccessResponse<MailboxListGetResponseBody200> {
   MailboxListGetResponse();
 
   /// Successful list
   factory MailboxListGetResponse.response200(
           MailboxListGetResponseBody200 body) =>
-      _MailboxListGetResponse200.response200(body);
+      MailboxListGetResponse200.response200(body);
 
-  void map({required ResponseMap<_MailboxListGetResponse200> on200}) {
-    if (this is _MailboxListGetResponse200) {
-      on200((this as _MailboxListGetResponse200));
+  R map<R>({
+    required ResponseMap<MailboxListGetResponse200, R> on200,
+    ResponseMap<MailboxListGetResponse, R>? onElse,
+  }) {
+    if (this is MailboxListGetResponse200) {
+      return on200((this as MailboxListGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successful list
   @override
   MailboxListGetResponseBody200 requireSuccess() {
-    if (this is _MailboxListGetResponse200) {
-      return (this as _MailboxListGetResponse200).body;
+    if (this is MailboxListGetResponse200) {
+      return (this as MailboxListGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
+class MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
   /// Update finished.
-  _MailMassupdatePostResponse200.response200() : status = 200;
+  MailMassupdatePostResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -1920,26 +1985,31 @@ class _MailMassupdatePostResponse200 extends MailMassupdatePostResponse {
       };
 }
 
-abstract class MailMassupdatePostResponse extends OpenApiResponse
+sealed class MailMassupdatePostResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailMassupdatePostResponse();
 
   /// Update finished.
   factory MailMassupdatePostResponse.response200() =>
-      _MailMassupdatePostResponse200.response200();
+      MailMassupdatePostResponse200.response200();
 
-  void map({required ResponseMap<_MailMassupdatePostResponse200> on200}) {
-    if (this is _MailMassupdatePostResponse200) {
-      on200((this as _MailMassupdatePostResponse200));
+  R map<R>({
+    required ResponseMap<MailMassupdatePostResponse200, R> on200,
+    ResponseMap<MailMassupdatePostResponse, R>? onElse,
+  }) {
+    if (this is MailMassupdatePostResponse200) {
+      return on200((this as MailMassupdatePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Update finished.
   @override
   void requireSuccess() {
-    if (this is _MailMassupdatePostResponse200) {
+    if (this is MailMassupdatePostResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2003,9 +2073,9 @@ class MailMassupdatePostSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
+class MailboxUpdateResponse200 extends MailboxUpdateResponse {
   /// Success.
-  _MailboxUpdateResponse200.response200() : status = 200;
+  MailboxUpdateResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2020,26 +2090,31 @@ class _MailboxUpdateResponse200 extends MailboxUpdateResponse {
       };
 }
 
-abstract class MailboxUpdateResponse extends OpenApiResponse
+sealed class MailboxUpdateResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailboxUpdateResponse();
 
   /// Success.
   factory MailboxUpdateResponse.response200() =>
-      _MailboxUpdateResponse200.response200();
+      MailboxUpdateResponse200.response200();
 
-  void map({required ResponseMap<_MailboxUpdateResponse200> on200}) {
-    if (this is _MailboxUpdateResponse200) {
-      on200((this as _MailboxUpdateResponse200));
+  R map<R>({
+    required ResponseMap<MailboxUpdateResponse200, R> on200,
+    ResponseMap<MailboxUpdateResponse, R>? onElse,
+  }) {
+    if (this is MailboxUpdateResponse200) {
+      return on200((this as MailboxUpdateResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Success.
   @override
   void requireSuccess() {
-    if (this is _MailboxUpdateResponse200) {
+    if (this is MailboxUpdateResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2097,10 +2172,10 @@ class MailboxUpdateSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
+class MailboxMessageGetResponse200 extends MailboxMessageGetResponse
     implements OpenApiResponseBodyString {
   /// Raw email message incluuding all headers, body and attachment.
-  _MailboxMessageGetResponse200.response200(this.body) : status = 200;
+  MailboxMessageGetResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -2119,36 +2194,41 @@ class _MailboxMessageGetResponse200 extends MailboxMessageGetResponse
       };
 }
 
-abstract class MailboxMessageGetResponse extends OpenApiResponse
+sealed class MailboxMessageGetResponse extends OpenApiResponse
     implements HasSuccessResponse<String> {
   MailboxMessageGetResponse();
 
   /// Raw email message incluuding all headers, body and attachment.
   factory MailboxMessageGetResponse.response200(String body) =>
-      _MailboxMessageGetResponse200.response200(body);
+      MailboxMessageGetResponse200.response200(body);
 
-  void map({required ResponseMap<_MailboxMessageGetResponse200> on200}) {
-    if (this is _MailboxMessageGetResponse200) {
-      on200((this as _MailboxMessageGetResponse200));
+  R map<R>({
+    required ResponseMap<MailboxMessageGetResponse200, R> on200,
+    ResponseMap<MailboxMessageGetResponse, R>? onElse,
+  }) {
+    if (this is MailboxMessageGetResponse200) {
+      return on200((this as MailboxMessageGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Raw email message incluuding all headers, body and attachment.
   @override
   String requireSuccess() {
-    if (this is _MailboxMessageGetResponse200) {
-      return (this as _MailboxMessageGetResponse200).body;
+    if (this is MailboxMessageGetResponse200) {
+      return (this as MailboxMessageGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
+class MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
   /// Message was deleted successfully.
-  _MailboxMessageDeleteResponse200.response200() : status = 200;
+  MailboxMessageDeleteResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2163,26 +2243,31 @@ class _MailboxMessageDeleteResponse200 extends MailboxMessageDeleteResponse {
       };
 }
 
-abstract class MailboxMessageDeleteResponse extends OpenApiResponse
+sealed class MailboxMessageDeleteResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailboxMessageDeleteResponse();
 
   /// Message was deleted successfully.
   factory MailboxMessageDeleteResponse.response200() =>
-      _MailboxMessageDeleteResponse200.response200();
+      MailboxMessageDeleteResponse200.response200();
 
-  void map({required ResponseMap<_MailboxMessageDeleteResponse200> on200}) {
-    if (this is _MailboxMessageDeleteResponse200) {
-      on200((this as _MailboxMessageDeleteResponse200));
+  R map<R>({
+    required ResponseMap<MailboxMessageDeleteResponse200, R> on200,
+    ResponseMap<MailboxMessageDeleteResponse, R>? onElse,
+  }) {
+    if (this is MailboxMessageDeleteResponse200) {
+      return on200((this as MailboxMessageDeleteResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Message was deleted successfully.
   @override
   void requireSuccess() {
-    if (this is _MailboxMessageDeleteResponse200) {
+    if (this is MailboxMessageDeleteResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2190,9 +2275,9 @@ abstract class MailboxMessageDeleteResponse extends OpenApiResponse
   }
 }
 
-class _MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
+class MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
   /// Successfully forwarded message.
-  _MailboxMessageForwardResponse200.response200() : status = 200;
+  MailboxMessageForwardResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2207,26 +2292,31 @@ class _MailboxMessageForwardResponse200 extends MailboxMessageForwardResponse {
       };
 }
 
-abstract class MailboxMessageForwardResponse extends OpenApiResponse
+sealed class MailboxMessageForwardResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailboxMessageForwardResponse();
 
   /// Successfully forwarded message.
   factory MailboxMessageForwardResponse.response200() =>
-      _MailboxMessageForwardResponse200.response200();
+      MailboxMessageForwardResponse200.response200();
 
-  void map({required ResponseMap<_MailboxMessageForwardResponse200> on200}) {
-    if (this is _MailboxMessageForwardResponse200) {
-      on200((this as _MailboxMessageForwardResponse200));
+  R map<R>({
+    required ResponseMap<MailboxMessageForwardResponse200, R> on200,
+    ResponseMap<MailboxMessageForwardResponse, R>? onElse,
+  }) {
+    if (this is MailboxMessageForwardResponse200) {
+      return on200((this as MailboxMessageForwardResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully forwarded message.
   @override
   void requireSuccess() {
-    if (this is _MailboxMessageForwardResponse200) {
+    if (this is MailboxMessageForwardResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2254,10 +2344,9 @@ class MailboxMessageForwardSchema implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _MailboxMessageMarkReadResponse200
-    extends MailboxMessageMarkReadResponse {
+class MailboxMessageMarkReadResponse200 extends MailboxMessageMarkReadResponse {
   /// Successfully marked as read.
-  _MailboxMessageMarkReadResponse200.response200() : status = 200;
+  MailboxMessageMarkReadResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2272,26 +2361,31 @@ class _MailboxMessageMarkReadResponse200
       };
 }
 
-abstract class MailboxMessageMarkReadResponse extends OpenApiResponse
+sealed class MailboxMessageMarkReadResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailboxMessageMarkReadResponse();
 
   /// Successfully marked as read.
   factory MailboxMessageMarkReadResponse.response200() =>
-      _MailboxMessageMarkReadResponse200.response200();
+      MailboxMessageMarkReadResponse200.response200();
 
-  void map({required ResponseMap<_MailboxMessageMarkReadResponse200> on200}) {
-    if (this is _MailboxMessageMarkReadResponse200) {
-      on200((this as _MailboxMessageMarkReadResponse200));
+  R map<R>({
+    required ResponseMap<MailboxMessageMarkReadResponse200, R> on200,
+    ResponseMap<MailboxMessageMarkReadResponse, R>? onElse,
+  }) {
+    if (this is MailboxMessageMarkReadResponse200) {
+      return on200((this as MailboxMessageMarkReadResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully marked as read.
   @override
   void requireSuccess() {
-    if (this is _MailboxMessageMarkReadResponse200) {
+    if (this is MailboxMessageMarkReadResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2299,10 +2393,10 @@ abstract class MailboxMessageMarkReadResponse extends OpenApiResponse
   }
 }
 
-class _MailboxMessageMarkUnReadResponse200
+class MailboxMessageMarkUnReadResponse200
     extends MailboxMessageMarkUnReadResponse {
   /// Successfully marked as unread.
-  _MailboxMessageMarkUnReadResponse200.response200() : status = 200;
+  MailboxMessageMarkUnReadResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2317,26 +2411,31 @@ class _MailboxMessageMarkUnReadResponse200
       };
 }
 
-abstract class MailboxMessageMarkUnReadResponse extends OpenApiResponse
+sealed class MailboxMessageMarkUnReadResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   MailboxMessageMarkUnReadResponse();
 
   /// Successfully marked as unread.
   factory MailboxMessageMarkUnReadResponse.response200() =>
-      _MailboxMessageMarkUnReadResponse200.response200();
+      MailboxMessageMarkUnReadResponse200.response200();
 
-  void map({required ResponseMap<_MailboxMessageMarkUnReadResponse200> on200}) {
-    if (this is _MailboxMessageMarkUnReadResponse200) {
-      on200((this as _MailboxMessageMarkUnReadResponse200));
+  R map<R>({
+    required ResponseMap<MailboxMessageMarkUnReadResponse200, R> on200,
+    ResponseMap<MailboxMessageMarkUnReadResponse, R>? onElse,
+  }) {
+    if (this is MailboxMessageMarkUnReadResponse200) {
+      return on200((this as MailboxMessageMarkUnReadResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully marked as unread.
   @override
   void requireSuccess() {
-    if (this is _MailboxMessageMarkUnReadResponse200) {
+    if (this is MailboxMessageMarkUnReadResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2344,9 +2443,9 @@ abstract class MailboxMessageMarkUnReadResponse extends OpenApiResponse
   }
 }
 
-class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
+class EmailReceivePostResponse200 extends EmailReceivePostResponse {
   /// Received and delivered successfully.
-  _EmailReceivePostResponse200.response200() : status = 200;
+  EmailReceivePostResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -2361,10 +2460,10 @@ class _EmailReceivePostResponse200 extends EmailReceivePostResponse {
       };
 }
 
-class _EmailReceivePostResponse403 extends EmailReceivePostResponse
+class EmailReceivePostResponse403 extends EmailReceivePostResponse
     implements OpenApiResponseBodyString {
   /// Delivery not accepted.
-  _EmailReceivePostResponse403.response403(this.body) : status = 403;
+  EmailReceivePostResponse403.response403(this.body) : status = 403;
 
   @override
   final int status;
@@ -2383,35 +2482,38 @@ class _EmailReceivePostResponse403 extends EmailReceivePostResponse
       };
 }
 
-abstract class EmailReceivePostResponse extends OpenApiResponse
+sealed class EmailReceivePostResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   EmailReceivePostResponse();
 
   /// Received and delivered successfully.
   factory EmailReceivePostResponse.response200() =>
-      _EmailReceivePostResponse200.response200();
+      EmailReceivePostResponse200.response200();
 
   /// Delivery not accepted.
   factory EmailReceivePostResponse.response403(String body) =>
-      _EmailReceivePostResponse403.response403(body);
+      EmailReceivePostResponse403.response403(body);
 
-  void map({
-    required ResponseMap<_EmailReceivePostResponse200> on200,
-    required ResponseMap<_EmailReceivePostResponse403> on403,
+  R map<R>({
+    required ResponseMap<EmailReceivePostResponse200, R> on200,
+    required ResponseMap<EmailReceivePostResponse403, R> on403,
+    ResponseMap<EmailReceivePostResponse, R>? onElse,
   }) {
-    if (this is _EmailReceivePostResponse200) {
-      on200((this as _EmailReceivePostResponse200));
-    } else if (this is _EmailReceivePostResponse403) {
-      on403((this as _EmailReceivePostResponse403));
+    if (this is EmailReceivePostResponse200) {
+      return on200((this as EmailReceivePostResponse200));
+    } else if (this is EmailReceivePostResponse403) {
+      return on403((this as EmailReceivePostResponse403));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Received and delivered successfully.
   @override
   void requireSuccess() {
-    if (this is _EmailReceivePostResponse200) {
+    if (this is EmailReceivePostResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2419,11 +2521,11 @@ abstract class EmailReceivePostResponse extends OpenApiResponse
   }
 }
 
-class _FilecloudFileMetadataPostResponse200
+class FilecloudFileMetadataPostResponse200
     extends FilecloudFileMetadataPostResponse
     implements OpenApiResponseBodyJson {
   /// Successful retrieving file metadata.
-  _FilecloudFileMetadataPostResponse200.response200(this.body)
+  FilecloudFileMetadataPostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2448,39 +2550,43 @@ class _FilecloudFileMetadataPostResponse200
       };
 }
 
-abstract class FilecloudFileMetadataPostResponse extends OpenApiResponse
+sealed class FilecloudFileMetadataPostResponse extends OpenApiResponse
     implements HasSuccessResponse<FileInfo> {
   FilecloudFileMetadataPostResponse();
 
   /// Successful retrieving file metadata.
   factory FilecloudFileMetadataPostResponse.response200(FileInfo body) =>
-      _FilecloudFileMetadataPostResponse200.response200(body);
+      FilecloudFileMetadataPostResponse200.response200(body);
 
-  void map(
-      {required ResponseMap<_FilecloudFileMetadataPostResponse200> on200}) {
-    if (this is _FilecloudFileMetadataPostResponse200) {
-      on200((this as _FilecloudFileMetadataPostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFileMetadataPostResponse200, R> on200,
+    ResponseMap<FilecloudFileMetadataPostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileMetadataPostResponse200) {
+      return on200((this as FilecloudFileMetadataPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successful retrieving file metadata.
   @override
   FileInfo requireSuccess() {
-    if (this is _FilecloudFileMetadataPostResponse200) {
-      return (this as _FilecloudFileMetadataPostResponse200).body;
+    if (this is FilecloudFileMetadataPostResponse200) {
+      return (this as FilecloudFileMetadataPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _FilecloudFileRetrievePostResponse200
+class FilecloudFileRetrievePostResponse200
     extends FilecloudFileRetrievePostResponse
     implements OpenApiResponseBodyBinary {
   /// The requested file
-  _FilecloudFileRetrievePostResponse200.response200(this.body) : status = 200;
+  FilecloudFileRetrievePostResponse200.response200(this.body) : status = 200;
 
   @override
   final int status;
@@ -2500,38 +2606,42 @@ class _FilecloudFileRetrievePostResponse200
       };
 }
 
-abstract class FilecloudFileRetrievePostResponse extends OpenApiResponse
+sealed class FilecloudFileRetrievePostResponse extends OpenApiResponse
     implements HasSuccessResponse<_i1.Uint8List> {
   FilecloudFileRetrievePostResponse();
 
   /// The requested file
   factory FilecloudFileRetrievePostResponse.response200(_i1.Uint8List body) =>
-      _FilecloudFileRetrievePostResponse200.response200(body);
+      FilecloudFileRetrievePostResponse200.response200(body);
 
-  void map(
-      {required ResponseMap<_FilecloudFileRetrievePostResponse200> on200}) {
-    if (this is _FilecloudFileRetrievePostResponse200) {
-      on200((this as _FilecloudFileRetrievePostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFileRetrievePostResponse200, R> on200,
+    ResponseMap<FilecloudFileRetrievePostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileRetrievePostResponse200) {
+      return on200((this as FilecloudFileRetrievePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  The requested file
   @override
   _i1.Uint8List requireSuccess() {
-    if (this is _FilecloudFileRetrievePostResponse200) {
-      return (this as _FilecloudFileRetrievePostResponse200).body;
+    if (this is FilecloudFileRetrievePostResponse200) {
+      return (this as FilecloudFileRetrievePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _FilecloudFileDeletePostResponse204
+class FilecloudFileDeletePostResponse204
     extends FilecloudFileDeletePostResponse {
   /// Successfully deleted the file.
-  _FilecloudFileDeletePostResponse204.response204() : status = 204;
+  FilecloudFileDeletePostResponse204.response204() : status = 204;
 
   @override
   final int status;
@@ -2546,26 +2656,31 @@ class _FilecloudFileDeletePostResponse204
       };
 }
 
-abstract class FilecloudFileDeletePostResponse extends OpenApiResponse
+sealed class FilecloudFileDeletePostResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   FilecloudFileDeletePostResponse();
 
   /// Successfully deleted the file.
   factory FilecloudFileDeletePostResponse.response204() =>
-      _FilecloudFileDeletePostResponse204.response204();
+      FilecloudFileDeletePostResponse204.response204();
 
-  void map({required ResponseMap<_FilecloudFileDeletePostResponse204> on204}) {
-    if (this is _FilecloudFileDeletePostResponse204) {
-      on204((this as _FilecloudFileDeletePostResponse204));
+  R map<R>({
+    required ResponseMap<FilecloudFileDeletePostResponse204, R> on204,
+    ResponseMap<FilecloudFileDeletePostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileDeletePostResponse204) {
+      return on204((this as FilecloudFileDeletePostResponse204));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 204:  Successfully deleted the file.
   @override
   void requireSuccess() {
-    if (this is _FilecloudFileDeletePostResponse204) {
+    if (this is FilecloudFileDeletePostResponse204) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -2573,11 +2688,11 @@ abstract class FilecloudFileDeletePostResponse extends OpenApiResponse
   }
 }
 
-class _FilecloudFileTokenCreatePostResponse200
+class FilecloudFileTokenCreatePostResponse200
     extends FilecloudFileTokenCreatePostResponse
     implements OpenApiResponseBodyJson {
   /// Successfully created token.
-  _FilecloudFileTokenCreatePostResponse200.response200(this.body)
+  FilecloudFileTokenCreatePostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2602,28 +2717,32 @@ class _FilecloudFileTokenCreatePostResponse200
       };
 }
 
-abstract class FilecloudFileTokenCreatePostResponse extends OpenApiResponse
+sealed class FilecloudFileTokenCreatePostResponse extends OpenApiResponse
     implements HasSuccessResponse<FileId> {
   FilecloudFileTokenCreatePostResponse();
 
   /// Successfully created token.
   factory FilecloudFileTokenCreatePostResponse.response200(FileId body) =>
-      _FilecloudFileTokenCreatePostResponse200.response200(body);
+      FilecloudFileTokenCreatePostResponse200.response200(body);
 
-  void map(
-      {required ResponseMap<_FilecloudFileTokenCreatePostResponse200> on200}) {
-    if (this is _FilecloudFileTokenCreatePostResponse200) {
-      on200((this as _FilecloudFileTokenCreatePostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFileTokenCreatePostResponse200, R> on200,
+    ResponseMap<FilecloudFileTokenCreatePostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileTokenCreatePostResponse200) {
+      return on200((this as FilecloudFileTokenCreatePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully created token.
   @override
   FileId requireSuccess() {
-    if (this is _FilecloudFileTokenCreatePostResponse200) {
-      return (this as _FilecloudFileTokenCreatePostResponse200).body;
+    if (this is FilecloudFileTokenCreatePostResponse200) {
+      return (this as FilecloudFileTokenCreatePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -2700,11 +2819,11 @@ class FilecloudFileTokenListPostResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _FilecloudFileTokenListPostResponse200
+class FilecloudFileTokenListPostResponse200
     extends FilecloudFileTokenListPostResponse
     implements OpenApiResponseBodyJson {
   ///
-  _FilecloudFileTokenListPostResponse200.response200(this.body)
+  FilecloudFileTokenListPostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2729,39 +2848,43 @@ class _FilecloudFileTokenListPostResponse200
       };
 }
 
-abstract class FilecloudFileTokenListPostResponse extends OpenApiResponse
+sealed class FilecloudFileTokenListPostResponse extends OpenApiResponse
     implements HasSuccessResponse<FilecloudFileTokenListPostResponseBody200> {
   FilecloudFileTokenListPostResponse();
 
   ///
   factory FilecloudFileTokenListPostResponse.response200(
           FilecloudFileTokenListPostResponseBody200 body) =>
-      _FilecloudFileTokenListPostResponse200.response200(body);
+      FilecloudFileTokenListPostResponse200.response200(body);
 
-  void map(
-      {required ResponseMap<_FilecloudFileTokenListPostResponse200> on200}) {
-    if (this is _FilecloudFileTokenListPostResponse200) {
-      on200((this as _FilecloudFileTokenListPostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFileTokenListPostResponse200, R> on200,
+    ResponseMap<FilecloudFileTokenListPostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileTokenListPostResponse200) {
+      return on200((this as FilecloudFileTokenListPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:
   @override
   FilecloudFileTokenListPostResponseBody200 requireSuccess() {
-    if (this is _FilecloudFileTokenListPostResponse200) {
-      return (this as _FilecloudFileTokenListPostResponse200).body;
+    if (this is FilecloudFileTokenListPostResponse200) {
+      return (this as FilecloudFileTokenListPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _FilecloudFileGetResponse200 extends FilecloudFileGetResponse
+class FilecloudFileGetResponse200 extends FilecloudFileGetResponse
     implements OpenApiResponseBodyJson {
   /// List of files of the user
-  _FilecloudFileGetResponse200.response200(this.body)
+  FilecloudFileGetResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2786,27 +2909,32 @@ class _FilecloudFileGetResponse200 extends FilecloudFileGetResponse
       };
 }
 
-abstract class FilecloudFileGetResponse extends OpenApiResponse
+sealed class FilecloudFileGetResponse extends OpenApiResponse
     implements HasSuccessResponse<FileListResponse> {
   FilecloudFileGetResponse();
 
   /// List of files of the user
   factory FilecloudFileGetResponse.response200(FileListResponse body) =>
-      _FilecloudFileGetResponse200.response200(body);
+      FilecloudFileGetResponse200.response200(body);
 
-  void map({required ResponseMap<_FilecloudFileGetResponse200> on200}) {
-    if (this is _FilecloudFileGetResponse200) {
-      on200((this as _FilecloudFileGetResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFileGetResponse200, R> on200,
+    ResponseMap<FilecloudFileGetResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFileGetResponse200) {
+      return on200((this as FilecloudFileGetResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  List of files of the user
   @override
   FileListResponse requireSuccess() {
-    if (this is _FilecloudFileGetResponse200) {
-      return (this as _FilecloudFileGetResponse200).body;
+    if (this is FilecloudFileGetResponse200) {
+      return (this as FilecloudFileGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -2836,10 +2964,10 @@ class FilecloudFilePutResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _FilecloudFilePutResponse200 extends FilecloudFilePutResponse
+class FilecloudFilePutResponse200 extends FilecloudFilePutResponse
     implements OpenApiResponseBodyJson {
   /// Successful file update
-  _FilecloudFilePutResponse200.response200(this.body)
+  FilecloudFilePutResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2864,9 +2992,9 @@ class _FilecloudFilePutResponse200 extends FilecloudFilePutResponse
       };
 }
 
-class _FilecloudFilePutResponse409 extends FilecloudFilePutResponse {
+class FilecloudFilePutResponse409 extends FilecloudFilePutResponse {
   /// conflict: versionToken was not the latest version.
-  _FilecloudFilePutResponse409.response409() : status = 409;
+  FilecloudFilePutResponse409.response409() : status = 409;
 
   @override
   final int status;
@@ -2881,37 +3009,40 @@ class _FilecloudFilePutResponse409 extends FilecloudFilePutResponse {
       };
 }
 
-abstract class FilecloudFilePutResponse extends OpenApiResponse
+sealed class FilecloudFilePutResponse extends OpenApiResponse
     implements HasSuccessResponse<FilecloudFilePutResponseBody200> {
   FilecloudFilePutResponse();
 
   /// Successful file update
   factory FilecloudFilePutResponse.response200(
           FilecloudFilePutResponseBody200 body) =>
-      _FilecloudFilePutResponse200.response200(body);
+      FilecloudFilePutResponse200.response200(body);
 
   /// conflict: versionToken was not the latest version.
   factory FilecloudFilePutResponse.response409() =>
-      _FilecloudFilePutResponse409.response409();
+      FilecloudFilePutResponse409.response409();
 
-  void map({
-    required ResponseMap<_FilecloudFilePutResponse200> on200,
-    required ResponseMap<_FilecloudFilePutResponse409> on409,
+  R map<R>({
+    required ResponseMap<FilecloudFilePutResponse200, R> on200,
+    required ResponseMap<FilecloudFilePutResponse409, R> on409,
+    ResponseMap<FilecloudFilePutResponse, R>? onElse,
   }) {
-    if (this is _FilecloudFilePutResponse200) {
-      on200((this as _FilecloudFilePutResponse200));
-    } else if (this is _FilecloudFilePutResponse409) {
-      on409((this as _FilecloudFilePutResponse409));
+    if (this is FilecloudFilePutResponse200) {
+      return on200((this as FilecloudFilePutResponse200));
+    } else if (this is FilecloudFilePutResponse409) {
+      return on409((this as FilecloudFilePutResponse409));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successful file update
   @override
   FilecloudFilePutResponseBody200 requireSuccess() {
-    if (this is _FilecloudFilePutResponse200) {
-      return (this as _FilecloudFilePutResponse200).body;
+    if (this is FilecloudFilePutResponse200) {
+      return (this as FilecloudFilePutResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -2951,10 +3082,10 @@ class FilecloudFilePostResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _FilecloudFilePostResponse200 extends FilecloudFilePostResponse
+class FilecloudFilePostResponse200 extends FilecloudFilePostResponse
     implements OpenApiResponseBodyJson {
   /// successful file creation.
-  _FilecloudFilePostResponse200.response200(this.body)
+  FilecloudFilePostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -2979,28 +3110,33 @@ class _FilecloudFilePostResponse200 extends FilecloudFilePostResponse
       };
 }
 
-abstract class FilecloudFilePostResponse extends OpenApiResponse
+sealed class FilecloudFilePostResponse extends OpenApiResponse
     implements HasSuccessResponse<FilecloudFilePostResponseBody200> {
   FilecloudFilePostResponse();
 
   /// successful file creation.
   factory FilecloudFilePostResponse.response200(
           FilecloudFilePostResponseBody200 body) =>
-      _FilecloudFilePostResponse200.response200(body);
+      FilecloudFilePostResponse200.response200(body);
 
-  void map({required ResponseMap<_FilecloudFilePostResponse200> on200}) {
-    if (this is _FilecloudFilePostResponse200) {
-      on200((this as _FilecloudFilePostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudFilePostResponse200, R> on200,
+    ResponseMap<FilecloudFilePostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudFilePostResponse200) {
+      return on200((this as FilecloudFilePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  successful file creation.
   @override
   FilecloudFilePostResponseBody200 requireSuccess() {
-    if (this is _FilecloudFilePostResponse200) {
-      return (this as _FilecloudFilePostResponse200).body;
+    if (this is FilecloudFilePostResponse200) {
+      return (this as FilecloudFilePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -3030,10 +3166,10 @@ class FilecloudAttachmentPostResponseBody200 implements OpenApiContent {
   String toString() => toJson().toString();
 }
 
-class _FilecloudAttachmentPostResponse200
-    extends FilecloudAttachmentPostResponse implements OpenApiResponseBodyJson {
+class FilecloudAttachmentPostResponse200 extends FilecloudAttachmentPostResponse
+    implements OpenApiResponseBodyJson {
   /// successfully created attachment.
-  _FilecloudAttachmentPostResponse200.response200(this.body)
+  FilecloudAttachmentPostResponse200.response200(this.body)
       : status = 200,
         bodyJson = body.toJson();
 
@@ -3058,38 +3194,43 @@ class _FilecloudAttachmentPostResponse200
       };
 }
 
-abstract class FilecloudAttachmentPostResponse extends OpenApiResponse
+sealed class FilecloudAttachmentPostResponse extends OpenApiResponse
     implements HasSuccessResponse<FilecloudAttachmentPostResponseBody200> {
   FilecloudAttachmentPostResponse();
 
   /// successfully created attachment.
   factory FilecloudAttachmentPostResponse.response200(
           FilecloudAttachmentPostResponseBody200 body) =>
-      _FilecloudAttachmentPostResponse200.response200(body);
+      FilecloudAttachmentPostResponse200.response200(body);
 
-  void map({required ResponseMap<_FilecloudAttachmentPostResponse200> on200}) {
-    if (this is _FilecloudAttachmentPostResponse200) {
-      on200((this as _FilecloudAttachmentPostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudAttachmentPostResponse200, R> on200,
+    ResponseMap<FilecloudAttachmentPostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudAttachmentPostResponse200) {
+      return on200((this as FilecloudAttachmentPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  successfully created attachment.
   @override
   FilecloudAttachmentPostResponseBody200 requireSuccess() {
-    if (this is _FilecloudAttachmentPostResponse200) {
-      return (this as _FilecloudAttachmentPostResponse200).body;
+    if (this is FilecloudAttachmentPostResponse200) {
+      return (this as FilecloudAttachmentPostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _FilecloudAttachmentTouchPostResponse200
+class FilecloudAttachmentTouchPostResponse200
     extends FilecloudAttachmentTouchPostResponse {
   /// Successfully touched all attachments.
-  _FilecloudAttachmentTouchPostResponse200.response200() : status = 200;
+  FilecloudAttachmentTouchPostResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -3104,27 +3245,31 @@ class _FilecloudAttachmentTouchPostResponse200
       };
 }
 
-abstract class FilecloudAttachmentTouchPostResponse extends OpenApiResponse
+sealed class FilecloudAttachmentTouchPostResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   FilecloudAttachmentTouchPostResponse();
 
   /// Successfully touched all attachments.
   factory FilecloudAttachmentTouchPostResponse.response200() =>
-      _FilecloudAttachmentTouchPostResponse200.response200();
+      FilecloudAttachmentTouchPostResponse200.response200();
 
-  void map(
-      {required ResponseMap<_FilecloudAttachmentTouchPostResponse200> on200}) {
-    if (this is _FilecloudAttachmentTouchPostResponse200) {
-      on200((this as _FilecloudAttachmentTouchPostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudAttachmentTouchPostResponse200, R> on200,
+    ResponseMap<FilecloudAttachmentTouchPostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudAttachmentTouchPostResponse200) {
+      return on200((this as FilecloudAttachmentTouchPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully touched all attachments.
   @override
   void requireSuccess() {
-    if (this is _FilecloudAttachmentTouchPostResponse200) {
+    if (this is FilecloudAttachmentTouchPostResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -3132,10 +3277,10 @@ abstract class FilecloudAttachmentTouchPostResponse extends OpenApiResponse
   }
 }
 
-class _FilecloudAttachmentUnlinkPostResponse200
+class FilecloudAttachmentUnlinkPostResponse200
     extends FilecloudAttachmentUnlinkPostResponse {
   /// Successfully removed association.
-  _FilecloudAttachmentUnlinkPostResponse200.response200() : status = 200;
+  FilecloudAttachmentUnlinkPostResponse200.response200() : status = 200;
 
   @override
   final int status;
@@ -3150,27 +3295,31 @@ class _FilecloudAttachmentUnlinkPostResponse200
       };
 }
 
-abstract class FilecloudAttachmentUnlinkPostResponse extends OpenApiResponse
+sealed class FilecloudAttachmentUnlinkPostResponse extends OpenApiResponse
     implements HasSuccessResponse<void> {
   FilecloudAttachmentUnlinkPostResponse();
 
   /// Successfully removed association.
   factory FilecloudAttachmentUnlinkPostResponse.response200() =>
-      _FilecloudAttachmentUnlinkPostResponse200.response200();
+      FilecloudAttachmentUnlinkPostResponse200.response200();
 
-  void map(
-      {required ResponseMap<_FilecloudAttachmentUnlinkPostResponse200> on200}) {
-    if (this is _FilecloudAttachmentUnlinkPostResponse200) {
-      on200((this as _FilecloudAttachmentUnlinkPostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudAttachmentUnlinkPostResponse200, R> on200,
+    ResponseMap<FilecloudAttachmentUnlinkPostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudAttachmentUnlinkPostResponse200) {
+      return on200((this as FilecloudAttachmentUnlinkPostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Successfully removed association.
   @override
   void requireSuccess() {
-    if (this is _FilecloudAttachmentUnlinkPostResponse200) {
+    if (this is FilecloudAttachmentUnlinkPostResponse200) {
       return;
     } else {
       throw StateError('Expected success response, but got $this');
@@ -3178,11 +3327,11 @@ abstract class FilecloudAttachmentUnlinkPostResponse extends OpenApiResponse
   }
 }
 
-class _FilecloudAttachmentRetrievePostResponse200
+class FilecloudAttachmentRetrievePostResponse200
     extends FilecloudAttachmentRetrievePostResponse
     implements OpenApiResponseBodyBinary {
   /// The requested file
-  _FilecloudAttachmentRetrievePostResponse200.response200(this.body)
+  FilecloudAttachmentRetrievePostResponse200.response200(this.body)
       : status = 200;
 
   @override
@@ -3203,40 +3352,43 @@ class _FilecloudAttachmentRetrievePostResponse200
       };
 }
 
-abstract class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
+sealed class FilecloudAttachmentRetrievePostResponse extends OpenApiResponse
     implements HasSuccessResponse<_i1.Uint8List> {
   FilecloudAttachmentRetrievePostResponse();
 
   /// The requested file
   factory FilecloudAttachmentRetrievePostResponse.response200(
           _i1.Uint8List body) =>
-      _FilecloudAttachmentRetrievePostResponse200.response200(body);
+      FilecloudAttachmentRetrievePostResponse200.response200(body);
 
-  void map(
-      {required ResponseMap<_FilecloudAttachmentRetrievePostResponse200>
-          on200}) {
-    if (this is _FilecloudAttachmentRetrievePostResponse200) {
-      on200((this as _FilecloudAttachmentRetrievePostResponse200));
+  R map<R>({
+    required ResponseMap<FilecloudAttachmentRetrievePostResponse200, R> on200,
+    ResponseMap<FilecloudAttachmentRetrievePostResponse, R>? onElse,
+  }) {
+    if (this is FilecloudAttachmentRetrievePostResponse200) {
+      return on200((this as FilecloudAttachmentRetrievePostResponse200));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  The requested file
   @override
   _i1.Uint8List requireSuccess() {
-    if (this is _FilecloudAttachmentRetrievePostResponse200) {
-      return (this as _FilecloudAttachmentRetrievePostResponse200).body;
+    if (this is FilecloudAttachmentRetrievePostResponse200) {
+      return (this as FilecloudAttachmentRetrievePostResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
   }
 }
 
-class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
+class WebsiteImageGetResponse200 extends WebsiteImageGetResponse
     implements OpenApiResponseBodyBinary {
   /// Image
-  _WebsiteImageGetResponse200.response200(
+  WebsiteImageGetResponse200.response200(
     this.contentType,
     this.body,
   ) : status = 200;
@@ -3258,9 +3410,9 @@ class _WebsiteImageGetResponse200 extends WebsiteImageGetResponse
       };
 }
 
-class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
+class WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
   /// No image found for this url.
-  _WebsiteImageGetResponse404.response404() : status = 404;
+  WebsiteImageGetResponse404.response404() : status = 404;
 
   @override
   final int status;
@@ -3275,7 +3427,7 @@ class _WebsiteImageGetResponse404 extends WebsiteImageGetResponse {
       };
 }
 
-abstract class WebsiteImageGetResponse extends OpenApiResponse
+sealed class WebsiteImageGetResponse extends OpenApiResponse
     implements HasSuccessResponse<_i1.Uint8List> {
   WebsiteImageGetResponse();
 
@@ -3284,33 +3436,36 @@ abstract class WebsiteImageGetResponse extends OpenApiResponse
     OpenApiContentType contentType,
     _i1.Uint8List body,
   ) =>
-      _WebsiteImageGetResponse200.response200(
+      WebsiteImageGetResponse200.response200(
         contentType,
         body,
       );
 
   /// No image found for this url.
   factory WebsiteImageGetResponse.response404() =>
-      _WebsiteImageGetResponse404.response404();
+      WebsiteImageGetResponse404.response404();
 
-  void map({
-    required ResponseMap<_WebsiteImageGetResponse200> on200,
-    required ResponseMap<_WebsiteImageGetResponse404> on404,
+  R map<R>({
+    required ResponseMap<WebsiteImageGetResponse200, R> on200,
+    required ResponseMap<WebsiteImageGetResponse404, R> on404,
+    ResponseMap<WebsiteImageGetResponse, R>? onElse,
   }) {
-    if (this is _WebsiteImageGetResponse200) {
-      on200((this as _WebsiteImageGetResponse200));
-    } else if (this is _WebsiteImageGetResponse404) {
-      on404((this as _WebsiteImageGetResponse404));
+    if (this is WebsiteImageGetResponse200) {
+      return on200((this as WebsiteImageGetResponse200));
+    } else if (this is WebsiteImageGetResponse404) {
+      return on404((this as WebsiteImageGetResponse404));
+    } else if (onElse != null) {
+      return onElse(this);
     } else {
-      throw StateError('Invalid instance type $this');
+      throw StateError('Invalid instance of type $this');
     }
   }
 
   /// status 200:  Image
   @override
   _i1.Uint8List requireSuccess() {
-    if (this is _WebsiteImageGetResponse200) {
-      return (this as _WebsiteImageGetResponse200).body;
+    if (this is WebsiteImageGetResponse200) {
+      return (this as WebsiteImageGetResponse200).body;
     } else {
       throw StateError('Expected success response, but got $this');
     }
@@ -3781,7 +3936,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _CheckGetResponse200.response200()
+            CheckGetResponse200.response200()
       },
     );
   }
@@ -3811,7 +3966,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _CheckStatusPostResponse200.response200(
+            CheckStatusPostResponse200.response200(
                 SystemStatus.fromJson(await response.responseBodyJson()))
       },
     );
@@ -3838,7 +3993,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserGetResponse200.response200(
+            UserGetResponse200.response200(
                 UserInfo.fromJson(await response.responseBodyJson()))
       },
     );
@@ -3864,7 +4019,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserRegisterPostResponse200.response200(
+            UserRegisterPostResponse200.response200(
                 RegisterResponse.fromJson(await response.responseBodyJson()))
       },
     );
@@ -3891,7 +4046,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _EmailStatusGetResponse200.response200(
+            EmailStatusGetResponse200.response200(
                 EmailStatusGetResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -3918,10 +4073,10 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _EmailConfirmGetResponse200.response200(
+            EmailConfirmGetResponse200.response200(
                 await response.responseBodyString()),
         '400': (OpenApiClientResponse response) async =>
-            _EmailConfirmGetResponse400.response400(
+            EmailConfirmGetResponse400.response400(
                 await response.responseBodyString()),
       },
     );
@@ -3947,10 +4102,10 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _EmailConfirmPostResponse200.response200(
+            EmailConfirmPostResponse200.response200(
                 await response.responseBodyString()),
         '400': (OpenApiClientResponse response) async =>
-            _EmailConfirmPostResponse400.response400(),
+            EmailConfirmPostResponse400.response400(),
       },
     );
   }
@@ -3969,7 +4124,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserDeleteGetResponse200.response200(
+            UserDeleteGetResponse200.response200(
                 await response.responseBodyString())
       },
     );
@@ -3995,10 +4150,10 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserDeletePostResponse200.response200(
+            UserDeletePostResponse200.response200(
                 await response.responseBodyString()),
         '404': (OpenApiClientResponse response) async =>
-            _UserDeletePostResponse404.response404(),
+            UserDeletePostResponse404.response404(),
       },
     );
   }
@@ -4023,10 +4178,10 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserDeleteConfirmGetResponse200.response200(
+            UserDeleteConfirmGetResponse200.response200(
                 await response.responseBodyString()),
         '400': (OpenApiClientResponse response) async =>
-            _UserDeleteConfirmGetResponse400.response400(
+            UserDeleteConfirmGetResponse400.response400(
                 await response.responseBodyString()),
       },
     );
@@ -4052,10 +4207,10 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _UserDeleteConfirmPostResponse200.response200(
+            UserDeleteConfirmPostResponse200.response200(
                 await response.responseBodyString()),
         '400': (OpenApiClientResponse response) async =>
-            _UserDeleteConfirmPostResponse400.response400(),
+            UserDeleteConfirmPostResponse400.response400(),
       },
     );
   }
@@ -4081,7 +4236,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _StatusGetResponse200.response200(StatusGetResponseBody200.fromJson(
+            StatusGetResponse200.response200(StatusGetResponseBody200.fromJson(
                 await response.responseBodyJson()))
       },
     );
@@ -4108,7 +4263,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxGetResponse200.response200(
+            MailboxGetResponse200.response200(
                 MailboxGetResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4142,7 +4297,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxCreatePostResponse200.response200(
+            MailboxCreatePostResponse200.response200(
                 MailboxCreatePostResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4184,7 +4339,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxListGetResponse200.response200(
+            MailboxListGetResponse200.response200(
                 MailboxListGetResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4218,7 +4373,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailMassupdatePostResponse200.response200()
+            MailMassupdatePostResponse200.response200()
       },
     );
   }
@@ -4256,7 +4411,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxUpdateResponse200.response200()
+            MailboxUpdateResponse200.response200()
       },
     );
   }
@@ -4287,7 +4442,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxMessageGetResponse200.response200(
+            MailboxMessageGetResponse200.response200(
                 await response.responseBodyString())
       },
     );
@@ -4319,7 +4474,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxMessageDeleteResponse200.response200()
+            MailboxMessageDeleteResponse200.response200()
       },
     );
   }
@@ -4357,7 +4512,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxMessageForwardResponse200.response200()
+            MailboxMessageForwardResponse200.response200()
       },
     );
   }
@@ -4388,7 +4543,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxMessageMarkReadResponse200.response200()
+            MailboxMessageMarkReadResponse200.response200()
       },
     );
   }
@@ -4419,7 +4574,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _MailboxMessageMarkUnReadResponse200.response200()
+            MailboxMessageMarkUnReadResponse200.response200()
       },
     );
   }
@@ -4452,9 +4607,9 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _EmailReceivePostResponse200.response200(),
+            EmailReceivePostResponse200.response200(),
         '403': (OpenApiClientResponse response) async =>
-            _EmailReceivePostResponse403.response403(
+            EmailReceivePostResponse403.response403(
                 await response.responseBodyString()),
       },
     );
@@ -4488,7 +4643,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFileMetadataPostResponse200.response200(
+            FilecloudFileMetadataPostResponse200.response200(
                 FileInfo.fromJson(await response.responseBodyJson()))
       },
     );
@@ -4522,7 +4677,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFileRetrievePostResponse200.response200(
+            FilecloudFileRetrievePostResponse200.response200(
                 await response.responseBodyBytes())
       },
     );
@@ -4556,7 +4711,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '204': (OpenApiClientResponse response) async =>
-            _FilecloudFileDeletePostResponse204.response204()
+            FilecloudFileDeletePostResponse204.response204()
       },
     );
   }
@@ -4588,7 +4743,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFileTokenCreatePostResponse200.response200(
+            FilecloudFileTokenCreatePostResponse200.response200(
                 FileId.fromJson(await response.responseBodyJson()))
       },
     );
@@ -4622,7 +4777,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFileTokenListPostResponse200.response200(
+            FilecloudFileTokenListPostResponse200.response200(
                 FilecloudFileTokenListPostResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4650,7 +4805,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFileGetResponse200.response200(
+            FilecloudFileGetResponse200.response200(
                 FileListResponse.fromJson(await response.responseBodyJson()))
       },
     );
@@ -4694,11 +4849,11 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFilePutResponse200.response200(
+            FilecloudFilePutResponse200.response200(
                 FilecloudFilePutResponseBody200.fromJson(
                     await response.responseBodyJson())),
         '409': (OpenApiClientResponse response) async =>
-            _FilecloudFilePutResponse409.response409(),
+            FilecloudFilePutResponse409.response409(),
       },
     );
   }
@@ -4736,7 +4891,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudFilePostResponse200.response200(
+            FilecloudFilePostResponse200.response200(
                 FilecloudFilePostResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4781,7 +4936,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudAttachmentPostResponse200.response200(
+            FilecloudAttachmentPostResponse200.response200(
                 FilecloudAttachmentPostResponseBody200.fromJson(
                     await response.responseBodyJson()))
       },
@@ -4815,7 +4970,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudAttachmentTouchPostResponse200.response200()
+            FilecloudAttachmentTouchPostResponse200.response200()
       },
     );
   }
@@ -4847,7 +5002,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudAttachmentUnlinkPostResponse200.response200()
+            FilecloudAttachmentUnlinkPostResponse200.response200()
       },
     );
   }
@@ -4880,7 +5035,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _FilecloudAttachmentRetrievePostResponse200.response200(
+            FilecloudAttachmentRetrievePostResponse200.response200(
                 await response.responseBodyBytes())
       },
     );
@@ -4911,12 +5066,12 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       request,
       {
         '200': (OpenApiClientResponse response) async =>
-            _WebsiteImageGetResponse200.response200(
+            WebsiteImageGetResponse200.response200(
               response.responseContentType(),
               await response.responseBodyBytes(),
             ),
         '404': (OpenApiClientResponse response) async =>
-            _WebsiteImageGetResponse404.response404(),
+            WebsiteImageGetResponse404.response404(),
       },
     );
   }
