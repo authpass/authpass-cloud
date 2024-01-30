@@ -134,7 +134,7 @@ void main() {
 
         now = now.add(const Duration(minutes: 5));
 
-        Future<FileContent> _load() async {
+        Future<FileContent> load() async {
           final fc = await endpoint.db.tables.fileCloud
               .selectFileContent(endpoint.db, fileToken: result.fileToken);
           if (fc == null) {
@@ -148,19 +148,19 @@ void main() {
         }
 
         // should still be the old value.
-        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
-        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
-        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await load()).lastAccessAt, DateTime.utc(2020, 1, 1));
         expect((await stats()).countRecentlyAccessed, 0);
         now = now.add(const Duration(hours: 48));
         expect((await stats()).countRecentlyAccessed, 0);
-        expect((await _load()).lastAccessAt, DateTime.utc(2020, 1, 1));
-        expect((await _load()).lastAccessAt, now);
+        expect((await load()).lastAccessAt, DateTime.utc(2020, 1, 1));
+        expect((await load()).lastAccessAt, now);
 
         expect((await stats()).countRecentlyAccessed, 1);
         now = now.add(const Duration(days: 2));
         expect((await stats()).countRecentlyAccessed, 0);
-        await _load();
+        await load();
         expect((await stats()).countRecentlyAccessed, 1);
         now = now.add(const Duration(days: 2));
         expect((await stats()).countRecentlyAccessed, 0);

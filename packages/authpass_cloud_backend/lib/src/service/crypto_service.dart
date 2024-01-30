@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:uuid/data.dart';
+import 'package:uuid/rng.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 enum TokenType {
   emailConfirm,
@@ -28,8 +29,7 @@ int _tokenTypeByteLength(TokenType type) {
 
 class CryptoService {
   final Random _random = Random.secure();
-  final Uuid _uuid =
-      const Uuid(options: <String, dynamic>{'grng': UuidUtil.cryptoRNG});
+  final Uuid _uuid = Uuid(goptions: GlobalOptions(CryptoRNG()));
 
 //  static const _ADDRESS_LENGTH = 32;
   // for now limit length to 10 characters, that should be more than enough.

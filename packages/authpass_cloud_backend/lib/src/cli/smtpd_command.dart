@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:authpass_cloud_backend/src/cli/serve_command.dart';
 import 'package:authpass_cloud_backend/src/dao/database_access.dart';
-import 'package:authpass_cloud_backend/src/env/env.dart';
 import 'package:authpass_cloud_backend/src/server.dart';
 import 'package:authpass_cloud_backend/src/service/service_provider.dart';
 import 'package:logging/logging.dart';
@@ -61,7 +60,7 @@ class SmtpdCommand extends BaseBackendCommand {
 }
 
 class SmtpBackendServer extends BackendServer {
-  SmtpBackendServer({required Env env, required this.config}) : super(env: env);
+  SmtpBackendServer({required super.env, required this.config});
 
   final SmtpConfig config;
 

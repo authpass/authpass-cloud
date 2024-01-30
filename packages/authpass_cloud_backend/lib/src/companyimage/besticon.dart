@@ -269,7 +269,7 @@ class BestIcon {
     if (decoder is IcoDecoder) {
       // extract the largest image and encode it to webp.
       final image = decoder.decodeImageLargest(bytes)!;
-      final pngBytes = PngEncoder().encodeImage(image);
+      final pngBytes = PngEncoder().encode(image);
       if (pngBytes.isEmpty) {
         _logger.severe('Unable to encode image to webp.');
       }
@@ -277,13 +277,13 @@ class BestIcon {
       return DecodedImage(
         image,
         decoder,
-        encodedBytes: pngBytes as Uint8List,
+        encodedBytes: pngBytes,
         encodedMimetype: 'image/png',
         encodedFileExtension: '.png',
       );
     }
     return DecodedImage(
-      decoder.decodeImage(bytes),
+      decoder.decode(bytes),
       decoder,
     );
   }
@@ -412,14 +412,18 @@ class BestIcon {
   double _analyseImageBrightnessRatio(Image image) {
     final histogram = List.generate(256, (index) => 0, growable: false);
     var count = 0;
-    for (final pixel in image.data) {
-      final alpha = getAlpha(pixel);
+    final imageData = image.data;
+    if (imageData == null) {
+      throw StateError('Unable to analyze image., image.data is null.');
+    }
+    for (final pixel in imageData) {
+      final alpha = pixel.a;
       if (alpha > 200) {
         continue;
       }
-      final r = getRed(pixel);
-      final g = getGreen(pixel);
-      final b = getBlue(pixel);
+      final r = pixel.r;
+      final g = pixel.g;
+      final b = pixel.b;
       count++;
       final brightness = (0.2126 * r + 0.7152 * g + 0.0722 * b).toInt();
       histogram[brightness]++;

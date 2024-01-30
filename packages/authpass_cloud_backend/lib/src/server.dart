@@ -53,7 +53,7 @@ class BackendServer {
 }
 
 class Server extends BackendServer {
-  Server({required Env env}) : super(env: env);
+  Server({required super.env});
 
   Future<void> run() async {
     PrintAppender.setupLogging();

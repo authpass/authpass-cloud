@@ -7,17 +7,15 @@ import 'package:postgres/postgres.dart';
 import 'package:postgres_utils/postgres_utils.dart';
 
 class DatabaseTransaction extends DatabaseTransactionBase<AuthPassTables> {
-  DatabaseTransaction(PostgreSQLExecutionContext conn, AuthPassTables tables)
-      : super(conn, tables);
+  DatabaseTransaction(super.conn, super.tables);
 }
 
 class DatabaseAccess
     extends DatabaseAccessBase<DatabaseTransaction, AuthPassTables> {
   DatabaseAccess({
     required CryptoService cryptoService,
-    required DatabaseConfig config,
+    required super.config,
   }) : super(
-          config: config,
           tables: AuthPassTables(cryptoService: cryptoService),
           migrations: AuthPassMigrationsProvider(),
         );
