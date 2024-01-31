@@ -15,14 +15,14 @@ String pageScaffold(
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AuthPass: Confirm email address</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-91100035-7"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DXFKFQSWDG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-91100035-7');
+  gtag('config', 'G-DXFKFQSWDG');
 </script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 ${script?.call() ?? ''}
