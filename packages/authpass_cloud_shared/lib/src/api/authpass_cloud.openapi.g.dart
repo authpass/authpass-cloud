@@ -8,9 +8,9 @@ part of 'authpass_cloud.openapi.dart';
 
 SystemStatusUser _$SystemStatusUserFromJson(Map<String, dynamic> json) =>
     SystemStatusUser(
-      emailConfirmed: json['emailConfirmed'] as int,
-      userConfirmed: json['userConfirmed'] as int,
-      emailUnconfirmed: json['emailUnconfirmed'] as int,
+      emailConfirmed: (json['emailConfirmed'] as num).toInt(),
+      userConfirmed: (json['userConfirmed'] as num).toInt(),
+      emailUnconfirmed: (json['emailUnconfirmed'] as num).toInt(),
     );
 
 Map<String, dynamic> _$SystemStatusUserToJson(SystemStatusUser instance) =>
@@ -22,8 +22,8 @@ Map<String, dynamic> _$SystemStatusUserToJson(SystemStatusUser instance) =>
 
 SystemStatusWebsite _$SystemStatusWebsiteFromJson(Map<String, dynamic> json) =>
     SystemStatusWebsite(
-      websiteCount: json['websiteCount'] as int,
-      urlCanonicalCount: json['urlCanonicalCount'] as int,
+      websiteCount: (json['websiteCount'] as num).toInt(),
+      urlCanonicalCount: (json['urlCanonicalCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$SystemStatusWebsiteToJson(
@@ -35,9 +35,9 @@ Map<String, dynamic> _$SystemStatusWebsiteToJson(
 
 SystemStatusMailbox _$SystemStatusMailboxFromJson(Map<String, dynamic> json) =>
     SystemStatusMailbox(
-      mailboxCount: json['mailboxCount'] as int,
-      messageCount: json['messageCount'] as int,
-      messageReadCount: json['messageReadCount'] as int,
+      mailboxCount: (json['mailboxCount'] as num).toInt(),
+      messageCount: (json['messageCount'] as num).toInt(),
+      messageReadCount: (json['messageReadCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$SystemStatusMailboxToJson(
@@ -51,14 +51,15 @@ Map<String, dynamic> _$SystemStatusMailboxToJson(
 SystemStatusFileCloud _$SystemStatusFileCloudFromJson(
         Map<String, dynamic> json) =>
     SystemStatusFileCloud(
-      fileCount: json['fileCount'] as int,
-      fileTotalLength: json['fileTotalLength'] as int,
-      fileContentCount: json['fileContentCount'] as int,
-      attachmentLength: json['attachmentLength'] as int,
-      attachmentCount: json['attachmentCount'] as int,
-      attachmentUntouchedMonth: json['attachmentUntouchedMonth'] as int,
-      countRecentlyAccessed: json['countRecentlyAccessed'] as int,
-      countWeekAccessed: json['countWeekAccessed'] as int,
+      fileCount: (json['fileCount'] as num).toInt(),
+      fileTotalLength: (json['fileTotalLength'] as num).toInt(),
+      fileContentCount: (json['fileContentCount'] as num).toInt(),
+      attachmentLength: (json['attachmentLength'] as num).toInt(),
+      attachmentCount: (json['attachmentCount'] as num).toInt(),
+      attachmentUntouchedMonth:
+          (json['attachmentUntouchedMonth'] as num).toInt(),
+      countRecentlyAccessed: (json['countRecentlyAccessed'] as num).toInt(),
+      countWeekAccessed: (json['countWeekAccessed'] as num).toInt(),
     );
 
 Map<String, dynamic> _$SystemStatusFileCloudToJson(
@@ -82,7 +83,7 @@ SystemStatus _$SystemStatusFromJson(Map<String, dynamic> json) => SystemStatus(
           SystemStatusMailbox.fromJson(json['mailbox'] as Map<String, dynamic>),
       fileCloud: SystemStatusFileCloud.fromJson(
           json['fileCloud'] as Map<String, dynamic>),
-      queryTime: json['queryTime'] as int,
+      queryTime: (json['queryTime'] as num).toInt(),
     );
 
 Map<String, dynamic> _$SystemStatusToJson(SystemStatus instance) =>
@@ -169,7 +170,7 @@ EmailMessage _$EmailMessageFromJson(Map<String, dynamic> json) => EmailMessage(
       mailboxEntryUuid: const ApiUuidJsonConverter()
           .fromJson(json['mailboxEntryUuid'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
-      size: json['size'] as int,
+      size: (json['size'] as num).toInt(),
       isRead: json['isRead'] as bool,
     );
 
@@ -210,7 +211,7 @@ FileInfo _$FileInfoFromJson(Map<String, dynamic> json) => FileInfo(
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       readOnly: json['readOnly'] as bool,
-      size: json['size'] as int,
+      size: (json['size'] as num).toInt(),
     );
 
 Map<String, dynamic> _$FileInfoToJson(FileInfo instance) => <String, dynamic>{
@@ -352,7 +353,7 @@ Map<String, dynamic> _$UserDeleteConfirmPostSchemaToJson(
 StatusGetResponseBody200Mail _$StatusGetResponseBody200MailFromJson(
         Map<String, dynamic> json) =>
     StatusGetResponseBody200Mail(
-      messagesUnread: json['messagesUnread'] as int,
+      messagesUnread: (json['messagesUnread'] as num).toInt(),
     );
 
 Map<String, dynamic> _$StatusGetResponseBody200MailToJson(

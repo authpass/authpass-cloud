@@ -5067,7 +5067,7 @@ class _AuthPassCloudClientImpl extends OpenApiClientBase
       {
         '200': (OpenApiClientResponse response) async =>
             WebsiteImageGetResponse200.response200(
-              response.responseContentType(),
+              response.responseContentType()!,
               await response.responseBodyBytes(),
             ),
         '404': (OpenApiClientResponse response) async =>
