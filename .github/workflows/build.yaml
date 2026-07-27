@@ -32,7 +32,7 @@ jobs:
         image=$( docker create ghcr.io/authpass/authpass-backend )
         docker cp ${image}:/authpass_backend.exe .
         docker rm ${image}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: auhpass_backend_${{ steps.buildnumber.outputs.buildnumber }}
         path: authpass_backend.exe
