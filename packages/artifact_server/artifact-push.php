@@ -22,6 +22,9 @@ if (isset($_POST['metrics'])) {
     print_r($newMetrics);
     $metrics = array_replace_recursive($oldMetrics, $newMetrics);
     print_r($metrics);
+    if ($metrics['stargazers']['total'] < 1) {
+        die('invalid stargazers count.' . $metrics['stargazers']['total']);
+    }
     file_put_contents('metrics.json', json_encode($metrics));
     echo 'Done';
     exit(0);
@@ -49,9 +52,12 @@ function isAllowedArtifact($filename) {
     $versionPattern = '[\d._\+]+';
     $allowedArtifacts = array(
         "(authpass-linux-)($versionPattern)(.tar.gz)",
+        "(authpass-linux-)($versionPattern)(.deb)",
         "(testartifact-)($versionPattern)(.tar.gz)",
         "(AuthPassSetup-)($versionPattern)(.exe)",
         "(AuthPass-setup-)($versionPattern)(.exe)",
+        "(AuthPass-portable-)($versionPattern)(.zip)",
+        "(authpass-)($versionPattern)(.msix)",
         "(authpass_)($versionPattern)(_amd64.snap)",
         "(authpass-sideload-)($versionPattern)(.apk)",
         "(authpass-samsungapps-)($versionPattern)(.apk)",

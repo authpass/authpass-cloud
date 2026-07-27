@@ -10,8 +10,13 @@ $file = trim($_SERVER['PATH_INFO'], '/');
 
 $fileParts = explode('/', $file);
 $shield = false;
+$versiontxt = false;
 if (count($fileParts) > 1 && $fileParts[1] == 'shield') {
     $shield = true;
+    $file = $fileParts[0];
+}
+if (count($fileParts) > 1 && $fileParts[1] == 'version.txt') {
+    $versiontxt = true;
     $file = $fileParts[0];
 }
 
@@ -27,6 +32,9 @@ $fileInfo = array(
     ),
     'authpass-linux-stable.tar.gz' => array(
         'type' => 'Linux Binaries'
+    ),
+    'authpass-linux-stable.deb' => array(
+        'type' => 'Debian Linux Package'
     ),
 );
 
@@ -68,9 +76,9 @@ if ($file === '.fosshub') {
             'version' => $v,
         );
         if ($latestVersion !== null && $latestVersion !== $v) {
-            echo "Error, all stable versions must be the same. $v vs $latestVersion";
-            print_r($versionMap);
-            exit;
+            //echo "Error, all stable versions must be the same. $v vs $latestVersion";
+            //print_r($versionMap);
+            //exit;
         }
         $latestVersion = $v;
     }
@@ -87,6 +95,10 @@ if ($version === null) {
     exit;
 }
 
+if ($versiontxt) {
+    echo $version['version'] . '_' . $version['buildNumber'];
+    exit;
+}
 if ($shield) {
     $shieldUrl = 'https://img.shields.io/badge/'.urlencode(str_replace('-', '--', $file)).'-'.urlencode($version['version'].'+'.$version['buildNumber']).'-green';
     header('Location: ' . $shieldUrl);
