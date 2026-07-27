@@ -22,11 +22,11 @@ jobs:
         buildnumber=$(curl -s https://raw.githubusercontent.com/hpoul/git-buildnumber/v1.0/git-buildnumber.sh | bash /dev/stdin generate)
         echo "::set-output name=buildnumber::$buildnumber"
     - name: docker build
-      run: cd docker && docker-compose build backend
+      run: cd docker && docker compose build backend
     - name: docker login and push
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-        cd docker && docker-compose push backend
+        cd docker && docker compose push backend
     - name: extract executable from image
       run: |
         image=$( docker create ghcr.io/authpass/authpass-backend )
