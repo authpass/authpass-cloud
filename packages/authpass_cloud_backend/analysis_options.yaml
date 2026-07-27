@@ -52,3 +52,7 @@ linter:
     unnecessary_null_aware_assignments: true
     unnecessary_statements: true
     unrelated_type_equality_checks: true
+
+
+formatter:
+  trailing_commas: preserve
