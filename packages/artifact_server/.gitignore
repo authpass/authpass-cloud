@@ -24,3 +24,7 @@
 /node_modules
 
 #### project specific ignores below
+
+# The artifact push token. This repository is public.
+artifact-push-token.txt
+artifact-push.php.pre-rotation

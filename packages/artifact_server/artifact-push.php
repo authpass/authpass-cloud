@@ -3,7 +3,17 @@
 // stored in the authpass-cloudu repository. do not  change on server.
 // https://github.com/authpass/authpass-cloud
 
-$TOKEN = '3?okQI/#~L.$lp.G8$gr';
+// Deliberately not in this file. This repository is public, so a token
+// committed here is a token published — which is exactly what happened to the
+// one this replaced, in plain sight since 2020. Kept beside it instead,
+// untracked, so rotating it never touches source. It is 0644 rather than
+// 0600 because php runs as www-data here and this filesystem has no ACL
+// support — it sits outside the web root, so it is readable by local
+// users but not served.
+$TOKEN = trim(@file_get_contents(__DIR__ . '/artifact-push-token.txt'));
+if ($TOKEN === '') {
+    fatalError('server misconfigured: artifact-push-token.txt is missing or empty');
+}
 
 /**
  * @param string $message
@@ -13,7 +23,7 @@ function fatalError($message) {
 }
 
 if ($_POST['token'] !== $TOKEN) {
-    fatalError('Permission denied. Invalid token ' . $_POST['token']);
+    fatalError('Permission denied.');
 }
 
 if (isset($_POST['metrics'])) {
