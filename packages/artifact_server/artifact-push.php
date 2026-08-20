@@ -88,6 +88,25 @@ function isAllowedArtifact($filename) {
             return new ArtifactMatch($matches[1], $matches[2], $matches[3]);
         }
     }
+
+    // A build manifest travels beside its artifact, named as the artifact
+    // plus `.manifest.json` (cux_ship's schema-2 sidecar). Admit exactly
+    // those companions by re-checking the stem against the artifact rules —
+    // derived rather than a second list, so the two can never drift — and
+    // fold the suffix into the extension, so the `latest` symlink aliases
+    // the sidecar exactly the way it aliases the artifact it describes.
+    $suffix = '.manifest.json';
+    if (substr($filename, -strlen($suffix)) === $suffix) {
+        $stem = substr($filename, 0, -strlen($suffix));
+        // One level only: a manifest describes an artifact, never another
+        // manifest, so `x.manifest.json.manifest.json` stays refused.
+        if (substr($stem, -strlen($suffix)) !== $suffix) {
+            $inner = isAllowedArtifact($stem);
+            if ($inner !== null) {
+                return new ArtifactMatch($inner->prefix, $inner->version, $inner->extension . $suffix);
+            }
+        }
+    }
     return null;
 }
 
