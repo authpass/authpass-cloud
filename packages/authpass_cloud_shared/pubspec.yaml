@@ -6,7 +6,9 @@ environment:
 dependencies:
   openapi_base: ">=1.0.1 <3.0.0"
   json_annotation: ^4.5.0
-  freezed_annotation: ^2.0.3
+  # Only for the re-export of json_annotation's JsonSerializable/JsonKey in
+  # the generated openapi client; no freezed classes here.
+  freezed_annotation: ">=2.0.3 <4.0.0"
 
 dev_dependencies:
   openapi_code_builder: ^1.7.0+2
